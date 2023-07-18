@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  identifier:
+    restart: "no"
+    ports:
+      - 80:80
+
+  dispatcher:
+    restart: "no"
+
+  database:
+    restart: "no"
+
+  virtuoso:
+    ports:
+      - "8890:8890"
+    restart: "no"
+
+  migrations:
+    restart: "no"
+
+  cache:
+    restart: "no"
+
+  resource:
+    restart: "no"
