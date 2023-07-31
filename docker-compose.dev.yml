@@ -6,10 +6,18 @@ services:
     ports:
       - 80:80
 
+  mocklogin:
+    image: lblod/mock-login-service:0.3.1
+    
   dispatcher:
     restart: "no"
 
   database:
+    environment:
+      LOG_INCOMING_SPARQL_QUERIES: "true"
+      LOG_OUTGOING_SPARQL_QUERIES: "true"
+      LOG_OUTGOING_SPARQL_QUERY_RESPONSES: "true"
+      LOG_ACCESS_RIGHTS: "true"
     restart: "no"
 
   virtuoso:
@@ -24,4 +32,7 @@ services:
     restart: "no"
 
   resource:
+    restart: "no"
+
+  subsidies-consumer:
     restart: "no"

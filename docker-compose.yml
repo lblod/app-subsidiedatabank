@@ -77,3 +77,64 @@ services:
     labels:
       - "logging=true"
     logging: *default-logging
+
+  ################################################################################
+  # OP PUBLIC CONSUMER
+  ################################################################################
+  reasoner:
+    image: eyereasoner/reasoning-service:increased-stack-limit
+    volumes:
+      - ./config/reasoner:/config
+    restart: always
+    labels:
+      - "logging=true"
+    logging: *default-logging
+  op-public-consumer:
+    image: lblod/delta-consumer:0.0.18
+    environment:
+      DCR_SERVICE_NAME: "op-public-consumer"
+      DCR_SYNC_BASE_URL: "https://organisaties.abb.lblod.info" # replace with link to OP API
+      DCR_SYNC_DATASET_SUBJECT: "http://data.lblod.info/datasets/delta-producer/dumps/PublicCacheGraphDump"
+      DCR_INITIAL_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/initialSync/op-public"
+      DCR_DELTA_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/deltaSync/op-public"
+      DCR_JOB_CREATOR_URI: "http://data.lblod.info/services/id/op-public-consumer"
+      DCR_DISABLE_INITIAL_SYNC: "true"
+      BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES: "true"
+      BATCH_SIZE: 1000
+      DCR_SYNC_FILES_PATH: "/sync/public/files"
+      FILE_SYNC_GRAPH: "http://mu.semte.ch/graphs/temp/original-physical-files-data"
+      KEEP_DELTA_FILES: "true"
+      DCR_ENABLE_DELTA_CONTEXT: "true"
+      DCR_LANDING_ZONE_DATABASE: "publication-triplestore"
+      DCR_LANDING_ZONE_GRAPH: "http://mu.semte.ch/graphs/landing-zone/op-public"
+    volumes:
+      - ./config/op-consumer/public:/config/triples-dispatching/custom-dispatching
+      - ./data/files/consumer-files/op-public:/consumer-files/
+    restart: always
+    labels:
+      - "logging=true"
+    logging: *default-logging
+
+  ################################################################################
+  # LOKET SUBSIDIE CONSUMER
+  ################################################################################
+  subsidies-consumer:
+    image: lblod/delta-consumer:0.0.6
+    environment:
+      DCR_SYNC_BASE_URL: 'https://loket.lblod.info' # replace with link to Loket API
+      DCR_SERVICE_NAME: 'subsidies-consumer'
+      DCR_SYNC_FILES_PATH: '/sync/subsidies/files'
+      DCR_SYNC_DATASET_SUBJECT: "http://data.lblod.info/datasets/delta-producer/dumps/SubsidiesCacheGraphDump"
+      DCR_INITIAL_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/initialSync/subsidies"
+      DCR_DELTA_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/deltaSync/subsidies"
+      DCR_JOB_CREATOR_URI: "http://data.lblod.info/services/id/subsidies-consumer"
+      DCR_DISABLE_INITIAL_SYNC: 'true'
+      DCR_BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES: 'true'
+      DCR_KEEP_DELTA_FILES: 'true'
+      DCR_DELTA_FILE_FOLDER: '/consumer-files'
+      DCR_SYNC_LOGIN_ENDPOINT: 'https://loket.lblod.info/sync/subsidies/login' # Note: don't forget DCR_SECRET_KEY in docker-compose.override.yml
+    volumes:
+      - ./data/files/consumer-files/subsidies:/consumer-files/
+    restart: always
+    labels:
+      - "logging=true"
