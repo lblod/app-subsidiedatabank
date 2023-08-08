@@ -37,7 +37,13 @@ defmodule Acl.UserGroups.Config do
                         "http://www.w3.org/2004/02/skos/core#Concept",
                         "http://data.europa.eu/m8g/Participation",
                       ]
-                    } } ] },
+                    } },
+                    %GraphSpec{
+                      graph: "http://mu.semte.ch/graphs/sessions",
+                      constraint: %ResourceFormatConstraint{
+                        resource_prefix: "http://mu.semte.ch/sessions/"
+                    } }
+                ] },
       # // CLEANUP
       #
       %GraphCleanup{
