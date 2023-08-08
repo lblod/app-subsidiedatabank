@@ -14,6 +14,7 @@ INSERT DATA {
 
     <http://data.lblod.info/id/account/3a91ff60-07c1-4136-ac5e-55cf401e0956> a foaf:OnlineAccount ;
       mu:uuid "3a91ff60-07c1-4136-ac5e-55cf401e0956" ;
-      foaf:accountServiceHomepage <https://github.com/lblod/mock-login-service>.
+      foaf:accountServiceHomepage <https://github.com/lblod/mock-login-service>;
+      ext:sessionRole "SubsidyDB-subsidies".
   }
 }
