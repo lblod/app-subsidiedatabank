@@ -81,14 +81,6 @@ services:
   ################################################################################
   # OP PUBLIC CONSUMER
   ################################################################################
-  reasoner:
-    image: eyereasoner/reasoning-service:increased-stack-limit
-    volumes:
-      - ./config/reasoner:/config
-    restart: always
-    labels:
-      - "logging=true"
-    logging: *default-logging
   op-public-consumer:
     image: lblod/delta-consumer:0.0.18
     environment:
