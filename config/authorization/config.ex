@@ -7,13 +7,24 @@ alias Acl.GroupSpec, as: GroupSpec
 alias Acl.GroupSpec.GraphCleanup, as: GraphCleanup
 
 defmodule Acl.UserGroups.Config do
+
+  defp access_by_role( group_string ) do
+    %AccessByQuery{
+      vars: ["session_group","session_role"],
+      query: sparql_query_for_access_role( group_string ) }
+  end
+
+  defp sparql_query_for_access_role( group_string ) do
+    "PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
+    PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
+    SELECT DISTINCT ?session_group ?session_role WHERE {
+      <SESSION_ID> ext:sessionGroup/mu:uuid ?session_group;
+                   ext:sessionRole ?session_role.
+      FILTER( ?session_role = \"#{group_string}\" )
+    }"
+  end
+
   def user_groups do
-    # These elements are walked from top to bottom.  Each of them may
-    # alter the quads to which the current query applies.  Quads are
-    # represented in three sections: current_source_quads,
-    # removed_source_quads, new_quads.  The quads may be calculated in
-    # many ways.  The useage of a GroupSpec and GraphCleanup are
-    # common.
     [
       # // PUBLIC
       %GroupSpec{
@@ -27,16 +38,6 @@ defmodule Acl.UserGroups.Config do
                         "http://xmlns.com/foaf/0.1/Person",
                         "http://xmlns.com/foaf/0.1/OnlineAccount",
                         "http://data.vlaanderen.be/ns/besluit#Bestuurseenheid",
-                        "http://lblod.data.gift/vocabularies/subsidie/ApplicationForm",
-                        "http://data.vlaanderen.be/ns/subsidie#SubsidiemaatregelConsumptie",
-                        "http://lblod.data.gift/vocabularies/subsidie/SubsidiemaatregelConsumptieStatus",
-                        "http://data.vlaanderen.be/ns/subsidie#SubsidiemaatregelAanbod",
-                        "http://lblod.data.gift/vocabularies/subsidie/SubsidiemaatregelAanbodReeks",
-                        "http://lblod.data.gift/vocabularies/subsidie/ApplicationFlow",
-                        "http://lblod.data.gift/vocabularies/subsidie/ApplicationStep",
-                        "http://data.vlaanderen.be/ns/subsidie#Subsidieprocedurestap",
-                        "http://www.w3.org/2004/02/skos/core#Concept",
-                        "http://data.europa.eu/m8g/Participation",
                       ]
                     } },
                     %GraphSpec{
@@ -45,6 +46,32 @@ defmodule Acl.UserGroups.Config do
                         resource_prefix: "http://mu.semte.ch/sessions/"
                     } }
                 ] },
+
+      # // SUBSIDIES
+      %GroupSpec{
+        name: "o-subs-r",
+        useage: [:read],
+        access: access_by_role( "SubsidyDB-subsidies" ),
+        graphs: [ %GraphSpec{
+                    graph: "http://mu.semte.ch/graphs/organizations/",
+                    constraint: %ResourceConstraint{
+                      resource_types: [
+                        "http://www.w3.org/2004/02/skos/core#ConceptScheme",
+                        "http://www.w3.org/2004/02/skos/core#Concept",
+                        "http://lblod.data.gift/vocabularies/subsidie/SubsidiemaatregelConsumptieStatus",
+                        "http://data.vlaanderen.be/ns/subsidie#SubsidiemaatregelAanbod",
+                        "http://lblod.data.gift/vocabularies/subsidie/SubsidiemaatregelAanbodReeks",
+                        "http://lblod.data.gift/vocabularies/subsidie/ApplicationFlow",
+                        "http://lblod.data.gift/vocabularies/subsidie/ApplicationStep",
+                        "http://data.vlaanderen.be/ns/subsidie#Subsidieprocedurestap",
+                        "http://data.europa.eu/m8g/PeriodOfTime",
+                        "http://data.europa.eu/m8g/Criterion",
+                        "http://data.europa.eu/m8g/RequirementGroup",
+                        "http://data.europa.eu/m8g/CriterionRequirement",
+                        "http://data.europa.eu/m8g/Requirement",
+                        "http://xmlns.com/foaf/0.1/Document",
+                        "http://www.w3.org/ns/org#Organization",
+                      ] } } ] },
 
       %GroupSpec{
         name: "org",
@@ -64,6 +91,7 @@ defmodule Acl.UserGroups.Config do
                         "http://xmlns.com/foaf/0.1/OnlineAccount",
                         "http://www.w3.org/ns/adms#Identifier",
                       ] } } ] },
+
       # // CLEANUP
       #
       %GraphCleanup{
