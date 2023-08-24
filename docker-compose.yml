@@ -78,6 +78,16 @@ services:
       - "logging=true"
     logging: *default-logging
 
+
+  search-query-management:
+    image: lblod/toezicht-search-query-management-service:0.3.6
+    volumes:
+      - ./config/search-query:/share/search-query
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
   ################################################################################
   # LOKET SUBSIDIE CONSUMER
   ################################################################################

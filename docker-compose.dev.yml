@@ -34,5 +34,8 @@ services:
   resource:
     restart: "no"
 
+  search-query-management:
+    restart: "no"
+    
   subsidies-consumer:
     restart: "no"

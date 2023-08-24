@@ -94,6 +94,30 @@ defmodule Dispatcher do
     forward conn, path, "http://resource/subsidy-procedural-steps/"
   end
 
+  ###############################################################
+  # Searching
+  ###############################################################
+
+  get "/search-queries/*path", %{ layer: :api_services } do
+    forward conn, path, "http://resource/search-queries/"
+  end
+  post "/search-queries/*path", %{ layer: :api_services } do
+    forward conn, path, "http://resource/search-queries/"
+  end
+  get "/search-queries/*path", %{ layer: :api_services } do
+    forward conn, path, "http://search-query-management/search-queries/"
+  end
+  put "/search-queries/*path", %{ layer: :api_services } do
+    forward conn, path, "http://search-query-management/search-queries/"
+  end
+  delete "/search-queries/*path", %{ layer: :api_services } do
+    forward conn, path, "http://search-query-management/search-queries/"
+  end
+  match "/search-query-forms/*path", %{ layer: :api_services } do
+    forward conn, path, "http://search-query-management/search-query-forms/"
+  end
+
+
   match "/*_", %{ last_call: true } do
     send_resp( conn, 404, "Route not found.  See config/dispatcher.ex" )
   end
