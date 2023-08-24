@@ -12,6 +12,7 @@
 (defparameter sparql:*experimental-no-application-graph-for-sudo-select-queries* t)
 
 (read-domain-file "master-subsidies-domain.lisp")
+(read-domain-file "master-submissions-domain.lisp")
 (read-domain-file "slave-users-domain.lisp")
 (read-domain-file "slave-besluit-domain.lisp")
 
