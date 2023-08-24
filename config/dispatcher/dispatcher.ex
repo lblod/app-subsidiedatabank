@@ -8,6 +8,11 @@ defmodule Dispatcher do
     any: [ "*/*" ]
   ]
 
+  @any %{ accept: %{ any: true } }
+  @turtle %{ accept: %{ turtle: true } }
+  @html %{ accept: %{ html: true } }
+  @json %{ accept: %{ json: true } }
+
   define_layers [ :static, :sparql, :api_services, :frontend_fallback, :resources, :not_found ]
 
   options "/*path", _ do
@@ -50,47 +55,50 @@ defmodule Dispatcher do
   # RESOURCES
   ##############
 
-  match "/gebruikers/*path" do
+  match "/gebruikers/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/gebruikers/"
   end
-  match "/accounts/*path" do
+  match "/accounts/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/accounts/"
   end
 
-  match "/subsidy-measure-consumptions/*path" do
+  match "/subsidy-measure-consumptions/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/subsidy-measure-consumptions/"
   end
 
-  match "/subsidy-measure-consumption-statuses/*path" do
+  match "/subsidy-measure-consumption-statuses/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/subsidy-measure-consumption-statuses/"
   end
 
-  match "/subsidy-measure-offers/*path" do
+  match "/subsidy-measure-offers/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/subsidy-measure-offers/"
   end
 
-  get "/bestuurseenheden/*path" do
+  get "/bestuurseenheden/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/bestuurseenheden/"
   end
 
-  match "/participations/*path" do
+  match "/participations/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/participations/"
   end
 
+  match "/subsidy-application-forms/*path", %{ layer: :resources } do
+    forward conn, path, "http://resource/subsidy-application-forms/"
+  end
 
-  match "/subsidy-measure-offer-series/*path" do
+  match "/subsidy-measure-offer-series/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/subsidy-measure-offer-series/"
   end
 
-  match "/subsidy-application-flows/*path" do
+  match "/subsidy-application-flows/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/subsidy-application-flows/"
   end
 
-  match "/subsidy-application-flow-steps/*path" do
+  match "/subsidy-application-flow-steps/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/subsidy-application-flow-steps/"
   end
 
-  match "/subsidy-procedural-steps/*path" do
+  match "/subsidy-procedural-steps/*path", %{ layer: :resources } do
     forward conn, path, "http://resource/subsidy-procedural-steps/"
   end
 
