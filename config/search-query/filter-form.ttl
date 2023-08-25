@@ -65,7 +65,7 @@ ext:bestuurseenheidF a form:Field ;
 ext:aanvraagDatumF a form:Field ;
     sh:name "Datum aanvraag" ;
     sh:path searchSubsidie:aanvraagDatum;
-    form:displayType displayTypes:date;
+    form:displayType displayTypes:datePicker;
     search:emberQueryParameterKey "aanvraagDatum" ;
     sh:order 30;
     sh:group ext:applicationPg .
