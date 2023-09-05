@@ -78,7 +78,6 @@ services:
       - "logging=true"
     logging: *default-logging
 
-
   search-query-management:
     image: lblod/toezicht-search-query-management-service:0.3.6
     volumes:
@@ -94,21 +93,50 @@ services:
   subsidies-consumer:
     image: lblod/delta-consumer:0.0.19
     environment:
-      DCR_SERVICE_NAME: 'subsidies-consumer'
-      DCR_SYNC_BASE_URL: 'https://loket.lblod.info' # replace with link to Loket API
-      DCR_SYNC_FILES_PATH: '/sync/subsidies/files'
+      DCR_SERVICE_NAME: "subsidies-consumer"
+      DCR_SYNC_BASE_URL: "https://loket.lblod.info" # replace with link to Loket API
+      DCR_SYNC_FILES_PATH: "/sync/subsidies/files"
       DCR_SYNC_DATASET_SUBJECT: "http://data.lblod.info/datasets/delta-producer/dumps/SubsidiesCacheGraphDump"
       DCR_INITIAL_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/initialSync/subsidies"
       DCR_DELTA_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/deltaSync/subsidies"
       DCR_JOB_CREATOR_URI: "http://data.lblod.info/services/id/subsidies-consumer"
-      DCR_DISABLE_INITIAL_SYNC: 'true'
-      DCR_BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES: 'true'
-      DCR_KEEP_DELTA_FILES: 'true'
-      DCR_DELTA_FILE_FOLDER: '/consumer-files'
-      DCR_SYNC_LOGIN_ENDPOINT: 'https://loket.lblod.info/sync/subsidies/login'
-      INGEST_GRAPH: 'http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidyDB-subsidies'
+      DCR_DISABLE_INITIAL_SYNC: "true"
+      DCR_BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES: "true"
+      DCR_KEEP_DELTA_FILES: "true"
+      DCR_DELTA_FILE_FOLDER: "/consumer-files"
+      DCR_SYNC_LOGIN_ENDPOINT: "https://loket.lblod.info/sync/subsidies/login"
+      INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidyDB-subsidies"
     volumes:
       - ./data/files/consumer-files/subsidies:/consumer-files/
     restart: always
     labels:
       - "logging=true"
+  subsidy-applications-management:
+    image: lblod/subsidy-applications-management-service:0.11.0
+    environment:
+      # “At every 15th minute past every hour from 8 through 18 on every day-of-week from Monday through Friday.”
+      META_DATA_CRON: "0 */15 8-18 * * 1-5"
+      MAX_BODY_SIZE: "10000kb"
+    ports:
+      - 8888:80
+      - 9229:9229
+    volumes:
+      - ./config/subsidy-application-management:/config
+      - ./data/files/subsidies:/data
+      - ./data/files:/share
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+  case-number-generator:
+    image: lblod/case-number-service:2.0.0
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+  subsidy-application-flow-management:
+    image: lblod/subsidy-application-flow-management-service:0.3.0
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
