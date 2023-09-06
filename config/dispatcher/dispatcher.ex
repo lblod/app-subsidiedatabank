@@ -8,11 +8,6 @@ defmodule Dispatcher do
     any: [ "*/*" ]
   ]
 
-  @any %{ accept: %{ any: true } }
-  @turtle %{ accept: %{ turtle: true } }
-  @html %{ accept: %{ html: true } }
-  @json %{ accept: %{ json: true } }
-
   define_layers [ :static, :sparql, :api_services, :frontend_fallback, :resources, :not_found ]
 
   options "/*path", _ do
