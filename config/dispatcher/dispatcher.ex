@@ -106,23 +106,8 @@ defmodule Dispatcher do
   # Searching
   ###############################################################
 
-  get "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://resource/search-queries/"
-  end
-  post "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://resource/search-queries/"
-  end
-  get "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-queries/"
-  end
-  put "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-queries/"
-  end
-  delete "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-queries/"
-  end
   match "/search-query-forms/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-query-forms/"
+    forward conn, path, "http://form-data-management/search-query-forms/"
   end
 
 
