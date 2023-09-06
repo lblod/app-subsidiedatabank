@@ -79,7 +79,7 @@ services:
     logging: *default-logging
 
   form-data-management:
-    image: form-data-management-service:0.0.2
+    image: lblod/form-data-management-service:0.0.2
     volumes:
       - ./config/search-query:/share/search-query
     labels:
