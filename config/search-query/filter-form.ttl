@@ -36,7 +36,7 @@ ext:typeSubsidieF a form:Field ;
     sh:name "Subsidie" ;
     sh:path searchSubsidie:subsidieMeasureOffer;
     form:displayType displayTypes:conceptSchemeSelector ;
-    search:emberQueryParameterKey "subsidietype" ;
+    search:emberQueryParameterKey "subsidieType" ;
     form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/5979ff3e-1f4c-4271-ae40-e1d2000d6412"}""" ;
     form:help "vb. Contact-en bronopsporing, Fietsinfrastructuur" ;
     sh:order 10;
@@ -74,7 +74,7 @@ ext:subsidieStatusF a form:Field ;
     sh:name "Status" ;
     sh:path searchSubsidie:subsidieStatus;
     form:displayType displayTypes:conceptSchemeMultiSelector ;
-    search:emberQueryParameterKey "status" ;
+    search:emberQueryParameterKey "subsidieStatus" ;
     form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/f7274d7f-31d5-4b02-aca8-b96481115651"}""" ;
     sh:order 30;
     sh:group ext:applicationPg .

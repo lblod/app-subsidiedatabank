@@ -8,11 +8,6 @@ defmodule Dispatcher do
     any: [ "*/*" ]
   ]
 
-  @any %{ accept: %{ any: true } }
-  @turtle %{ accept: %{ turtle: true } }
-  @html %{ accept: %{ html: true } }
-  @json %{ accept: %{ json: true } }
-
   define_layers [ :static, :sparql, :api_services, :frontend_fallback, :resources, :not_found ]
 
   options "/*path", _ do
@@ -40,6 +35,17 @@ defmodule Dispatcher do
   end
 
 
+  #################
+  # FRONTEND PAGES
+  #################
+
+  # self-service
+  match "/*path", %{ layer: :frontend_fallback, accept: %{ html: true } } do
+    # we don't forward the path, because the app should take care of this in the browser.
+    forward conn, [], "http://frontend/index.html"
+  end
+
+
   ##############
   # LOGIN
   ##############
@@ -55,30 +61,30 @@ defmodule Dispatcher do
   # RESOURCES
   ##############
 
-  match "/gebruikers/*path", %{ layer: :resources } do
+  match "/gebruikers/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/gebruikers/"
   end
-  match "/accounts/*path", %{ layer: :resources } do
+  match "/accounts/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/accounts/"
   end
 
-  match "/subsidy-measure-consumptions/*path", %{ layer: :resources } do
+  match "/subsidy-measure-consumptions/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/subsidy-measure-consumptions/"
   end
 
-  match "/subsidy-measure-consumption-statuses/*path", %{ layer: :resources } do
+  match "/subsidy-measure-consumption-statuses/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/subsidy-measure-consumption-statuses/"
   end
 
-  match "/subsidy-measure-offers/*path", %{ layer: :resources } do
+  match "/subsidy-measure-offers/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/subsidy-measure-offers/"
   end
 
-  get "/bestuurseenheden/*path", %{ layer: :resources } do
+  get "/bestuurseenheden/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/bestuurseenheden/"
   end
 
-  match "/participations/*path", %{ layer: :resources } do
+  match "/participations/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/participations/"
   end
 
@@ -217,30 +223,18 @@ defmodule Dispatcher do
   end
 
   ###############################################################
-  # Searching
+  # Search Forms
   ###############################################################
 
-  get "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://resource/search-queries/"
-  end
-  post "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://resource/search-queries/"
-  end
-  get "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-queries/"
-  end
-  put "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-queries/"
-  end
-  delete "/search-queries/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-queries/"
-  end
   match "/search-query-forms/*path", %{ layer: :api_services } do
-    forward conn, path, "http://search-query-management/search-query-forms/"
+    forward conn, path, "http://form-data-management/search-query-forms/"
   end
 
 
-  match "/*_", %{ last_call: true } do
+ #################
+  # NOT FOUND
+  #################
+  match "/*_path", %{ layer: :not_found } do
     send_resp( conn, 404, "Route not found.  See config/dispatcher.ex" )
   end
 end

@@ -33,9 +33,10 @@ services:
 
   resource:
     restart: "no"
-
-  search-query-management:
+    
+  form-data-management:
     restart: "no"
     
   subsidies-consumer:
     restart: "no"
+    
