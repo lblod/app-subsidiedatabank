@@ -1,33 +1,122 @@
-version: '3.4'
+version: "3.7"
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
 
 services:
+  frontend:
+    image: lblod/frontend-subsidiedatabank:0.0.1
+    volumes:
+      - ./config/frontend:/config
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
   identifier:
-    image: semtech/mu-identifier:1.9.1
-    environment:
-      SESSION_COOKIE_SECURE: "on"
-    links:
-      - dispatcher:dispatcher
-    ports:
-      - "80:80"
+    image: semtech/mu-identifier:1.10.0
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
   dispatcher:
-    image: semtech/mu-dispatcher:2.0.0
-    links:
-      - resource:resource
+    image: semtech/mu-dispatcher:2.1.0-beta.2
     volumes:
       - ./config/dispatcher:/config
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
   database:
+    image: semtech/mu-authorization:0.6.0-beta.8
+    environment:
+      MU_SPARQL_ENDPOINT: "http://virtuoso:8890/sparql"
+    volumes:
+      - ./config/authorization:/config
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
+  virtuoso:
     image: redpencil/virtuoso:1.0.0
     environment:
       SPARQL_UPDATE: "true"
-      DEFAULT_GRAPH: "http://mu.semte.ch/application"
-    ports:
-      - "8890:8890"
+      DEFAULT_GRAPH: "http://mu.semte.ch/graphs/public"
     volumes:
       - ./data/db:/data
       - ./config/virtuoso/virtuoso.ini:/data/virtuoso.ini
-  resource:
-    image: semtech/mu-cl-resources:1.20.0
+      - ./config/virtuoso/:/opt/virtuoso-scripts
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
+  migrations:
+    image: semtech/mu-migrations-service:0.8.0
     links:
-      - database:database
+      - virtuoso:database
+    volumes:
+      - ./config/migrations:/data/migrations
+    restart: always
+    labels:
+      - "logging=true"
+
+  cache:
+    image: semtech/mu-cache:2.0.2
+    links:
+      - resource:backend
+    restart: always
+    labels:
+      - "logging=true"
+    logging: *default-logging
+
+  resource:
+    image: semtech/mu-cl-resources:1.22.2
+    environment:
+      CACHE_CLEAR_PATH: "http://cache/.mu/clear-keys"
     volumes:
       - ./config/resources:/config
+    restart: always
+    labels:
+      - "logging=true"
+    logging: *default-logging
+
+  form-data-management:
+    image: lblod/form-data-management-service:0.0.3
+    volumes:
+      - ./config/search-query:/share/search-query
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
+  ################################################################################
+  # LOKET SUBSIDIE CONSUMER
+  ################################################################################
+  subsidies-consumer:
+    image: lblod/delta-consumer:0.0.21
+    environment:
+      DCR_SERVICE_NAME: "subsidies-consumer"
+      DCR_SYNC_BASE_URL: "https://loket.lblod.info" # replace with link to Loket API
+      DCR_SYNC_FILES_PATH: "/sync/subsidies/files"
+      DCR_SYNC_DATASET_SUBJECT: "http://data.lblod.info/datasets/delta-producer/dumps/SubsidiesCacheGraphDump"
+      DCR_INITIAL_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/initialSync/subsidies"
+      DCR_DELTA_SYNC_JOB_OPERATION: "http://redpencil.data.gift/id/jobs/concept/JobOperation/deltas/consumer/deltaSync/subsidies"
+      DCR_JOB_CREATOR_URI: "http://data.lblod.info/services/id/subsidies-consumer"
+      DCR_DISABLE_INITIAL_SYNC: "true"
+      DCR_BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES: "true"
+      DCR_KEEP_DELTA_FILES: "true"
+      DCR_DELTA_FILE_FOLDER: "/consumer-files"
+      DCR_SYNC_LOGIN_ENDPOINT: "https://loket.lblod.info/sync/subsidies/login"
+      INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidyDB-subsidies"
+    volumes:
+      - ./data/files/consumer-files/subsidies:/consumer-files/
+    restart: always
+    labels:
+      - "logging=true"

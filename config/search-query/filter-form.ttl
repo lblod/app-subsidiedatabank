@@ -1,0 +1,89 @@
+@prefix : <#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix schema: <http://schema.org/>.
+@prefix lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>.
+@prefix form: <http://lblod.data.gift/vocabularies/forms/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix displayTypes: <http://lblod.data.gift/display-types/>.
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/>.
+@prefix mu: <http://mu.semte.ch/vocabularies/core/> .
+@prefix search: <http://redpencil.data.gift/vocabularies/search-queries/> .
+@prefix searchSubsidie: <http://lblod.data.gift/vocabularies/search-queries-subsidie/> .
+
+
+##########################################################
+# form
+##########################################################
+  ext:form a form:Form, form:TopLevelForm ;
+    mu:uuid "e025a601-b50b-4abd-a6de-d0c3b619795c";
+    form:includes ext:typeSubsidieF;
+    form:includes ext:typeBestuurF;
+    form:includes ext:bestuurseenheidF;
+    form:includes ext:aanvraagDatumF;
+    form:includes ext:subsidieStatusF.
+
+##########################################################
+#  property-group
+##########################################################
+ext:applicationPg a form:PropertyGroup.
+
+##########################################################
+#  Filter fields
+##########################################################
+ext:typeSubsidieF a form:Field ;
+    sh:name "Subsidie" ;
+    sh:path searchSubsidie:subsidieMeasureOffer;
+    form:displayType displayTypes:conceptSchemeSelector ;
+    search:emberQueryParameterKey "subsidieType" ;
+    form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/5979ff3e-1f4c-4271-ae40-e1d2000d6412"}""" ;
+    form:help "vb. Contact-en bronopsporing, Fietsinfrastructuur" ;
+    sh:order 10;
+    sh:group ext:applicationPg .
+
+ext:typeBestuurF a form:Field ;
+    sh:name "Type bestuur" ;
+    sh:path searchSubsidie:typeBestuur;
+    form:displayType displayTypes:conceptSchemeSelector ;
+    search:emberQueryParameterKey "bestuursType" ;
+    form:options  """{"conceptScheme":"http://data.vlaanderen.be/id/conceptscheme/BestuurseenheidClassificatieCode"}""" ;
+    form:help "vb. Gemeente, OCMW" ;
+    sh:order 20;
+    sh:group ext:applicationPg .
+
+ext:bestuurseenheidF a form:Field ;
+    sh:name "Bestuurseenheid" ;
+    sh:path searchSubsidie:bestuurseenheid;
+    form:displayType displayTypes:conceptSchemeSelector ;
+    search:emberQueryParameterKey "bestuurseenheden" ;
+    form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/7e2b965e-c824-474f-b5d5-b1c115740083"}""" ;
+    form:help "vb. Gemeente Hasselt, OCMW Gent" ;
+    sh:order 20;
+    sh:group ext:applicationPg .
+
+ext:aanvraagDatumF a form:Field ;
+    sh:name "Datum aanvraag" ;
+    sh:path searchSubsidie:aanvraagDatum;
+    form:displayType displayTypes:datePicker;
+    search:emberQueryParameterKey "aanvraagDatum" ;
+    sh:order 30;
+    sh:group ext:applicationPg .
+
+ext:subsidieStatusF a form:Field ;
+    sh:name "Status" ;
+    sh:path searchSubsidie:subsidieStatus;
+    form:displayType displayTypes:conceptSchemeMultiSelector ;
+    search:emberQueryParameterKey "subsidieStatus" ;
+    form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/f7274d7f-31d5-4b02-aca8-b96481115651"}""" ;
+    sh:order 30;
+    sh:group ext:applicationPg .
+
+
+
+
+    
+
+
+    
+    
