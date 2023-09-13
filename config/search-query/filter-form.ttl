@@ -48,7 +48,7 @@ ext:typeBestuurF a form:Field ;
     form:displayType displayTypes:conceptSchemeSelector ;
     search:emberQueryParameterKey "bestuursType" ;
     form:options  """{"conceptScheme":"http://data.vlaanderen.be/id/conceptscheme/BestuurseenheidClassificatieCode"}""" ;
-    form:help "vb. Gemeente Hasselt, OCMW Gent" ;
+    form:help "vb. Gemeente, OCMW" ;
     sh:order 20;
     sh:group ext:applicationPg .
 
