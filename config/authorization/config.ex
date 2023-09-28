@@ -51,7 +51,7 @@ defmodule Acl.UserGroups.Config do
       %GroupSpec{
         name: "o-subs-r",
         useage: [:read],
-        access: access_by_role( "SubsidyDB-subsidies" ),
+        access: access_by_role( "SubsidiedatabankGebruiker" ),
         graphs: [ %GraphSpec{
                     graph: "http://mu.semte.ch/graphs/organizations/",
                     constraint: %ResourceConstraint{
