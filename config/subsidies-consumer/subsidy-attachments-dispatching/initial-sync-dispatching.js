@@ -33,8 +33,16 @@ async function dispatch(lib, data) {
 
 
   fileInserts.forEach(file => {
-    // fetch the file
+    // fetch the file and store it in the file-service at ./data/files
+
     console.log(file);
+    // TODO: add loket url?
+    const downloadFilePath = `/delta-files-share/download?uri=${file.subject}`;
+    const fileData = fetch(downloadFilePath);
+
+    // write the file to the file-service manually or via call https://github.com/mu-semtech/file-service#how-to-upload-a-file-using-a-curl-command
+    // TODO: double check the location
+    fs.writeFileSync('/share/', fileData);
   });
 
 }
