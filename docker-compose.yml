@@ -8,7 +8,7 @@ x-logging: &default-logging
 
 services:
   frontend:
-    image: lblod/frontend-subsidiedatabank:0.0.1
+    image: lblod/frontend-subsidiedatabank:0.0.5
     volumes:
       - ./config/frontend:/config
     labels:
@@ -17,7 +17,7 @@ services:
     logging: *default-logging
 
   identifier:
-    image: semtech/mu-identifier:1.10.0
+    image: semtech/mu-identifier:1.10.1
     labels:
       - "logging=true"
     restart: always
@@ -44,7 +44,7 @@ services:
     logging: *default-logging
 
   virtuoso:
-    image: redpencil/virtuoso:1.0.0
+    image: redpencil/virtuoso:1.2.0-rc.1
     environment:
       SPARQL_UPDATE: "true"
       DEFAULT_GRAPH: "http://mu.semte.ch/graphs/public"
@@ -114,7 +114,7 @@ services:
       DCR_KEEP_DELTA_FILES: "true"
       DCR_DELTA_FILE_FOLDER: "/consumer-files"
       DCR_SYNC_LOGIN_ENDPOINT: "https://loket.lblod.info/sync/subsidies/login"
-      INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidyDB-subsidies"
+      INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidiedatabankGebruiker"
     volumes:
       - ./data/files/consumer-files/subsidies:/consumer-files/
     restart: always

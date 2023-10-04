@@ -1,14 +1,14 @@
-version: '3.7'
+version: "3.7"
 
 services:
   identifier:
-    restart: "no"
     ports:
-      - 80:80
+      - "81:80"
+    restart: "no"
 
   mocklogin:
-    image: lblod/mock-login-service:0.3.1
-    
+    image: lblod/mock-login-service:0.4.0
+
   dispatcher:
     restart: "no"
 
@@ -22,7 +22,7 @@ services:
 
   virtuoso:
     ports:
-      - "8890:8890"
+      - "8895:8890"
     restart: "no"
 
   migrations:
@@ -39,4 +39,3 @@ services:
     
   subsidies-consumer:
     restart: "no"
-    
