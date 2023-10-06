@@ -137,12 +137,6 @@ services:
       - "logging=true"
     restart: always
     logging: *default-logging
-  case-number-generator:
-    image: lblod/case-number-service:2.0.0
-    labels:
-      - "logging=true"
-    restart: always
-    logging: *default-logging
   subsidy-application-flow-management:
     image: lblod/subsidy-application-flow-management-service:0.3.0
     labels:
