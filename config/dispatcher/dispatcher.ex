@@ -112,24 +112,138 @@ defmodule Dispatcher do
     forward conn, path, "http://resource/participations/"
   end
 
-  match "/subsidy-application-forms/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-application-forms/"
+  match "/subsidy-application-forms/*path", %{ layer: :resources } do
+    forward conn, path, "http://cache/subsidy-application-forms/"
   end
 
-  match "/subsidy-measure-offer-series/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-measure-offer-series/"
+  match "/subsidy-measure-offer-series/*path", %{ layer: :resources } do
+    forward conn, path, "http://cache/subsidy-measure-offer-series/"
   end
 
-  match "/subsidy-application-flows/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-application-flows/"
+  match "/subsidy-application-flows/*path", %{ layer: :resources } do
+    forward conn, path, "http://cache/subsidy-application-flows/"
   end
 
-  match "/subsidy-application-flow-steps/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-application-flow-steps/"
+  match "/subsidy-application-flow-steps/*path", %{ layer: :resources } do
+    forward conn, path, "http://cache/subsidy-application-flow-steps/"
   end
 
-  match "/subsidy-procedural-steps/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-procedural-steps/"
+  match "/subsidy-procedural-steps/*path", %{ layer: :resources } do
+    forward conn, path, "http://cache/subsidy-procedural-steps/"
+  end
+
+  #################################################################
+  # Toezicht / supervision
+  # TODO: delete?
+  #################################################################
+
+  match "/vendors/*path" do
+    forward conn, path, "http://cache/vendors/"
+  end
+
+  match "/authenticity-types/*path" do
+    forward conn, path, "http://cache/authenticity-types/"
+  end
+
+  match "/tax-types/*path" do
+    forward conn, path, "http://cache/tax-types/"
+  end
+
+  match "/chart-of-accounts/*path" do
+    forward conn, path, "http://cache/chart-of-accounts/"
+  end
+
+  match "/submission-document-statuses/*path" do
+    forward conn, path, "http://cache/submission-document-statuses/"
+  end
+
+  match "/remote-urls/*path" do
+    forward conn, path, "http://resource/remote-urls/"
+  end
+
+  get "/submission-forms/*path" do
+    forward conn, path, "http://enrich-submission/submission-documents/"
+  end
+
+  delete "/submissions/*path" do
+    forward conn, path, "http://clean-up-submission/submissions/"
+  end
+
+  put "/submissions/*path" do
+    forward conn, path, "http://resource/submissions/"
+  end
+
+  patch "/submissions/*path" do
+    forward conn, path, "http://resource/submissions/"
+  end
+
+  post "/submissions/*path" do
+    forward conn, path, "http://resource/submissions/"
+  end
+
+  get "/submissions/*path" do
+    forward conn, path, "http://resource/submissions/"
+  end
+
+  put "/submission-forms/:id/flatten" do
+    forward conn, [], "http://toezicht-flattened-form-data-generator/submission-documents/" <> id <> "/flatten"
+  end
+
+  put "/submission-forms/:id" do
+    forward conn, [], "http://validate-submission/submission-documents/" <> id
+  end
+
+  post "/submission-forms/:id/submit" do
+    forward conn, [], "http://validate-submission/submission-documents/" <> id <> "/submit"
+  end
+
+  match "/submission-documents/*path" do
+    forward conn, path, "http://cache/submission-documents/"
+  end
+
+  get "/form-data/*path" do
+    forward conn, path, "http://resource/form-data/"
+  end
+
+  get "/concept-schemes/*path" do
+    forward conn, path, "http://cache/concept-schemes/"
+  end
+
+  get "/concepts/*path" do
+    forward conn, path, "http://cache/concepts/"
+  end
+
+
+  #################################################################
+  # subsidy-applications: custom API endpoints
+  #################################################################
+
+  match "/case-number-generator/*path" do
+    forward conn, path, "http://case-number-generator/"
+  end
+
+  get "/management-active-form-file/*path" do
+    forward conn, path, "http://subsidy-applications-management/active-form-file/"
+  end
+
+  get "/management-application-forms/*path" do
+    forward conn, path, "http://subsidy-applications-management/semantic-forms/"
+  end
+
+  put "/management-application-forms/*path" do
+    forward conn, path, "http://subsidy-applications-management/semantic-forms/"
+  end
+
+  delete "/management-application-forms/*path" do
+    forward conn, path, "http://subsidy-applications-management/semantic-forms/"
+  end
+
+  post "/management-application-forms/:id/submit" do
+    forward conn, [], "http://subsidy-applications-management/semantic-forms/" <> id <> "/submit"
+  end
+
+  match "/flow-management/*path" do
+    forward conn, path, "http://subsidy-application-flow-management/flow/"
   end
 
   ###############################################################
