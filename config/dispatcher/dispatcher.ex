@@ -58,6 +58,30 @@ defmodule Dispatcher do
   end
 
   ##############
+  # Files
+  ##############
+
+  get "/files/:id/download" do
+    forward conn, [], "http://file/files/" <> id <> "/download"
+  end
+  get "/files/*path" do
+    forward conn, path, "http://resource/files/"
+  end
+  patch "/files/*path" do
+    forward conn, path, "http://resource/files/"
+  end
+  post "/files/*path" do
+    forward conn, path, "http://file/files/"
+  end
+
+  # TODO: double check these 2
+  post "/file-service/files/*path" do
+    forward conn, path, "http://file/files/"
+  end
+  delete "/files/*path" do
+    forward conn, path, "http://file/files/"
+  end
+  ##############
   # RESOURCES
   ##############
 

@@ -97,7 +97,7 @@ services:
     logging: *default-logging
 
   ################################################################################
-  # LOKET SUBSIDIE CONSUMER
+  # SYNC SUBSIDIES
   ################################################################################
   subsidies-consumer:
     image: lblod/delta-consumer:0.0.21
@@ -112,23 +112,27 @@ services:
       DCR_DISABLE_INITIAL_SYNC: "true"
       DCR_BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES: "true"
       DCR_KEEP_DELTA_FILES: "true"
+      FILE_SYNC_GRAPH: "http://mu.semte.ch/graphs/temp/original-physical-files-data" #TODO: find the right value of this; represents the URI where files get written to?
       DCR_DELTA_FILE_FOLDER: "/consumer-files"
       DCR_SYNC_LOGIN_ENDPOINT: "https://loket.lblod.info/sync/subsidies/login"
       INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidiedatabankGebruiker"
     volumes:
       - ./data/files/consumer-files/subsidies:/consumer-files/
+      # Mount code to download attachments
+      - ./config/subsidies-consumer/subsidy-attachments-dispatching:/config/triples-dispatching/custom-dispatching
     restart: always
     labels:
       - "logging=true"
+
+  ################################################################################
+  # SUBSIDIE FORMS
+  ################################################################################
   subsidy-applications-management:
     image: lblod/subsidy-applications-management-service:0.11.0
     environment:
       # “At every 15th minute past every hour from 8 through 18 on every day-of-week from Monday through Friday.”
       META_DATA_CRON: "0 */15 8-18 * * 1-5"
       MAX_BODY_SIZE: "10000kb"
-    ports:
-      - 8888:80
-      - 9229:9229
     volumes:
       - ./config/subsidy-application-management:/config
       - ./data/files/subsidies:/data
@@ -137,14 +141,18 @@ services:
       - "logging=true"
     restart: always
     logging: *default-logging
-  case-number-generator:
-    image: lblod/case-number-service:2.0.0
+
+  subsidy-application-flow-management:
+    image: lblod/subsidy-application-flow-management-service:0.3.0
     labels:
       - "logging=true"
     restart: always
     logging: *default-logging
-  subsidy-application-flow-management:
-    image: lblod/subsidy-application-flow-management-service:0.3.0
+
+  file:
+    image: semtech/mu-file-service:3.3.0
+    volumes:
+      - ./data/files:/share
     labels:
       - "logging=true"
     restart: always

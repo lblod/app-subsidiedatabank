@@ -39,3 +39,12 @@ services:
     
   subsidies-consumer:
     restart: "no"
+
+  subsidy-applications-management:
+    restart: "no"
+
+  subsidy-application-flow-management:
+    restart: "no"
+    
+  file:
+    restart: "no"
