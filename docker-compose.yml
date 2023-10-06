@@ -97,7 +97,7 @@ services:
     logging: *default-logging
 
   ################################################################################
-  # LOKET SUBSIDIE CONSUMER
+  # SYNC SUBSIDIES
   ################################################################################
   subsidies-consumer:
     image: lblod/delta-consumer:0.0.21
@@ -123,6 +123,10 @@ services:
     restart: always
     labels:
       - "logging=true"
+
+  ################################################################################
+  # SUBSIDIE FORMS
+  ################################################################################
   subsidy-applications-management:
     image: lblod/subsidy-applications-management-service:0.11.0
     environment:
@@ -137,12 +141,14 @@ services:
       - "logging=true"
     restart: always
     logging: *default-logging
+
   subsidy-application-flow-management:
     image: lblod/subsidy-application-flow-management-service:0.3.0
     labels:
       - "logging=true"
     restart: always
     logging: *default-logging
+
   file:
     image: semtech/mu-file-service:3.3.0
     volumes:
