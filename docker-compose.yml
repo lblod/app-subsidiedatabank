@@ -120,6 +120,7 @@ services:
       - ./data/files/consumer-files/subsidies:/consumer-files/
       # Mount code to download attachments
       - ./config/subsidies-consumer/subsidy-attachments-dispatching:/config/triples-dispatching/custom-dispatching
+      - ./data/files:/mnt
     restart: always
     labels:
       - "logging=true"
@@ -150,10 +151,13 @@ services:
     logging: *default-logging
 
   file:
-    image: semtech/mu-file-service:3.3.0
+    image: semtech/mu-file-service:3.3.1
     volumes:
       - ./data/files:/share
     labels:
       - "logging=true"
+      # TODO: keep?
+    environment:
+      MU_APPLICATION_GRAPH: "http://mu.semte.ch/application"
     restart: always
     logging: *default-logging
