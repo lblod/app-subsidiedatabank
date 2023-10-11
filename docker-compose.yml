@@ -143,10 +143,10 @@ services:
       DCR_SYNC_LOGIN_ENDPOINT: "https://loket.lblod.info/sync/subsidies/login"
       INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidiedatabankGebruiker"
     volumes:
-      - ./data/files/consumer-files2/subsidies:/consumer-files/
+      - ./data/files/consumer-files/subsidies-attachments:/consumer-files/
       # Mount code to download attachments
       - ./config/subsidies-consumer/subsidy-attachments-dispatching:/config/triples-dispatching/custom-dispatching
-      - ./data/files:/mnt
+      - ./data/files:/share
     restart: always
     labels:
       - "logging=true"

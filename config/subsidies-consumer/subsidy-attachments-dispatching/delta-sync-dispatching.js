@@ -32,8 +32,6 @@ async function dispatch(lib, data) {
   const { termObjectChangeSets } = data;
 
   for (const { deletes, inserts } of data.termObjectChangeSets) {
-    console.log("general inserts FOUND amount:", inserts.length);
-    console.log("general inserts FOUND:", inserts);
 
     // Inserts
     const insertsFilePartition = partition(inserts, (o) =>
@@ -44,7 +42,6 @@ async function dispatch(lib, data) {
     if (fileInserts.length > 0) {
       fileInserts.forEach((file) => {
         if (file.predicate === "<http://mu.semte.ch/vocabularies/core/uuid>") {
-          console.log("testing backup", file.subject);
           const fileUUID = file.subject.replace(/[<>]/g, "");
           const fileName = fileUUID.replaceAll('share://', '');
           console.log("FILEUUID FOUND:", fileUUID);
@@ -66,7 +63,7 @@ async function dispatch(lib, data) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
               }
 
-              const fileStream = fs.createWriteStream(`/mnt/${fileName}`);
+              const fileStream = fs.createWriteStream(`/share/${fileName}`);
               response.body.pipe(fileStream);
 
               return new Promise((resolve, reject) => {
