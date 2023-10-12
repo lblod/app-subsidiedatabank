@@ -8,9 +8,9 @@ const {
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
   FILE_SYNC_GRAPH,
-} = require("./config");
-const { batchedDbUpdate, partition } = require("./utils");
-const fs = require("fs");
+} = require('./config');
+const { batchedDbUpdate, partition } = require('./utils');
+const fs = require('fs');
 
 /**
  * Dispatch the fetched information to a target graph.
@@ -32,7 +32,6 @@ async function dispatch(lib, data) {
   const { termObjectChangeSets } = data;
 
   for (const { deletes, inserts } of data.termObjectChangeSets) {
-
     // Inserts
     const insertsFilePartition = partition(inserts, (o) =>
       o.subject.startsWith("<share://")
@@ -43,20 +42,20 @@ async function dispatch(lib, data) {
       fileInserts.forEach((file) => {
         if (file.predicate === "<http://mu.semte.ch/vocabularies/core/uuid>") {
           const fileUUID = file.subject.replace(/[<>]/g, "");
-          const fileName = fileUUID.replaceAll('share://', '');
+          const fileName = fileUUID.replaceAll("share://", "");
           console.log("FILEUUID FOUND:", fileUUID);
 
           const requestOptions = {
-            method: "GET", // or 'POST', 'PUT', etc. as needed
+            method: "GET",
             headers: {
               // gemeente lievegem
               Cookie:
-                "proxy_session=QTEyOEdDTQ.rINzvwAUh4TuKOC_FGPwS8uQuM_ouYmt3ZTTDRJN-pgiAeNBbrUJGnK-wxU.Rfoe-Y_L8JRJqmQc.0LSAT37ko9t3QASju8zNpHyVlArJw6zft25FMm3xyGTVPOYccubsPHVvXXiqLT8Npo61aYDFBYcFqhDVgencDZ8ABtA8inFFzcMQxGBU7PoR6gocZa5BJEDsxUuVALfrjbk2B4WapvDPnxH47-5cET-FuqkIuSMSGBAH7E85lJSx7jeTJ2qWLq-3m-VJ4_usYOTjf17-CcrovluDvk5-2CFOkOKNtPjlD2GR44Qgdy2KDJK64WkJHuMcoOwVpIaeSJIruZHQfytpG0gZ8IfZ1IUm_KngTY5XK9Dpy36HujHyr1tRaIrmjFLj3DdD4xBYHTe1_9bXN88hx2jtBYUOjcGBmGAFMr7dG4_Y9PlA-fWr0G-5ueF9o_Kwt1uBzyJWDXJ8Aake3rAe4uY6dppzPfvvR0IyVopmQk8VtHB87n5xlnjLvZ7p7TTGLHEJRo0lmo34nGKJoPV6wXIG_yXjQdX1mB6UXiJsCCy4Z5UIWZcXGPEq7NHvfFlw_EdjSYTQvhWuNahCwjP31JSOAdInOddo_SW-0N9_ueIB8KcTtbdQnDia7IMhD41FCNyP88dPT2ojGomcqYTlSki7bQs4TUCmFrjcAplyb9QnUQaaMmru2xMtJsK-0_jEio4Bsuojwu_90J5qBqepGE2UTVJY6OkxmklMlgvdrncH5rI4A5PYBPKOYxPqGWkYRNAYHTEpm7W_pcaR9XDqNXyE0Pjkn9QQLB5CIo3qS2__R7jD136HccqmRcVdj62O6cowFNROlqKdoQHhzjgNFvwTkzY2niaVXV4eohxnt80VmNOubIl7wImWorDuHL2LIw4lJWuFzd9ic7IAduO4W-sKMou0kP7B5oRHKagoD3F9wiwUZhFp_-6pI6YHHiZ65FZi-iGsloaENTCTDKh02HkneogcbLEk4cUrzYFSXUSH9uXtICgOBovyN6tdkxp1uNPp4181-L54NlZ8MiSSJ0wk7Ds7I8h6SnMOGkvbIhc2m9RgCA1zo4020lsJuzXyY0Xxr5omt_q64awGIyoSzZrXduAwgmzlHwP9MpvbwDDVyNtePHkoPhAke7yRIivaevSZ27gMd38XHd-Jnryl8P8dNL3-rZwJgZBZYUhLLuNw01tEgYAROpl03gmmZi_ox6DbkflDB9MbBbmjNTuQNrVtKV2p4DGIQd6qEQw0MxWafLXCfwhAWeJVihUkBFgpWkiGN8MNatSZRVQTUptv06YL6eYIKVY2oaIsja4OpAFKsVYcTYA7M3NXIZm0IZkicYvepgLl3BwhSAIC3CF1A1O6TGYY-Ze7e1e8JNgiqRHO7Jo028zjij0gooef-QAaB2Qo7VOmoJxbRwdNIo2xDodHFhKsJxHmBGQXTTwwLOFYQ7OOlTZGSWjW6aKTcD1951_ALNMHMAGr_kSEUMddMHKYVTEPBOWHSVN6Sb2Q5DfsH7yxkqqmdRQJFvtfdpmfUnVTNKn6dLyp3HLyI8duUbrFNG29pF1moXu-rh6mclL46yPEhaK_mehqHV_Fb-VwrM5VOG_kwo963Yp6cSthVFUpv21PvoGnZ3_epZkH_MQHhCMqDuxFsuDnGjEeUKVCxRrYvQFmsBQzupLWeP0Bxc0AmE09bYiCgFq0eSfc6TExgafIlYHnushuBIEvYFQWeTwXp08ZoMtG7PfxWwTwQLi0S-TFbytkPCwvIx3Eo6eVBA.sohFRCVEuqwp7sJU1ceifA",
+                "proxy_session=QTEyOEdDTQ.jW43o1elY86shKUDIGGTXhivMGGN0qOEErIqo63hoT2DwYvZZbyD783UKRI.71BZEC6_SJ9bQgxw.YMVFR9WD6DHHpDbGE0EHWrHuKE2MxMWIrO5T63ZuFFamo8O6Un1ZLnEfs8QgMhNs00_ELHFG3l3F0eKKBBct2UFT-neqJO-CzAP2kYh9SxEOBnmc3wz1vhv7L9E2tJ2mq4bO7ZItxJN6dZYakE4G8dW12KiBWfwAMYMj_BvHsLWLQHc6wzfG8PUe_6LXw5ONamjSWASy7SFLRjiYk7EDof3C2bgdiMsHJl72VvVvtNNkMzVhi-QrVOzTtT7X_XM-xZkIGZubC6U53r4lU10b5_m5TLASrK_MdtnLMCRfDRmk1Yu_Lo0YQJRbH8stIKBH-pFwj3nU9f54UyHbpDbE6P7biaks6sgohe5uS_XKowrUTI8B-H12lhGug7lUt6ZoV8WwkTm-d7r-j5Uuoeatlomou9ckDGYTZvIi3YVQpaTX-nBENYJKFhGGoRZyyuP16VL84daJzEGAZn6BeFPtUkM1rTB0B7wBb2xO7UW8NckrTD0NnnwXq_UUzJMPz49aP1T5KbKgyUgr08KrAkD4ibeKU48NOnshO01lvufD2zViB8U8tjXPiHoDFL3KNzowjrHw1N_zTj5vlB5EZoD-66HKs5sMRcwirqT2iT-FxWtJ9_-botsKJMpfuioc4t7hurCbMYqs7OUDMWjGKFR0BsWm7dKhfkbF42zCKTpPsgKA5CrDD4aKWcD7eJzsSJb7MkB7GBgex5qFhfUYiz89VjeHEzW-gGaxBqlxaFbW5ZVq3eISbw01otGB2AHVtNUg1P9Mqh7Lm_WwcI1_wAURbvfdwVXgosS60oqpN6VOpDwTZVFkFb_0j2OifvULrxdkK9tCZ97SVhXd0PmulgLPsZzq-kv_Yg7qkw5DyoMbEnNpmCDoVoIPtaUvu7ThdFsT9r6_wqwuY22dHmyaX6htQ3aqK-jyT2FldOhvFdAs_YIos2PNEK629CR9fF-UGDpdwvJ2SNMJk01lv8o2Di-4hm2MKkWv49oI37GgHBD3pPgSLH_P6tyRYxTZGA6cvvv3Eo3_yaySEULlDnJ6YmwW2ex63JlplsCpMv4X5lrNQ-Rr-ULk0hvm9D7gNKXSe3GtHBxEB3kJMns8a2UoGRXrJh988lmQtkOazWyDpjw2m3ZcSbLv2Q2kxD4fpRG5Np97sOf7--a33bS8aPImKxXay-l0ZHe2Z20oxqxH1WfLVEtoXHcXkZJ5e5EB3ZK_2gcEj9aRe-oeD5Brz5sIPTFgIytiXV_UNhcDjU8v4nuQeDEKww2qZQJRUCeRSE5pY-Q8QbgtQFhTw2htyuKKyX5Q41OebgoFRk-BlxP3yVpa-yKG0dMyyfxgywLleIdOckOSnXG4QBDTL4MAWoacHMavo5BbtrBdyyj8v6-RaaYbMwMt_NKS6MGjbtdNJvpdVOHbRfXlVqS7azihv9W-VfZXydHEkmE6cbq0wV4PeeAmmcpa5wa-rjhVtwtDIm2YKfrYDwa51zi9TN9dQx0M1aDfQsSHm1RhvCAZczHoqfdNkDRyyBRLGoIld5YEAifoHYwzeCnLwz_Ad3xgrD-pANGlEo1-RB1qj6ebkRVA-NeOc9r1brSecjOAerYo4ikxU50KHlyycJu4eZFHJDwU-M_76bbvwJjgqaVK4TZEFkxmg6nN6fvEn0fCopIraGcPdqDwDvZAT6bbAX4MzH9FAEyW8cbtnzEgHE_iqDrttA.4DUOvRfzk7VIQdXlDl4peQ",
             },
           };
           const downloadFileURL = `http://producer-identifier/delta-files-share/download?uri=${fileUUID}`;
           console.log("START FETCHNG of", downloadFileURL);
-          // const fileData = await fetch(downloadFilePath);
+
           fetch(downloadFileURL, requestOptions)
             .then((response) => {
               if (!response.ok) {
@@ -80,29 +79,6 @@ async function dispatch(lib, data) {
                 error
               );
             });
-          // fetcher(downloadFileURL, requestOptions)
-          //   .then((response) => {
-          //     if (!response.ok) {
-          //       throw new Error(`HTTP error! Status: ${response.status}`);
-          //     }
-
-          //     const fileStream = fs.createWriteStream(`/mnt/${fileUUID}`);
-          //     response.body.pipe(fileStream);
-
-          //     return new Promise((resolve, reject) => {
-          //       fileStream.on("finish", resolve);
-          //       fileStream.on("error", reject);
-          //     });
-          //   })
-          //   .then(() => {
-          //     console.log("------------->File downloaded successfully.");
-          //   })
-          //   .catch((error) => {
-          //     console.error(
-          //       "----------->>>>Error downloading the file:",
-          //       error
-          //     );
-          //   });
         }
       });
     }
