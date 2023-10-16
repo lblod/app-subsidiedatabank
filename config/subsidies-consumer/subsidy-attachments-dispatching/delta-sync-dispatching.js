@@ -7,10 +7,10 @@ const {
   SLEEP_BETWEEN_BATCHES,
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
-  FILE_SYNC_GRAPH,
 } = require('./config');
 const { batchedUpdate, batchedDbUpdate, partition, deleteFromAllGraphs } = require('./utils');
 const fs = require('fs');
+const path = require('path');
 
 /**
  * Dispatch the fetched information to a target graph.
@@ -31,8 +31,59 @@ async function dispatch(lib, data) {
   const { mu, muAuthSudo, fetch } = lib;
   const { termObjectChangeSets } = data;
 
+  // Try downloading a ttl file
+      // const fileUUID = file.subject.replace(/[<>]/g, "");
+      // const fileUUID = 'data://tailored-meta-files/05877120-69ba-11ee-a1a4-478b9e7f5fa1-additions-meta.ttl';
+      // const fileName = 'trying.ttl';
+
+      // const requestOptions = {
+      //   method: "GET",
+      //   headers: {
+      //     // gemeente lievegem
+      //     Cookie:
+      //     "proxy_session=QTEyOEdDTQ.dyEWiWXpY_ttRAxyIWhpAbtEaFSBjXwDAx7udWR3G3s1BtggOA_czNyR-fE.7csBC7xvFCDgWi99.8HSlTr-hQrM3msd4Do7UKfk5X5ORizPD8mrJ5RzrRdXNvyNLpA0AK3V0dRygd3XAYVv_qsAMSOwZeD0TaY0NKy5CY3VR7mElr728AfiGFA9CwDfEhRCtSm6mXPqy52LZgxqQ6Yx5e0X83ex3B5HH0Lrl6Tfs0k2AerLa13B6JkUH8VKHtXynShL-VNTZpAJnIXkwP2ZWB4n0gp0nmGQzJHKWWSD1xBi-VQpTlHx7aDMo81MShX97htiO1rSsRJx_jaRWtaSMm9xIniuKzc7uxftYX9ywfCxnvnwCkrPeOf-_G3aBmNpMS5G77d84Yd0VpZ00zAWWEuftNtBBpTxxYN8TCNiET1D3nYvxwlE7iVCwEmCzMuoFVz_bkUJpwTNQN1E866AEvjMIIsbrSMuWDe-ORIvb_ZeVLODXNydBnjvX21xdVmIhcje8-jmLc84BXyR30GsNRamL82GuG1w9Ty6f5lKWNAFUeKjiP-0qEr8_H1aI934fG-8sV4yQUfEADC45r3pWM-HA5krFnOdzSdYgPnjQFfK_8GZDcnPPfF5X-Z-ugp90Xhpcqxkju5t5xzLeoloQ0fjL6GfVDckKNU9GnhpObsF7ra7mtF_5hsUhdpqzIdsfEXLoM2NOgHGsIOK-mgEGPGtViNWCHkoUxGwC2iJxd8G7I6EwFN9UUqfqvIJtPku_0J2hjyibiFBWEBsLmOPCT2gDsCj8upJi-d7kF-u-8eEkEcv6pbBJ3PkvngSZd7ppeutY304_8GF2HAPAkPzWtp6RJUEdgyng6gFzczU3r98x741WgP6gCFE_Z36NwR-rYgepr5HtshHIb44wCv7wd9VyJfdgAc8qRgzPqTFF7DMWl-6cDy3ldAKCKq9741Isc1T5okI5oeJ-Bplwd1xlRw1sm9-UzHU4cI3__nQcR6VYcSrUrgXJgXSOyvN6C2nJWctQVNE8R_Kw4Pp_FHSG743hrCVhQc2YPq6cdd-cgnp_MUXC8FVKnAp5tG1uJd9PrDDUXtsxHaC0FUJnWWg5G6vBI2MSeygThIcD6rCLe_qxVU44pQXYgHS2xmQCLlvXhAr0UXdiCyAYBcygzCP3-rhl8EQ_qbgm_S-1NvTYnsWcrx0s90WFqicKwCgw9PwnZL72jon_ffwaujkge1tGn2CrdnTZFQhNGydgaUWa9GmS-FEK7LYDrneJe-ph1YSZxLYaMYuqHmZkykH_w1UOkpWQzjKPwEwPuklVnOeSsbDIutC_N19-0M5y8ULAQRSLB5bvARiq7WZw2GUl8FBYxKwdVSb8OvJUX63WuYPvKJr8U55qrUZQTpEc818WcRHas4wZG8thxFHz36dADi-e-GTUx_tdvPJQzd4KUx9uZTMlaEvOQ3Su-L-WCaBzGM01OIRCDxBs3xeROEf9aG8RrLbGKs_1T-3UBo22grrM4QfAt20Lakz40UOY85EF-dmQ-8WcIHNBmgj2Zb0o0WthrawAJe0ir5q3tV3mkuOLmPHaXXKpI_tvmcY863oGq8JlFzvwSpwIJ6J7jOftcFvF8DAaV6C14R2LwO5RRlkmtyl2tpH5lwlj6xNJEJMPmZKEZ_hyq6ZKFt6Tcll-mgWRkw0CPJb7fvfl27OmRm4yYHdMyQsD7D_lIA2MTnZGEmh3OJWRe9lbOssx_Qz-frSjm3xLgqezQn84iUSZWca4YHs3wKJlZg.lu5H9Gc1MWffxCAG0YforA",
+      //   },
+      // };
+      // const downloadFileURL = `http://producer-identifier/delta-files-share/download?uri=${fileUUID}`;
+      // console.log("-=-=-=-=-=-=-START FETCHNG of", downloadFileURL);
+
+      // fetch(downloadFileURL, requestOptions)
+      // .then((response) => {
+      //   if (!response.ok) {
+      //     throw new Error(`-=-=-=HTTP error! Status: ${response.status}`);
+      //   }
+
+      //   const fileStream = fs.createWriteStream(`/share/subsidies/${fileName}`);
+      //   response.body.pipe(fileStream);
+
+      //   return new Promise((resolve, reject) => {
+      //     fileStream.on("finish", resolve);
+      //     fileStream.on("error", reject);
+      //   });
+      // })
+      // .then(() => {
+      //   console.log("-=-=-=-=File downloaded successfully.");
+      // })
+      // .catch((error) => {
+      //   console.error(
+      //     "-=-=-=Error downloading the file:",
+      //     error
+      //     );
+      //   });
+
   for (let { deletes, inserts } of termObjectChangeSets) {
 
+    // meta ttl Inserts
+    const insertsMetaPartition = partition(inserts, (o) =>
+      o.object.startsWith("<data://")
+    );
+    const metaInserts = insertsMetaPartition.passes;
+    if(metaInserts.length > 0){
+      metaInserts.forEach((file) => {
+        console.log("METAAA", file);
+        downloadFile(file.object, fetch);
+      });
+    }
 
     // Attachment Inserts
     const insertsFilePartition = partition(inserts, (o) =>
@@ -43,47 +94,51 @@ async function dispatch(lib, data) {
     if (fileInserts.length > 0) {
       fileInserts.forEach((file) => {
         if (file.predicate === "<http://mu.semte.ch/vocabularies/core/uuid>") {
-          const fileUUID = file.subject.replace(/[<>]/g, "");
-          const fileName = fileUUID.replaceAll("share://", "");
-          console.log("FILEUUID FOUND:", fileUUID);
+          downloadFile(file.subject, fetch);
+        }
+      });
+    }
+        //   const fileUUID = file.subject.replace(/[<>]/g, "");
+        //   const fileName = fileUUID.replaceAll("share://", "");
+        //   console.log("FILEUUID FOUND:", fileUUID);
 
-          const requestOptions = {
-            method: "GET",
-            headers: {
-              // gemeente lievegem
-              Cookie:
-              "proxy_session=QTEyOEdDTQ.7e5BfvAaEWBWyT9IdAFC9aGS5vN1goxAWMKbKgv_e6jesm9y0iLwXgSrVgg.NnHx2O2xjoatimoh.ybldxCk2SJXU9mq6mtfJAIinB49k9WTiZjHvRo7KDuNWqJj7d1V9k_YorLr4wGRYq_-j-eO5gLrxTzBBJE9V-JhdvbTIaC3W-QYAcgPopmrfzcsqCo9jogohTipLzkhSw2AMx6Kzllhy6j0mTv1l6zUF7-3jTtvw448NZT_Ji2FizStevQ5ENH9AoeajCsF75o3tb_F4VJ_m4t7mkEcJZ02k5praox9bLDSaKMlE7QGNOnWNuiAu0ZYrwGt_bAzk9jC6CHNE3X-tTwYz_I57S36wh17PkCgoPIQ4ND5oN6IbqXGqHFlPoYhI_0zSo0C3GZ8heRlPNiMaRnURGNiDkqkrb99k2qcOVlotyAcSEnd_syV-oE9KcybTg80Z0LkbUzk7ym6Ix_kICveEV9DkNBclGVBXZTeOWoWm1UUvhJfL_shPU65heNvQboRnViAUDYNlTD5oy_OrAymrJX8iPhiTQ-yFSM3FkF9pT0EQPFpxYqiFDCpf2ut4ULuV5XwpORR4gl8_Ui2bSZFxiL0KpSXvFlgDuBQ4H9LBlh3Rm6teIXdyDzWtI-IEMZK9usJugMhXw2a8QSBnWZl5u121rzqXVSF52mfeS08GGvl8dz9YGgPls4MZKQD963wdiQ6SYCAbPbK9Mu2k7ACfwaUupt6svI9k3UU54L97cRZy5C4z6YXb8jeR3qRTg5rG380Ao8NM3R-uJ_CCAfg5ZV1AbQ0Ta4dkvEw6lyBZv2SgL4X21RfNbHd-CiJV9wFNEY8UNmuq7iSU7rumg6H6kKhNATWWeDZpGJ0kFrUhEDpMPrb1deiXq2rgI4u25ZT7oMPxp_6wTnAzuhfn9wYT_lIDjEYrgn4l57w74mqoJTh6t3qbHtJiHNqZhcpR8q85APQ-54BPZOWLlUAL8mrdrVkVFq3Ug6Dcb9dSejAT4DxzJOw93TbsU6sgWuO2-Vuz6IQ0hd0t6QKeM0x0HAeGSpIV-rIN3Gt1RRwE_ogO350IW8Z3HHTrY5JjyrplQOaK_Q0yTxBAUqccoIS3g8SvfnD5ZGCGNO9vyMNlO9_jpCWNU_zcN35coOZHnDX_AaIURV8uijvYY0ag8DGi8vz2AvJehK2dh9DmsljSzt7vjVoSQR68-IJeYRSSiOgmrsMhpdcPJ_RnQWL39wHeJfM2hxYzuWSnLLk5e2LCnj6bgSSWaB3j7DqTGrgUytG6Msfbr6cxOfA5vknt3cTjpkkbelDg6IANMyXr6C3y1Xba9KSQafxmmYu_9cALYZgakN38Km57hbb1HOOf3rUO9FD2bU_o3ktNQPlzjQZwpS1VX1SjayVZjqGW-bjng3F_FnCBke5gvmGjzXp34Ix9TnQXWr5t9lB9wvs22w5_uAYy8Rqh6KK_L4GhhDax8-bw6xg5ixoNhBx5M1QbOTdy8e4Fd8rCEiqRr5LmFXz6XGwgJuawr3WQ6kOMlsIcgnjWRjVv1SfZTZrxMP1qKqF3I6usD9zM0qJkCNQo3s4Xua0494BgXMIAbAzKZPho9svoQlrDJhVMhi_atNP6z-1RqHdyhHFVW0L45vDHsxQDbPGRMrTi0mq-urg_h_FU2yErrV19JZMQCrMKja9j9XdzyCiL4V249_2JwgHHleN1yDYGC85dllv-pndQycFhZq46LT2cK3GUlJz8l7lbU93ItmY--N42asv5N9-QtdoPGGMOMQ.ZZw3y4HSCVCmJ9cDhJ8QYQ",
-            },
-          };
-          const downloadFileURL = `http://producer-identifier/delta-files-share/download?uri=${fileUUID}`;
-          console.log("START FETCHNG of", downloadFileURL);
+        //   const requestOptions = {
+        //     method: "GET",
+        //     headers: {
+        //       // gemeente lievegem
+        //       Cookie:
+        //       "proxy_session=QTEyOEdDTQ.dyEWiWXpY_ttRAxyIWhpAbtEaFSBjXwDAx7udWR3G3s1BtggOA_czNyR-fE.7csBC7xvFCDgWi99.8HSlTr-hQrM3msd4Do7UKfk5X5ORizPD8mrJ5RzrRdXNvyNLpA0AK3V0dRygd3XAYVv_qsAMSOwZeD0TaY0NKy5CY3VR7mElr728AfiGFA9CwDfEhRCtSm6mXPqy52LZgxqQ6Yx5e0X83ex3B5HH0Lrl6Tfs0k2AerLa13B6JkUH8VKHtXynShL-VNTZpAJnIXkwP2ZWB4n0gp0nmGQzJHKWWSD1xBi-VQpTlHx7aDMo81MShX97htiO1rSsRJx_jaRWtaSMm9xIniuKzc7uxftYX9ywfCxnvnwCkrPeOf-_G3aBmNpMS5G77d84Yd0VpZ00zAWWEuftNtBBpTxxYN8TCNiET1D3nYvxwlE7iVCwEmCzMuoFVz_bkUJpwTNQN1E866AEvjMIIsbrSMuWDe-ORIvb_ZeVLODXNydBnjvX21xdVmIhcje8-jmLc84BXyR30GsNRamL82GuG1w9Ty6f5lKWNAFUeKjiP-0qEr8_H1aI934fG-8sV4yQUfEADC45r3pWM-HA5krFnOdzSdYgPnjQFfK_8GZDcnPPfF5X-Z-ugp90Xhpcqxkju5t5xzLeoloQ0fjL6GfVDckKNU9GnhpObsF7ra7mtF_5hsUhdpqzIdsfEXLoM2NOgHGsIOK-mgEGPGtViNWCHkoUxGwC2iJxd8G7I6EwFN9UUqfqvIJtPku_0J2hjyibiFBWEBsLmOPCT2gDsCj8upJi-d7kF-u-8eEkEcv6pbBJ3PkvngSZd7ppeutY304_8GF2HAPAkPzWtp6RJUEdgyng6gFzczU3r98x741WgP6gCFE_Z36NwR-rYgepr5HtshHIb44wCv7wd9VyJfdgAc8qRgzPqTFF7DMWl-6cDy3ldAKCKq9741Isc1T5okI5oeJ-Bplwd1xlRw1sm9-UzHU4cI3__nQcR6VYcSrUrgXJgXSOyvN6C2nJWctQVNE8R_Kw4Pp_FHSG743hrCVhQc2YPq6cdd-cgnp_MUXC8FVKnAp5tG1uJd9PrDDUXtsxHaC0FUJnWWg5G6vBI2MSeygThIcD6rCLe_qxVU44pQXYgHS2xmQCLlvXhAr0UXdiCyAYBcygzCP3-rhl8EQ_qbgm_S-1NvTYnsWcrx0s90WFqicKwCgw9PwnZL72jon_ffwaujkge1tGn2CrdnTZFQhNGydgaUWa9GmS-FEK7LYDrneJe-ph1YSZxLYaMYuqHmZkykH_w1UOkpWQzjKPwEwPuklVnOeSsbDIutC_N19-0M5y8ULAQRSLB5bvARiq7WZw2GUl8FBYxKwdVSb8OvJUX63WuYPvKJr8U55qrUZQTpEc818WcRHas4wZG8thxFHz36dADi-e-GTUx_tdvPJQzd4KUx9uZTMlaEvOQ3Su-L-WCaBzGM01OIRCDxBs3xeROEf9aG8RrLbGKs_1T-3UBo22grrM4QfAt20Lakz40UOY85EF-dmQ-8WcIHNBmgj2Zb0o0WthrawAJe0ir5q3tV3mkuOLmPHaXXKpI_tvmcY863oGq8JlFzvwSpwIJ6J7jOftcFvF8DAaV6C14R2LwO5RRlkmtyl2tpH5lwlj6xNJEJMPmZKEZ_hyq6ZKFt6Tcll-mgWRkw0CPJb7fvfl27OmRm4yYHdMyQsD7D_lIA2MTnZGEmh3OJWRe9lbOssx_Qz-frSjm3xLgqezQn84iUSZWca4YHs3wKJlZg.lu5H9Gc1MWffxCAG0YforA",
+        //     },
+        //   };
+        //   const downloadFileURL = `http://producer-identifier/delta-files-share/download?uri=${fileUUID}`;
+        //   console.log("START FETCHNG of", downloadFileURL);
 
-          fetch(downloadFileURL, requestOptions)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+        //   fetch(downloadFileURL, requestOptions)
+        //   .then((response) => {
+        //     if (!response.ok) {
+        //       throw new Error(`HTTP error! Status: ${response.status}`);
+        //     }
 
-            const fileStream = fs.createWriteStream(`/share/${fileName}`);
-            response.body.pipe(fileStream);
+        //     const fileStream = fs.createWriteStream(`/share/${fileName}`);
+        //     response.body.pipe(fileStream);
 
-            return new Promise((resolve, reject) => {
-              fileStream.on("finish", resolve);
-              fileStream.on("error", reject);
-            });
-          })
-          .then(() => {
-            console.log("File downloaded successfully.");
-          })
-          .catch((error) => {
-            console.error(
-              "Error downloading the file:",
-              error
-              );
-            });
-          }
-        });
-      }
+        //     return new Promise((resolve, reject) => {
+        //       fileStream.on("finish", resolve);
+        //       fileStream.on("error", reject);
+        //     });
+        //   })
+        //   .then(() => {
+        //     console.log("File downloaded successfully.");
+        //   })
+        //   .catch((error) => {
+        //     console.error(
+        //       "Error downloading the file:",
+        //       error
+        //       );
+        //     });
+        //   }
+        // });
+      // }
 
     // Attachment Deletes
     // TODO: support deletes
@@ -118,9 +173,33 @@ async function dispatch(lib, data) {
         SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
       );
     }
+  }
+}
 
+async function downloadFile(uri, fetcher){
+  uri = uri.replace(/[<>]/g, "");
+  const fileName = uri.replace('data://', '').replace('share://', '');
+  // TODO: use the env variable SYNC_FILESHARE_ENDPOINT
+  const downloadFileURL = `http://producer-identifier/delta-files-share/download?uri=${uri}`;
+  console.log("-=-=-=-=-=-=-START FETCHNG of", downloadFileURL);
+
+  let filePath = `/share/${fileName}`;
+  if (uri.startsWith('data://')){
+    filePath = `/share/subsidies/${fileName}`;
   }
 
+  console.log(`Downloading file ${uri} from ${downloadFileURL}`);
+  const response = await fetcher(downloadFileURL)
+  if (response.ok) {
+    const buffer = await response.buffer();
+
+    // Create (sub)directories
+    await fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+    fs.writeFileSync(filePath, buffer);
+  } else {
+    console.error(`Failed to download file ${uri} (${response.status})`);
+  }
 }
 
 module.exports = {

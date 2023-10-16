@@ -112,7 +112,6 @@ services:
       DCR_DISABLE_INITIAL_SYNC: "true"
       DCR_BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES: "true"
       DCR_KEEP_DELTA_FILES: "true"
-      FILE_SYNC_GRAPH: "http://mu.semte.ch/graphs/temp/original-physical-files-data" #TODO: find the right value of this; represents the URI where files get written to?
       DCR_DELTA_FILE_FOLDER: "/consumer-files"
       DCR_SYNC_LOGIN_ENDPOINT: "https://loket.lblod.info/sync/subsidies/login"
       INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidiedatabankGebruiker"

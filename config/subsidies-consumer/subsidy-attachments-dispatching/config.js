@@ -7,10 +7,6 @@ const SLEEP_BETWEEN_BATCHES = parseInt(process.env.SLEEP_BETWEEN_BATCHES || 1000
 const SLEEP_TIME_AFTER_FAILED_DB_OPERATION = parseInt(process.env.SLEEP_TIME_AFTER_FAILED_DB_OPERATION || 60000);
 const INGEST_GRAPH = process.env.INGEST_GRAPH || `http://mu.semte.ch/application`;
 
-if (!process.env.FILE_SYNC_GRAPH)
-  throw `Expected 'FILE_SYNC_GRAPH' to be provided.`;
-const FILE_SYNC_GRAPH = process.env.FILE_SYNC_GRAPH;
-
 module.exports = {
   BATCH_SIZE,
   MU_CALL_SCOPE_ID_INITIAL_SYNC,
@@ -20,5 +16,4 @@ module.exports = {
   SLEEP_BETWEEN_BATCHES,
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
-  FILE_SYNC_GRAPH
 };
