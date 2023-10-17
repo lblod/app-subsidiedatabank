@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 async function batchedDbUpdate(muUpdate,
   graph,
   triples,
@@ -152,9 +155,36 @@ async function deleteFromAllGraphs(muUpdate,
   }
 }
 
+async function downloadFile(uri, fetcher){
+  uri = uri.replace(/[<>]/g, "");
+  const fileName = uri.replace('data://', '').replace('share://', '');
+  // TODO: use the env variable SYNC_FILESHARE_ENDPOINT
+  const downloadFileURL = `http://producer-identifier/delta-files-share/download?uri=${uri}`;
+  console.log("-=-=-=-=-=-=-START FETCHNG of", downloadFileURL);
+
+  let filePath = `/share/${fileName}`;
+  if (uri.startsWith('data://')){
+    filePath = `/share/subsidies/${fileName}`;
+  }
+
+  console.log(`Downloading file ${uri} from ${downloadFileURL}`);
+  const response = await fetcher(downloadFileURL)
+  if (response.ok) {
+    const buffer = await response.buffer();
+
+    // Create (sub)directories
+    await fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+    fs.writeFileSync(filePath, buffer);
+  } else {
+    console.error(`Failed to download file ${uri} (${response.status})`);
+  }
+}
+
 module.exports = {
   batchedDbUpdate,
   batchedUpdate,
   partition,
-  deleteFromAllGraphs
+  deleteFromAllGraphs,
+  downloadFile
 };
