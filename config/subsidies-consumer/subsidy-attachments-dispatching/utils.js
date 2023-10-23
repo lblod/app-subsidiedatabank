@@ -1,5 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const {
+  SYNC_BASE_URL,
+} = require('./config');
 
 async function batchedDbUpdate(muUpdate,
   graph,
@@ -158,8 +161,7 @@ async function deleteFromAllGraphs(muUpdate,
 async function downloadFile(uri, fetcher){
   uri = uri.replace(/[<>]/g, "");
   const fileName = uri.replace('data://', '').replace('share://', '');
-  // TODO: use the env variable SYNC_FILESHARE_ENDPOINT
-  const downloadFileURL = `http://producer-identifier/delta-files-share/download?uri=${uri}`;
+  const downloadFileURL = `${SYNC_BASE_URL}/delta-files-share/download?uri=${uri}`;
   console.log("-=-=-=-=-=-=-START FETCHNG of", downloadFileURL);
 
   let filePath = `/share/${fileName}`;
