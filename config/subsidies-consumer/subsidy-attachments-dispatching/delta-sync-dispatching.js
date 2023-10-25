@@ -11,9 +11,10 @@ const {
 const { batchedDbUpdate, partition, deleteFromAllGraphs, downloadFile } = require('./utils');
 
 /**
- * Dispatch the fetched information to a target graph.
- * Note: <share://file/data> will be ADDED to it's own graph.
- *   We take only care of adding them, not updating triples, this is a TODO
+ * Dispatch the fetched information to a target graph. The function consists of 3 parts:
+ * - Regular inserts/deletes
+ * - Meta ttl inserts/deletes
+ * - Attachment inserts
  * @param { mu, muAuthSudo, fetch } lib - The provided libraries from the host service.
  * @param { termObjectChangeSets: { deletes, inserts } } data - The fetched changes sets, which objects of serialized Terms
  *          [ {

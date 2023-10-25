@@ -158,6 +158,14 @@ async function deleteFromAllGraphs(muUpdate,
   }
 }
 
+/**
+ * Function to download either files that start with share:// or data://.
+ * It uses the SYNC_BASE_URL to access the file-share-sync-service and download the files.
+ * It will create (sub)directories if needed and store it in the right directory using the uri.
+ * @param {any} uri - the uri of the file that needs to be downloaded
+ * @param {any} fetcher - the fetcher function
+ * @returns {any}
+ */
 async function downloadFile(uri, fetcher){
   uri = uri.replace(/[<>]/g, "");
   const fileName = uri.replace('data://', '').replace('share://', '');

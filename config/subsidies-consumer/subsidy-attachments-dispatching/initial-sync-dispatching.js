@@ -11,7 +11,10 @@ const {
 const { batchedDbUpdate, partition, downloadFile } = require('./utils');
 
 /**
- * Dispatch the fetched information to a target graph.
+ * Dispatch the fetched information to a target graph. The function consists of 3 parts:
+ * - Regular inserts
+ * - Meta ttl inserts
+ * - Attachment inserts
  * @param { mu, muAuthSudo, fetch } lib - The provided libraries from the host service.
  * @param { termObjects } data - The fetched quad information, which objects of serialized Terms
  *          [ {
