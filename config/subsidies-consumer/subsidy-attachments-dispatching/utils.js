@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const {
   SYNC_BASE_URL,
+  SYNC_LOGIN_ENDPOINT,
+  SECRET_KEY,
 } = require('./config');
 
 async function batchedDbUpdate(muUpdate,
@@ -158,37 +160,92 @@ async function deleteFromAllGraphs(muUpdate,
   }
 }
 
+let cookie = null;
+async function login() {
+  try {
+    const resp = await fetch(SYNC_LOGIN_ENDPOINT, {
+      headers: {
+        'key': SECRET_KEY,
+        'accept': "application/vnd.api+json"
+      },
+      method: 'POST'
+    });
+
+    if (!resp.ok) {
+      console.log("FAILED TO LOG IN");
+      throw "Could not log in";
+    }
+
+    if (resp.headers.get('set-cookie')) {
+      const cookieParts = resp.headers.get('set-cookie').split(/\s*;\s*/);
+      const newCookiePart = cookieParts.find(part => part.startsWith('proxy_session='));
+
+      if (newCookiePart) {
+        cookie = newCookiePart;
+      }
+    }
+  } catch (e) {
+    console.log(`Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}`);
+    console.log(e);
+    throw e;
+  }
+}
+
 /**
  * Function to download either files that start with share:// or data://.
  * It uses the SYNC_BASE_URL to access the file-share-sync-service and download the files.
  * It will create (sub)directories if needed and store it in the right directory using the uri.
  * @param {any} uri - the uri of the file that needs to be downloaded
  * @param {any} fetcher - the fetcher function
+ * @param {any} maxRetries - the amount of retries
+ * @param {any} retryDelay - the amount of delay between each retry
  * @returns {any}
  */
-async function downloadFile(uri, fetcher){
+async function downloadFileWithRetry(uri, fetcher, maxRetries = 4, retryDelay = 1000) {
+  // Login to endpoint as super user, so we can set the correct proxy_session cookie
+  if(!cookie) {
+    await login();
+  }
+  // Use the cookie from login in fetch options
+  const fetchOptions = {
+    headers: {
+      cookie: cookie,
+    },
+  };
+
   uri = uri.replace(/[<>]/g, "");
   const fileName = uri.replace('data://', '').replace('share://', '');
   const downloadFileURL = `${SYNC_BASE_URL}/delta-files-share/download?uri=${uri}`;
-  console.log("-=-=-=-=-=-=-START FETCHNG of", downloadFileURL);
 
   let filePath = `/share/${fileName}`;
   if (uri.startsWith('data://')){
     filePath = `/share/subsidies/${fileName}`;
   }
 
-  console.log(`Downloading file ${uri} from ${downloadFileURL}`);
-  const response = await fetcher(downloadFileURL)
-  if (response.ok) {
-    const buffer = await response.buffer();
+  let attempt = 1;
 
-    // Create (sub)directories
-    await fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  while (attempt <= maxRetries) {
+    console.log(`Downloading file ${uri} from ${downloadFileURL}, Attempt ${attempt}`);
+    const response = await fetcher(downloadFileURL, fetchOptions);
 
-    fs.writeFileSync(filePath, buffer);
-  } else {
-    console.error(`Failed to download file ${uri} (${response.status})`);
+    if (response.ok) {
+      const buffer = await response.buffer();
+
+      // Create (sub)directories
+      await fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+      fs.writeFileSync(filePath, buffer);
+      return; // Successfully downloaded, exit the loop
+    } else {
+      console.error(`Failed to download file ${uri} (${response.status})`);
+
+      // Retry after a delay
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      attempt++;
+    }
   }
+
+  console.error(`Exceeded maximum retry attempts for downloading file ${uri}`);
 }
 
 module.exports = {
@@ -196,5 +253,5 @@ module.exports = {
   batchedUpdate,
   partition,
   deleteFromAllGraphs,
-  downloadFile
+  downloadFileWithRetry
 };

@@ -8,7 +8,7 @@ const {
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
 } = require('./config');
-const { batchedDbUpdate, partition, downloadFile } = require('./utils');
+const { batchedDbUpdate, partition, downloadFileWithRetry } = require('./utils');
 
 /**
  * Dispatch the fetched information to a target graph. The function consists of 3 parts:
@@ -30,32 +30,6 @@ async function dispatch(lib, data) {
   const { mu, muAuthSudo, fetch } = lib;
   const { termObjects } = data;
 
-  // meta ttl Inserts
-  const insertsMetaPartition = partition(termObjects, (o) =>
-    o.object.startsWith('<data://')
-  );
-  const metaInserts = insertsMetaPartition.passes;
-  if (metaInserts.length > 0) {
-    metaInserts.forEach((file) => {
-      console.log('INITIAL-METAAA', file);
-      downloadFile(file.object, fetch);
-    });
-  }
-
-  // Attachment Inserts
-  const insertsFilePartition = partition(termObjects, (o) =>
-    o.subject.startsWith('<share://')
-  );
-  const fileInserts = insertsFilePartition.passes;
-
-  if (fileInserts.length > 0) {
-    fileInserts.forEach((file) => {
-      if (file.predicate === '<http://mu.semte.ch/vocabularies/core/uuid>') {
-        downloadFile(file.subject, fetch);
-      }
-    });
-  }
-
   // Regular Inserts
   const insertStatements = termObjects.map(
     (o) => `${o.subject} ${o.predicate} ${o.object}.`
@@ -75,6 +49,31 @@ async function dispatch(lib, data) {
       SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
       'INSERT'
     );
+  }
+
+  // meta ttl Inserts
+  const insertsMetaPartition = partition(termObjects, (o) =>
+    o.object.startsWith('<data://')
+  );
+  const metaInserts = insertsMetaPartition.passes;
+  if (metaInserts.length > 0) {
+    metaInserts.forEach((file) => {
+      downloadFileWithRetry(file.object, fetch);
+    });
+  }
+
+  // Attachment Inserts
+  const insertsFilePartition = partition(termObjects, (o) =>
+    o.subject.startsWith('<share://')
+  );
+  const fileInserts = insertsFilePartition.passes;
+
+  if (fileInserts.length > 0) {
+    fileInserts.forEach((file) => {
+      if (file.predicate === '<http://mu.semte.ch/vocabularies/core/uuid>') {
+        downloadFileWithRetry(file.subject, fetch);
+      }
+    });
   }
 }
 

@@ -6,6 +6,8 @@ const MAX_DB_RETRY_ATTEMPTS = parseInt(process.env.MAX_DB_RETRY_ATTEMPTS || 5);
 const SLEEP_BETWEEN_BATCHES = parseInt(process.env.SLEEP_BETWEEN_BATCHES || 1000);
 const SLEEP_TIME_AFTER_FAILED_DB_OPERATION = parseInt(process.env.SLEEP_TIME_AFTER_FAILED_DB_OPERATION || 60000);
 const INGEST_GRAPH = process.env.INGEST_GRAPH || `http://mu.semte.ch/application`;
+const SYNC_LOGIN_ENDPOINT = process.env.DCR_SYNC_LOGIN_ENDPOINT;
+const SECRET_KEY = process.env.DCR_SECRET_KEY;
 
 if(!process.env.DCR_SYNC_BASE_URL)
   throw `Expected 'DCR_SYNC_BASE_URL' to be provided.`;
@@ -20,5 +22,7 @@ module.exports = {
   SLEEP_BETWEEN_BATCHES,
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
-  SYNC_BASE_URL
+  SYNC_BASE_URL,
+  SYNC_LOGIN_ENDPOINT,
+  SECRET_KEY,
 };

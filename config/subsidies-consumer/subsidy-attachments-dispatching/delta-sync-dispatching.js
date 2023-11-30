@@ -8,7 +8,7 @@ const {
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
 } = require('./config');
-const { batchedDbUpdate, partition, deleteFromAllGraphs, downloadFile } = require('./utils');
+const { batchedDbUpdate, partition, deleteFromAllGraphs, downloadFileWithRetry } = require('./utils');
 
 /**
  * Dispatch the fetched information to a target graph. The function consists of 3 parts:
@@ -38,8 +38,7 @@ async function dispatch(lib, data) {
     const metaInserts = insertsMetaPartition.passes;
     if(metaInserts.length > 0){
       metaInserts.forEach((file) => {
-        console.log("METAAA", file);
-        downloadFile(file.object, fetch);
+        downloadFileWithRetry(file.object, fetch);
       });
     }
 
@@ -52,13 +51,13 @@ async function dispatch(lib, data) {
     if (fileInserts.length > 0) {
       fileInserts.forEach((file) => {
         if (file.predicate === "<http://mu.semte.ch/vocabularies/core/uuid>") {
-          downloadFile(file.subject, fetch);
+          downloadFileWithRetry(file.subject, fetch);
         }
       });
     }
 
     // Attachment Deletes
-    // TODO: support deletes
+    // TODO: support deletes?
 
     // Regular Inserts
     const insertStatements = inserts.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
