@@ -4,6 +4,8 @@ const {
   SYNC_BASE_URL,
   SYNC_LOGIN_ENDPOINT,
   SECRET_KEY,
+  MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS,
+  SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION,
 } = require('./config');
 
 async function batchedDbUpdate(muUpdate,
@@ -197,11 +199,11 @@ async function login() {
  * It will create (sub)directories if needed and store it in the right directory using the uri.
  * @param {any} uri - the uri of the file that needs to be downloaded
  * @param {any} fetcher - the fetcher function
- * @param {any} maxRetries - the amount of retries
- * @param {any} retryDelay - the amount of delay between each retry
  * @returns {any}
  */
-async function downloadFileWithRetry(uri, fetcher, maxRetries = 4, retryDelay = 1000) {
+MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS,
+SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION
+async function downloadFileWithRetry(uri, fetcher) {
   // Login to endpoint as super user, so we can set the correct proxy_session cookie
   if(!cookie) {
     await login();
@@ -224,7 +226,7 @@ async function downloadFileWithRetry(uri, fetcher, maxRetries = 4, retryDelay = 
 
   let attempt = 1;
 
-  while (attempt <= maxRetries) {
+  while (attempt <= MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
     console.log(`Downloading file ${uri} from ${downloadFileURL}, Attempt ${attempt}`);
     const response = await fetcher(downloadFileURL, fetchOptions);
 
@@ -240,7 +242,7 @@ async function downloadFileWithRetry(uri, fetcher, maxRetries = 4, retryDelay = 
       console.error(`Failed to download file ${uri} (${response.status})`);
 
       // Retry after a delay
-      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      await new Promise(resolve => setTimeout(resolve, SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION));
       attempt++;
     }
   }
