@@ -66,7 +66,7 @@ defmodule Dispatcher do
   end
 
   get "/files/*path" do
-    forward conn, path, "http://resource/files/"
+    forward conn, path, "http://cache/files/"
   end
 
   ##############
