@@ -66,7 +66,7 @@ defmodule Dispatcher do
   end
 
   get "/files/*path" do
-    forward conn, path, "http://resource/files/"
+    forward conn, path, "http://cache/files/"
   end
 
   ##############
@@ -74,50 +74,50 @@ defmodule Dispatcher do
   ##############
 
   match "/gebruikers/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/gebruikers/"
+    forward conn, path, "http://cache/gebruikers/"
   end
   match "/accounts/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/accounts/"
+    forward conn, path, "http://cache/accounts/"
   end
 
   match "/subsidy-measure-consumptions/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-measure-consumptions/"
+    forward conn, path, "http://cache/subsidy-measure-consumptions/"
   end
 
   match "/subsidy-measure-consumption-statuses/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-measure-consumption-statuses/"
+    forward conn, path, "http://cache/subsidy-measure-consumption-statuses/"
   end
 
   match "/subsidy-measure-offers/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/subsidy-measure-offers/"
+    forward conn, path, "http://cache/subsidy-measure-offers/"
   end
 
   get "/bestuurseenheden/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/bestuurseenheden/"
+    forward conn, path, "http://cache/bestuurseenheden/"
   end
 
   match "/participations/*path", %{ layer: :resources, accept: %{ json: true } } do
-    forward conn, path, "http://resource/participations/"
+    forward conn, path, "http://cache/participations/"
   end
 
   match "/subsidy-application-forms/*path", %{ layer: :resources } do
-    forward conn, path, "http://resource/subsidy-application-forms/"
+    forward conn, path, "http://cache/subsidy-application-forms/"
   end
 
   match "/subsidy-measure-offer-series/*path", %{ layer: :resources } do
-    forward conn, path, "http://resource/subsidy-measure-offer-series/"
+    forward conn, path, "http://cache/subsidy-measure-offer-series/"
   end
 
   match "/subsidy-application-flows/*path", %{ layer: :resources } do
-    forward conn, path, "http://resource/subsidy-application-flows/"
+    forward conn, path, "http://cache/subsidy-application-flows/"
   end
 
   match "/subsidy-application-flow-steps/*path", %{ layer: :resources } do
-    forward conn, path, "http://resource/subsidy-application-flow-steps/"
+    forward conn, path, "http://cache/subsidy-application-flow-steps/"
   end
 
   match "/subsidy-procedural-steps/*path", %{ layer: :resources } do
-    forward conn, path, "http://resource/subsidy-procedural-steps/"
+    forward conn, path, "http://cache/subsidy-procedural-steps/"
   end
 
   #################################################################
