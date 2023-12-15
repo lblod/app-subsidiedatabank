@@ -145,3 +145,12 @@ services:
       - "logging=true"
     restart: always
     logging: *default-logging
+
+  file:
+    image: semtech/mu-file-service:3.3.2
+    volumes:
+      - ./data/files:/share
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
