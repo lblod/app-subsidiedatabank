@@ -58,6 +58,18 @@ defmodule Dispatcher do
   end
 
   ##############
+  # FILES
+  ##############
+
+  get "/files/:id/download", %{ layer: :api_services, accept: %{ any: true } } do
+    forward conn, [], "http://file/files/" <> id <> "/download"
+  end
+
+  get "/files/*path", %{ layer: :resources, accept: %{ json: true } } do
+    forward conn, path, "http://resource/files/"
+  end
+
+  ##############
   # RESOURCES
   ##############
 

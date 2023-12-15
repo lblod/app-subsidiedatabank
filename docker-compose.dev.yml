@@ -45,3 +45,6 @@ services:
 
   subsidy-application-flow-management:
     restart: "no"
+
+  file:
+    restart: "no"

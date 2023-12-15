@@ -71,6 +71,7 @@ defmodule Acl.UserGroups.Config do
                         "http://data.europa.eu/m8g/Requirement",
                         "http://xmlns.com/foaf/0.1/Document",
                         "http://www.w3.org/ns/org#Organization",
+                        "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#FileDataObject",
                       ] } } ] },
 
       %GroupSpec{
