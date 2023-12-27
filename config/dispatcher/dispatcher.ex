@@ -124,23 +124,6 @@ defmodule Dispatcher do
   # subsidy-applications: custom API endpoints
   #################################################################
 
-  get "/management-active-form-file/*path" do
-    forward conn, path, "http://subsidy-applications-management/active-form-file/"
-  end
-
-  get "/management-application-forms/*path" do
-    forward conn, path, "http://subsidy-applications-management/semantic-forms/"
-  end
-
-  get "/flow-management/*path" do
-    forward conn, path, "http://subsidy-application-flow-management/flow/"
-  end
-
-
-  #################################################################
-  # subsidy-applications: custom API endpoints
-  #################################################################
-
   get "/management-active-form-file/*path", %{ layer: :api_services, accept: %{ json: true } } do
     forward conn, path, "http://subsidy-applications-management/active-form-file/"
   end
