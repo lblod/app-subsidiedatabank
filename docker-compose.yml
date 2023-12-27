@@ -8,7 +8,7 @@ x-logging: &default-logging
 
 services:
   frontend:
-    image: lblod/frontend-subsidiedatabank:0.0.5
+    image: lblod/frontend-subsidiedatabank:0.0.7
     volumes:
       - ./config/frontend:/config
     labels:
@@ -58,7 +58,7 @@ services:
     logging: *default-logging
 
   migrations:
-    image: semtech/mu-migrations-service:0.8.0
+    image: semtech/mu-migrations-service:0.9.0
     links:
       - virtuoso:database
     volumes:
@@ -124,9 +124,10 @@ services:
     labels:
       - "logging=true"
 
-  ################################################################################
-  # SUBSIDIE FORMS
-  ################################################################################
+
+ ################################################################################
+ # SUBSIDIE FORMS
+ ################################################################################
   subsidy-applications-management:
     image: lblod/subsidy-applications-management-service:0.11.0
     environment:
@@ -150,13 +151,10 @@ services:
     logging: *default-logging
 
   file:
-    image: semtech/mu-file-service:3.3.1
+    image: semtech/mu-file-service:3.3.2
     volumes:
       - ./data/files:/share
     labels:
       - "logging=true"
-      # TODO: keep?
-    environment:
-      MU_APPLICATION_GRAPH: "http://mu.semte.ch/application"
     restart: always
     logging: *default-logging

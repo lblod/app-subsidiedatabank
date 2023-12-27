@@ -58,15 +58,15 @@ defmodule Dispatcher do
   end
 
   ##############
-  # Files
+  # FILES
   ##############
 
-  get "/files/:id/download" do
+  get "/files/:id/download", %{ layer: :api_services, accept: %{ any: true } } do
     forward conn, [], "http://file/files/" <> id <> "/download"
   end
 
-  get "/files/*path" do
-    forward conn, path, "http://cache/files/"
+  get "/files/*path", %{ layer: :resources, accept: %{ json: true } } do
+    forward conn, path, "http://resource/files/"
   end
 
   ##############
@@ -133,6 +133,23 @@ defmodule Dispatcher do
   end
 
   get "/flow-management/*path" do
+    forward conn, path, "http://subsidy-application-flow-management/flow/"
+  end
+
+
+  #################################################################
+  # subsidy-applications: custom API endpoints
+  #################################################################
+
+  get "/management-active-form-file/*path", %{ layer: :api_services, accept: %{ json: true } } do
+    forward conn, path, "http://subsidy-applications-management/active-form-file/"
+  end
+
+  get "/management-application-forms/*path", %{ layer: :api_services, accept: %{ json: true } } do
+    forward conn, path, "http://subsidy-applications-management/semantic-forms/"
+  end
+
+  get "/flow-management/*path", %{ layer: :api_services, accept: %{ json: true } } do
     forward conn, path, "http://subsidy-application-flow-management/flow/"
   end
 
