@@ -118,6 +118,7 @@ services:
     volumes:
       - ./data/files/consumer-files/subsidies:/consumer-files/
       - ./config/subsidies-consumer/subsidy-attachments-dispatching:/config/triples-dispatching/custom-dispatching
+      - ./data/files:/share
     restart: always
     labels:
       - "logging=true"
