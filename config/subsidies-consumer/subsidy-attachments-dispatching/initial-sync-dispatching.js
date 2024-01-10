@@ -1,6 +1,4 @@
 const {
-  BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES,
-  DIRECT_DATABASE_ENDPOINT,
   MU_CALL_SCOPE_ID_INITIAL_SYNC,
   BATCH_SIZE,
   MAX_DB_RETRY_ATTEMPTS,
@@ -8,7 +6,9 @@ const {
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
 } = require('./config');
-const { batchedDbUpdate, partition, downloadFileWithRetry } = require('./utils');
+
+const { processFileDeltas, DOWNLOAD_OPERATION } = require('./file-processor');
+const { batchedDbUpdate} = require('./utils');
 
 /**
  * Dispatch the fetched information to a target graph. The function consists of 3 parts:
@@ -25,15 +25,18 @@ const { batchedDbUpdate, partition, downloadFileWithRetry } = require('./utils')
  *            }
  *         ]
  * @return {void} Nothing
- */
+ */ 
 async function dispatch(lib, data) {
   const { mu, muAuthSudo, fetch } = lib;
   const { termObjects } = data;
 
+  await processFileDeltas(termObjects, fetch, DOWNLOAD_OPERATION)
+  
   // Regular Inserts
   const insertStatements = termObjects.map(
     (o) => `${o.subject} ${o.predicate} ${o.object}.`
   );
+  
   if (insertStatements.length) {
     await batchedDbUpdate(
       muAuthSudo.updateSudo,
@@ -51,30 +54,6 @@ async function dispatch(lib, data) {
     );
   }
 
-  // meta ttl Inserts
-  const insertsMetaPartition = partition(termObjects, (o) =>
-    o.object.startsWith('<data://')
-  );
-  const metaInserts = insertsMetaPartition.passes;
-  if (metaInserts.length > 0) {
-    metaInserts.forEach((file) => {
-      downloadFileWithRetry(file.object, fetch);
-    });
-  }
-
-  // Attachment Inserts
-  const insertsFilePartition = partition(termObjects, (o) =>
-    o.subject.startsWith('<share://')
-  );
-  const fileInserts = insertsFilePartition.passes;
-
-  if (fileInserts.length > 0) {
-    fileInserts.forEach((file) => {
-      if (file.predicate === '<http://mu.semte.ch/vocabularies/core/uuid>') {
-        downloadFileWithRetry(file.subject, fetch);
-      }
-    });
-  }
 }
 
 module.exports = {

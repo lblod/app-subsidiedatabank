@@ -1,14 +1,13 @@
 const {
-  BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES,
-  DIRECT_DATABASE_ENDPOINT,
-  MU_CALL_SCOPE_ID_INITIAL_SYNC,
   BATCH_SIZE,
   MAX_DB_RETRY_ATTEMPTS,
   SLEEP_BETWEEN_BATCHES,
   SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
   INGEST_GRAPH,
 } = require('./config');
-const { batchedDbUpdate, partition, deleteFromAllGraphs, downloadFileWithRetry } = require('./utils');
+
+const { processFileDeltas, DELETE_OPERATION, DOWNLOAD_OPERATION } = require('./file-processor');
+const { batchedDbUpdate, deleteFromAllGraphs} = require('./utils');
 
 /**
  * Dispatch the fetched information to a target graph. The function consists of 3 parts:
@@ -28,68 +27,50 @@ const { batchedDbUpdate, partition, deleteFromAllGraphs, downloadFileWithRetry }
  */
 async function dispatch(lib, data) {
   const { mu, muAuthSudo, fetch } = lib;
-  const { termObjectChangeSets } = data;
+  const { termObjectChangeSets: { deletes, inserts } } = data;  
 
-  for (let { deletes, inserts } of termObjectChangeSets) {
-    // meta ttl Inserts
-    const insertsMetaPartition = partition(inserts, (o) =>
-      o.object.startsWith("<data://")
+  /**
+   * PROCESS DELETES
+   */
+
+  await processFileDeltas(deletes, fetch, DELETE_OPERATION)
+
+  // Regular Deletes
+  const deleteStatements = deletes.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
+  if (deleteStatements.length) {
+    await deleteFromAllGraphs(
+      muAuthSudo.updateSudo,
+      deleteStatements,
+      { 'mu-call-scope-id': 'http://redpencil.data.gift/id/concept/muScope/deltas/write-for-dispatch' },
+      process.env.MU_SPARQL_ENDPOINT,
+      MAX_DB_RETRY_ATTEMPTS,
+      SLEEP_BETWEEN_BATCHES,
+      SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
     );
-    const metaInserts = insertsMetaPartition.passes;
-    if(metaInserts.length > 0){
-      metaInserts.forEach((file) => {
-        downloadFileWithRetry(file.object, fetch);
-      });
-    }
+  }
 
-    // Attachment Inserts
-    const insertsFilePartition = partition(inserts, (o) =>
-      o.subject.startsWith("<share://")
-    );
-    const fileInserts = insertsFilePartition.passes;
+  /**
+   * PROCESS INSERTS
+   */
 
-    if (fileInserts.length > 0) {
-      fileInserts.forEach((file) => {
-        if (file.predicate === "<http://mu.semte.ch/vocabularies/core/uuid>") {
-          downloadFileWithRetry(file.subject, fetch);
-        }
-      });
-    }
+  await processFileDeltas(deletes, fetch, DOWNLOAD_OPERATION)
 
-    // Attachment Deletes
-    // TODO: support deletes?
-
-    // Regular Inserts
-    const insertStatements = inserts.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
-    if (insertStatements.length) {
-      await batchedDbUpdate(
-        muAuthSudo.updateSudo,
-        INGEST_GRAPH,
-        insertStatements,
-        { 'mu-call-scope-id': 'http://redpencil.data.gift/id/concept/muScope/deltas/write-for-dispatch' },
-        process.env.MU_SPARQL_ENDPOINT,
-        BATCH_SIZE,
-        MAX_DB_RETRY_ATTEMPTS,
-        SLEEP_BETWEEN_BATCHES,
-        SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
-        "INSERT"
-        );
-      }
-
-    // Regular Deletes
-    const deleteStatements = deletes.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
-    if (deleteStatements.length) {
-      await deleteFromAllGraphs(
-        muAuthSudo.updateSudo,
-        deleteStatements,
-        { 'mu-call-scope-id': 'http://redpencil.data.gift/id/concept/muScope/deltas/write-for-dispatch' },
-        process.env.MU_SPARQL_ENDPOINT,
-        MAX_DB_RETRY_ATTEMPTS,
-        SLEEP_BETWEEN_BATCHES,
-        SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
+  const insertStatements = inserts.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
+  if (insertStatements.length) {
+    await batchedDbUpdate(
+      muAuthSudo.updateSudo,
+      INGEST_GRAPH,
+      insertStatements,
+      { 'mu-call-scope-id': 'http://redpencil.data.gift/id/concept/muScope/deltas/write-for-dispatch' },
+      process.env.MU_SPARQL_ENDPOINT,
+      BATCH_SIZE,
+      MAX_DB_RETRY_ATTEMPTS,
+      SLEEP_BETWEEN_BATCHES,
+      SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
+      "INSERT"
       );
     }
-  }
+
 }
 
 
