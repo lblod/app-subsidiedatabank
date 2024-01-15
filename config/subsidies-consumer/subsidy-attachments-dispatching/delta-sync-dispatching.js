@@ -9,6 +9,8 @@ const {
 const { processFileDeltas, DELETE_OPERATION, DOWNLOAD_OPERATION } = require('./file-processor');
 const { batchedDbUpdate, deleteFromAllGraphs} = require('./utils');
 
+
+
 /**
  * Dispatch the fetched information to a target graph. The function consists of 3 parts:
  * - Regular inserts/deletes
@@ -26,18 +28,22 @@ const { batchedDbUpdate, deleteFromAllGraphs} = require('./utils');
  * @return {void} Nothing
  */
 async function dispatch(lib, data) {
-  const { mu, muAuthSudo, fetch } = lib;
-  const { termObjectChangeSets: { deletes, inserts } } = data;  
+  for (const { deletes, inserts } of data.termObjectChangeSets) {
+    await processDeletes(lib, deletes);
+    await processInserts(lib, inserts);
+  }
+}
 
-  /**
-   * PROCESS DELETES
-   */
+/**
+ * PROCESS DELETES
+ */
+async function processDeletes(lib, deletes) {
+  const { mu, muAuthSudo, fetch } = lib;
 
   await processFileDeltas(deletes, fetch, DELETE_OPERATION)
 
-  // Regular Deletes
-  const deleteStatements = deletes.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
-  if (deleteStatements.length) {
+  const deleteStatements = deletes?.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
+  if (deleteStatements?.length) {
     await deleteFromAllGraphs(
       muAuthSudo.updateSudo,
       deleteStatements,
@@ -48,15 +54,18 @@ async function dispatch(lib, data) {
       SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
     );
   }
+}
 
-  /**
-   * PROCESS INSERTS
-   */
+/**
+ * PROCESS INSERTS
+ */
+async function processInserts(lib, inserts) {
+  const { mu, muAuthSudo, fetch } = lib;
 
-  await processFileDeltas(deletes, fetch, DOWNLOAD_OPERATION)
+  await processFileDeltas(inserts, fetch, DOWNLOAD_OPERATION)
 
-  const insertStatements = inserts.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
-  if (insertStatements.length) {
+  const insertStatements = inserts?.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
+  if (insertStatements?.length) {
     await batchedDbUpdate(
       muAuthSudo.updateSudo,
       INGEST_GRAPH,
@@ -68,12 +77,9 @@ async function dispatch(lib, data) {
       SLEEP_BETWEEN_BATCHES,
       SLEEP_TIME_AFTER_FAILED_DB_OPERATION,
       "INSERT"
-      );
-    }
-
+    );
+  }
 }
-
-
 
 module.exports = {
   dispatch,
