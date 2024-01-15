@@ -33,11 +33,11 @@ async function dispatch(lib, data) {
   await processFileDeltas(termObjects, fetch, DOWNLOAD_OPERATION)
   
   // Regular Inserts
-  const insertStatements = termObjects.map(
+  const insertStatements = termObjects?.map(
     (o) => `${o.subject} ${o.predicate} ${o.object}.`
   );
   
-  if (insertStatements.length) {
+  if (insertStatements?.length) {
     await batchedDbUpdate(
       muAuthSudo.updateSudo,
       INGEST_GRAPH,
