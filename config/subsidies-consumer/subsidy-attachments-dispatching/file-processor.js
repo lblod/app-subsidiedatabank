@@ -14,7 +14,7 @@ const {
 const DOWNLOAD_OPERATION = "download"
 const DELETE_OPERATION = "delete"
 
-// Cookie nescessary to download file from producer
+// Cookie necessary to download file from producer
 let cookie = null;
 
 /**
