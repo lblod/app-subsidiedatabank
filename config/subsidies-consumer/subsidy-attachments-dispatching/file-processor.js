@@ -105,8 +105,7 @@ async function downloadFile(uri, fetcher) {
  */
 function deleteFile(uri) {
   uri = uri.replace(/[<>]/g, "");
-  const fileName = uri.replace('share://', '');
-  const filePath = `/share/${fileName}`;
+  const filePath = uri.replace('share://', '/share/');
 
   try {
     fs.unlinkSync(filePath);
