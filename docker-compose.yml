@@ -117,6 +117,8 @@ services:
       INGEST_GRAPH: "http://mu.semte.ch/graphs/organizations/141d9d6b-54af-4d17-b313-8d1c30bc3f5b/SubsidiedatabankGebruiker"
     volumes:
       - ./data/files/consumer-files/subsidies:/consumer-files/
+      - ./config/subsidies-consumer/subsidy-attachments-dispatching:/config/triples-dispatching/custom-dispatching
+      - ./data/files:/share
     restart: always
     labels:
       - "logging=true"
