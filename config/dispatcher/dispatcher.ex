@@ -100,23 +100,23 @@ defmodule Dispatcher do
     forward conn, path, "http://cache/participations/"
   end
 
-  match "/subsidy-application-forms/*path", %{ layer: :resources } do
+  match "/subsidy-application-forms/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://cache/subsidy-application-forms/"
   end
 
-  match "/subsidy-measure-offer-series/*path", %{ layer: :resources } do
+  match "/subsidy-measure-offer-series/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://cache/subsidy-measure-offer-series/"
   end
 
-  match "/subsidy-application-flows/*path", %{ layer: :resources } do
+  match "/subsidy-application-flows/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://cache/subsidy-application-flows/"
   end
 
-  match "/subsidy-application-flow-steps/*path", %{ layer: :resources } do
+  match "/subsidy-application-flow-steps/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://cache/subsidy-application-flow-steps/"
   end
 
-  match "/subsidy-procedural-steps/*path", %{ layer: :resources } do
+  match "/subsidy-procedural-steps/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://cache/subsidy-procedural-steps/"
   end
 
