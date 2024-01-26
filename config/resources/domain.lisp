@@ -1,7 +1,6 @@
 (in-package :mu-cl-resources)
 
 (defparameter *cache-count-queries* nil)
-(defparameter *cache-model-properties* t)
 (defparameter *supply-cache-headers-p* t
   "when non-nil, cache headers are supplied.  this works together with mu-cache.")
 (setf *cache-model-properties-p* t)
@@ -11,7 +10,6 @@
    of responses in the result object's meta.")
 (defparameter *max-group-sorted-properties* nil)
 (defparameter sparql:*experimental-no-application-graph-for-sudo-select-queries* t)
-(setf *fetch-all-types-in-construct-queries* t)
 
 (read-domain-file "master-subsidies-domain.lisp")
 (read-domain-file "master-submissions-domain.lisp")
