@@ -11,6 +11,8 @@ services:
     image: lblod/frontend-subsidiedatabank:0.4.1
     volumes:
       - ./config/frontend:/config
+    links:
+      - resource:backend
     labels:
       - "logging=true"
     restart: always
