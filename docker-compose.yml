@@ -12,7 +12,7 @@ services:
     volumes:
       - ./config/frontend:/config
     links:
-      - resource:backend
+      - identifier:backend
     labels:
       - "logging=true"
     restart: always
