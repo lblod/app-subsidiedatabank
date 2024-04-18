@@ -12,6 +12,7 @@
 
 !/tmp/
 
+node_modules/
 docker-compose.override.yml
 .htpasswd
 .env
