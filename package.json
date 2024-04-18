@@ -1,0 +1,15 @@
+{
+  "name": "app-subsidiedatabank",
+  "version": "2.0.0",
+  "description": "Bootstrap a mu.semte.ch microservices environment in three easy steps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "release-it": "^17.2.0"
+  }
+}
