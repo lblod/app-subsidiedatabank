@@ -63,6 +63,14 @@ defmodule Dispatcher do
     forward conn, path, "http://resource/subsidy-measure-offers/"
   end
 
+  match "/organizations/*path" do
+    forward conn, path, "http://cache/organizations/"
+  end
+
+  match "/organization-classification-codes/*path" do
+    forward conn, path, "http://cache/organization-classification-codes/"
+  end
+
   get "/bestuurseenheden/*path", %{ layer: :resources, accept: %{ json: true } } do
     forward conn, path, "http://resource/bestuurseenheden/"
   end
