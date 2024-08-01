@@ -1,21 +1,3 @@
-(define-resource bestuurseenheid ()
-  :class (s-prefix "besluit:Bestuurseenheid")
-  :properties `((:naam :string ,(s-prefix "skos:prefLabel"))
-                (:alternatieve-naam :string-set ,(s-prefix "skos:altLabel")))
-  :has-one `((werkingsgebied :via ,(s-prefix "besluit:werkingsgebied")
-                             :as "werkingsgebied")
-             (werkingsgebied :via ,(s-prefix "ext:inProvincie")
-                             :as "provincie")
-             (bestuurseenheid-classificatie-code :via ,(s-prefix "besluit:classificatie")
-                                                 :as "classificatie"))
-  :has-many `((bestuursorgaan :via ,(s-prefix "besluit:bestuurt")
-                              :inverse t
-                              :as "bestuursorganen"))
-  :resource-base (s-url "http://data.lblod.info/id/bestuurseenheden/")
-  :features '(include-uri)
-  :on-path "bestuurseenheden"
-)
-
 (define-resource bestuurseenheid-classificatie-code ()
   :class (s-prefix "ext:BestuurseenheidClassificatieCode")
   :properties `((:label :string ,(s-prefix "skos:prefLabel"))
