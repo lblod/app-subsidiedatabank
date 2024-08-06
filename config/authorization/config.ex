@@ -38,6 +38,8 @@ defmodule Acl.UserGroups.Config do
                         "http://xmlns.com/foaf/0.1/Person",
                         "http://xmlns.com/foaf/0.1/OnlineAccount",
                         "http://data.vlaanderen.be/ns/besluit#Bestuurseenheid",
+                        "http://www.w3.org/ns/org#Organization",
+                        "http://mu.semte.ch/vocabularies/ext/OrganizationClassificationCode",
                       ]
                     } },
                     %GraphSpec{
