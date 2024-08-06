@@ -1,0 +1,642 @@
+@prefix : <#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix form: <http://lblod.data.gift/vocabularies/forms/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix displayTypes: <http://lblod.data.gift/display-types/>.
+@prefix nodes: <http://data.lblod.info/form-data/nodes/>.
+@prefix emb: <http://ember-submission-form-fields/>.
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/>.
+@prefix lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix schema: <http://schema.org/>.
+
+nodes:068992a7-e93b-4e09-9047-034e6699583e
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help "Geef hier een kort overzicht en schets de algemene doelstellingen/ opdrachten van de organisatie en van de relevante expertise die de organisatie kan inzetten met betrekking tot de doelstellingen van dit subsidiekader.";
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	form:validatedBy [
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:order 1;
+		sh:path lblodSubsidie:organisatieDoelstellingen;
+		sh:resultMessage "Max. karakters overschreden."@nl ];
+	sh:name "Informatie over de algemene werking en doelstellingen van uw organisatie.";
+	sh:order 1;
+	sh:path lblodSubsidie:organisatieDoelstellingen .
+
+nodes:0dd992f9-4512-405d-80d6-b6381ec7d53e
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+  form:help "Vat het project bondig samen. Formuleer daarbij welke doelen u met het voorstel beoogt en licht uw visie op dit project toe.";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Doelstelling en korte omschrijving van het project";
+	sh:order 2;
+	sh:path lblodSubsidie:projectDescription .
+
+nodes:1af789aa-49d2-419d-87ee-5014e8aa75ec
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help "Omschrijf beknopt het specifieke doelpubliek van het project evenals het grondgebied dat u met dit project bestrijkt en de mate waarin de beoogde doelgroep daarop is vertegenwoordigd. Geef daarbij de noden van het specifieke doelpubliek aan en hoe u met hen zal samenwerken. Hoe worden de acties van het project afgestemd op de doelgroep?";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Doelpubliek";
+	sh:order 3;
+	sh:path lblodSubsidie:projectTargetAudience.
+
+nodes:1c0e55b3-bd82-47ca-8c01-33edd7b131c3
+	 a form:Field;
+	form:displayType displayTypes:currencyInput;
+	form:partOf nodes:b12c7fa8-f842-4ba4-8d0c-c05b9c2e0d3a;
+	sh:name "Gevraagde subsidie";
+	sh:order 4;
+	sh:path lblodSubsidie:subisidyAmount .
+
+nodes:1ff8e8dc-9c94-4d36-b46f-ffab391aa64c
+	 a form:Scope;
+	sh:path nodes:239d823a-bed3-4f17-bd15-7e69b12bcf8f.
+
+nodes:23190479-6fc7-47af-9ee1-62d56d691b44
+	 a form:Listing,
+	form:ListingTable;
+	form:canAdd true;
+	form:canRemove true;
+	form:createGenerator nodes:28ce5976-e87f-4a3e-8cf9-2b820a8b3950;
+	form:scope nodes:678aa635-ebaa-4d41-b892-f211d6b29a33;
+	sh:order 5 .
+
+nodes:243fde9a-ad78-489c-a950-ab6fda6d54f6
+   a form:Field;
+	form:displayType displayTypes:remoteUrls;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	sh:name "Website";
+	sh:order 6;
+	sh:path dct:hasPart .
+
+nodes:27b32ac5-af6a-4104-8c6c-d46ca9d083d9
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ea6faa0b-f3a4-4e80-8b7d-5ef8ff6c1cf4;
+	sh:name "Subsidi\u00ebrende instantie";
+	sh:order 1;
+	sh:path ext:subsidieInstantie .
+
+nodes:28ce5976-e87f-4a3e-8cf9-2b820a8b3950
+	 a form:Generator;
+	form:prototype [
+		form:shape [
+		a ext:Expense;
+		ext:expenseAmount 0.0 ] ].
+
+	nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355
+		 a form:Section;
+		form:help "Maak een zo gedetailleerd mogelijke begroting op, op basis van onderstaand schema:";
+		sh:name "Overzicht begroting";
+		sh:order 6 .
+
+	nodes:32223769-2e97-485e-bfef-e689e043ac62
+		sh:order 7, 8 .
+
+	nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35
+		 a form:Section;
+		sh:name "Inhoudelijke gegevens van het project";
+		sh:order 5 .
+
+	nodes:38e8bf03-8276-483c-bab0-f47cfac91990
+		 a form:Scope;
+		sh:path nodes:fc33eb9d-d508-413c-b2b1-c2db6ab3e7b4 .
+
+	nodes:396e0acf-c88b-4c4d-a0ad-3b4714866a28
+		 a form:Field;
+		form:displayType displayTypes:date;
+
+	form:partOf nodes:b12c7fa8-f842-4ba4-8d0c-c05b9c2e0d3a;
+	sh:name "Einddatum van het project";
+	sh:order 3;
+	sh:path lblodSubsidie:projectEnddate.
+
+nodes:43adef89-c1e8-4d49-b063-5bbb041e00cd
+	 a form:Scope;
+	sh:path nodes:ce2ed3f6-fe63-43ef-aba2-75e1c8da9c13 .
+
+nodes:4573aaad-cb13-4a45-b486-0301a47a9f05
+	 a form:Generator;
+	form:prototype nodes:498b9d37-a4c3-466b-8833-a0999478d802 .
+
+nodes:498b9d37-a4c3-466b-8833-a0999478d802
+	form:shape nodes:b39e59fd-587b-48aa-b54a-eef9db2770a9 .
+
+nodes:4b34572d-7d5a-49f6-8fa3-0ff792c045ef
+	 a form:Listing,
+	form:ListingTable;
+	form:canAdd true;
+	form:canRemove true;
+	form:createGenerator nodes:fb675f2f-95f0-412a-8d80-509b499c5e8a;
+	form:scope nodes:43adef89-c1e8-4d49-b063-5bbb041e00cd;
+	sh:order 4 .
+
+nodes:4bfeb9f9-cb17-4432-9f6f-837540c1e700
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path ( schema:contactPoint schema:email );
+		sh:resultMessage "Dit veld is verplicht."@nl
+  ],
+	[
+    a form:ValidEmail;
+		form:grouping form:MatchEvery;
+	  sh:order 2;
+	  sh:path ( schema:contactPoint schema:email );
+	  sh:resultMessage "Geef een geldig e-mailadres op."@nl
+  ];
+	sh:name "E-mailadres";
+	sh:order 9;
+	sh:path ( schema:contactPoint schema:email ) .
+
+nodes:4ca2edb4-544e-4096-9cfb-0de4c7ca9406
+	 a form:Listing,
+	form:ListingTable;
+	form:canAdd true;
+	form:canRemove true;
+	form:createGenerator nodes:5f6b3a7e-86b0-4e32-ae28-f1563a469d72;
+	form:scope nodes:1ff8e8dc-9c94-4d36-b46f-ffab391aa64c;
+	sh:order 2 .
+
+nodes:5f6b3a7e-86b0-4e32-ae28-f1563a469d72
+	 a form:Generator;
+	form:prototype nodes:ad771e46-7747-4d94-b842-6207adecc40f.
+
+nodes:605c7fda-f84a-45e2-a326-a8a5983883ab
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help "Hoe wordt kennis verspreid in de loop van het project? Hoe worden de resultaten bekendgemaakt en zo nodig overgedragen aan andere organisaties? Wat zijn de randvoorwaarden om het project te kunnen opnemen in reguliere financiering of elders duurzaam te verankeren?";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Promotie en implementatie/verankering";
+	sh:order 10;
+	sh:path lblodSubsidie:promotionStrategy .
+
+nodes:612bdaf7-d755-471e-b7e3-036992ee0602
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1;
+	sh:name "Projecttitel";
+	sh:order 11;
+	sh:path lblodSubsidie:projectTitle .
+
+nodes:678aa635-ebaa-4d41-b892-f211d6b29a33
+	 a form:Scope;
+	sh:path ext:Expense.
+
+nodes:69aa4aae-b45c-434a-bc12-ca69100544dc
+	 a form:Section;
+	sh:name "Overzicht van andere subsidi\u00ebrende instanties";
+	sh:order 9 .
+
+nodes:6a7a290b-3260-4feb-8770-b2233d34ef8b
+	form:shape nodes:7ed056c5-3b4c-4b94-959a-cd6bd97a2e72 .
+
+# TODO: use contactPoint schema:postalCode? It's postnummer AND gemeente
+# Or just use lblodSubsidie:postalCodeAndMunicipality / lblodSubsidie:postcodeEnGemeente
+nodes:6e3cf229-c58b-413f-a8ac-90a2ea1d1091
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path ( schema:contactPoint schema:postalCode );
+		sh:resultMessage "Dit veld is verplicht."@nl ];
+	sh:name "Postnummer en Gemeente";
+	sh:order 7;
+	sh:path ( schema:contactPoint schema:postalCode ) .
+
+nodes:6f0c146e-a479-41cf-a209-99eb703c286f
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+  form:help """* Toegankelijkheidskosten: dit kan gaan om uitgaven i.v.m. bijvoorbeeld ondersteuning in het toegankelijk maken van documenten, website e.d.., ondersteuning door het Agentschap Inter,\u2026 OPGELET: Uitgaven i.v.m. infrastructuurwerken voor het toegankelijk maken van gebouwen of omgeving worden niet gesubsidieerd. Voor wat betreft de personeelskosten: geef per medewerker de kost aan (met vermelding van gehanteerde loonschaal en inzet in het project)
+OPGELET -	Investeringen in materieel kunnen alleen onder de vorm van afschrijvingen in de begroting worden opgenomen in verhouding tot de duur van het project (bijvoorbeeld aankoop van een PC: afschrijving over 3 jaar: max. 1/3e van de aankoopwaarde kan ingebracht worden wanneer het project 1 jaar duurt). -	Als een organisatie geen algemene werkingssubsidies krijgt, kunnen algemene werkingskosten alleen gedeeltelijk worden aangerekend, voor zover ze verband houden met het project. Deze kosten moeten in rapportagefase altijd bewezen kunnen worden met nodige bewijsstukken (facturen).""";
+	form:partOf nodes:b216bee1-75fa-484f-9533-af3e081d5b21;
+	sh:name "Geef een korte verantwoording van de werkingskosten die noodzakelijk zijn voor de verwezenlijking van het project.";
+	sh:order 14;
+	sh:path lblodSubsidie:werkingskostenVerantwoording .
+
+nodes:70f09b18-ec3f-4c3a-acfb-7f9df79b975d
+	 a form:SubForm;
+	form:includes nodes:3498416b-fadc-4191-96cc-8f19af72016c,
+	nodes:a1ef555e-ed8b-4716-afb9-c427e7fa7f58, nodes:e5f1d37d-eb43-45d9-81a0-c7528bce8573;
+	sh:name "The subform title".
+
+nodes:7448c804-cac4-4d5c-ba2c-b4a52b47da7f
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help """Argumenteer op welke manier je tegemoet komt aan de toegankelijkheidseisen zoals geformuleerd onder de voorwaarden voor subsidi\u00ebring van de subsidiegids. Geef ook aan hoe je \u2013voor zover je dit elders nog niet aangeeft- rekening houdt met de algemene principes rond diversiteit.""";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Aandacht voor toegankelijkheid en diversiteit";
+	sh:order 15;
+	sh:path lblodSubsidie:toegankelijkheidArgumentatie.
+
+nodes:74c83e68-3c82-4ae4-b5a2-68346a8a7695
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help "Beschrijf welke personeelsleden de organisatie inzet voor de uitvoering van het project. Wat is hun taak binnen het project? Op basis van welke kennis en ervaring worden ze ingezet? Voor welke periode binnen de duur van het project worden ze aangesteld?";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Personeelsinzet";
+	sh:order 5;
+	sh:path lblodSubsidie:personeelsinzetBeschrijving.
+
+nodes:7cc25932-f91d-4ee6-9d07-792609ccee57
+	 a form:SubForm;
+	form:includes nodes:fddf5a94-1d21-4f7d-9d9f-5cda3c597aa0;
+	sh:name "The subform title".
+
+nodes:834b7c21-7a4f-46f0-9653-6f4e970e1546
+	 a form:Field;
+	form:displayType displayTypes:checkbox;
+	form:help """Als eventuele begunstigde van een projectsubsidie Gelijke Kansen zal de indiener zich houden aan de bepalingen van deze verklaring. De begunstigde verbindt zich er toe bij het uitvoeren van dit project niemand te discrimineren op grond van geslacht, genderidentiteit, genderexpressie, leeftijd, seksuele geaardheid, burgerlijke staat, geboorte, vermogen, geloof of levensbeschouwing, politieke overtuiging, syndicale overtuiging, taal, gezondheidstoestand, handicap, fysieke of genetische eigenschap, sociale positie, nationaliteit, zogenaamd ras, huidskleur, afkomst, of nationale of etnische afstamming. Hij ziet hierop toe, zowel ten aanzien van zijn personeelsleden onderling als ten aanzien van derden, zoals deelnemers, bezoekers, externe medewerkers,\u2026 De begunstigde verbindt zich er toe, voor zo ver redelijk, aanpassingen door te voeren, op vraag van personen met een handicap, die de beperkende invloed van een onaangepaste omgeving op de participatie van een persoon met een handicap neutraliseren. Indien een personeelslid van de begunstigde zich tijdens de uitvoering van het project schuldig maakt aan discriminatie, pestgedrag, geweld, aantasting van de integriteit of ongewenst seksueel gedrag, zal de begunstigde de nodige maatregelen treffen om een eind te maken aan dit gedrag en waar nodig het slachtoffer in eer herstellen. De werknemers met hi\u00ebrarchische verantwoordelijkheden zullen toezien op het naleven van dit engagement. Bij elke mogelijke klacht in dit verband tegen de begunstigde, zal deze zijn volledige medewerking verlenen aan eventueel onderzoek dat in dit verband verricht wordt door een organisatie, gespecialiseerd in de bestrijding van discriminatie, in dit verband aangesteld door de Vlaamse overheid. De begunstigde vraagt tevens al zijn personeelsleden alert te zijn voor discriminatie, pestgedrag, geweld, aantasting van de integriteit of ongewenst seksueel gedrag, in die zin dat ze de gevallen waar ze getuige van zijn, onmiddellijk dienen te melden aan een werknemer met hi\u00ebrarchische verantwoordelijkheid.  De begunstigde verbindt zich ertoe om geen druk uit te oefenen op eigen personeelsleden, die slachtoffer worden van discriminatie, pestgedrag, geweld, aantasting van de integriteit of ongewenst seksueel gedrag door een klant of een derde, om af te zien van eventuele indiening van een klacht of inleiding van een vordering voor de rechtbank in dit verband. De begunstigde ziet er voor zover redelijk op toe dat ook de onderaannemers die hij eventueel inschakelt voor het project zich houden aan deze uitvoeringsvoorwaarden.""";
+	form:partOf nodes:a5918896-a804-487d-b2f3-e1dcd8a61e4a;
+	sh:name "Bevestig";
+	sh:order 17;
+	sh:path lblodSubsidie:confirmationCheckbox .
+
+nodes:84d96972-ff79-4b8f-bb48-d4c546500168
+	 a form:SubForm;
+	form:includes nodes:2aa410d4-ad60-4ae5-82e5-119ec5255be4,
+
+nodes:7afcc135-b043-49c5-a9b6-ad809a6fa243, nodes:a2dcaa17-e535-4ae2-9b9e-8b4561969545;
+	form:removeLabel "Remove row text";
+	sh:name "The subform title".
+
+nodes:873c6e4f-1109-4b6f-a57c-4251b381ec5d
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ea6faa0b-f3a4-4e80-8b7d-5ef8ff6c1cf4;
+	sh:name "Reden van erkenning/subsidie";
+	sh:order 2;
+	sh:path ext:subsidieOfErkenningReden.
+
+nodes:942cb8aa-d787-4ade-9abd-16d8d7bf72bd
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path ( schema:contactPoint schema:fullName );
+		sh:resultMessage "Dit veld is verplicht."@nl ];
+	sh:name "Contactpersoon";
+	sh:order 8;
+	sh:path ( schema:contactPoint schema:fullName ).
+
+nodes:944f37e1-0a0e-4e3d-bcd1-0e362c26f391
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+  form:validatedBy
+  [
+    a form:RequiredConstraint;
+    form:grouping form:Bag;
+    sh:order 1;
+    sh:path ( schema:contactPoint schema:streetAddress );
+    sh:resultMessage "Dit veld is verplicht."@nl
+  ];
+	sh:name "Straat en nummer";
+	sh:order 6;
+	sh:path ( schema:contactPoint schema:streetAddress ) .
+
+nodes:99d5b32f-63ba-4a04-8f35-5d9b70ccddbe
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help "Hoe zal u samenwerken met de lokale besturen die binnen het grondgebied van het project vallen? Indien relevant, welke  samenwerkingsverbanden met andere verenigingen of organisaties worden aangegaan in het kader van dit project? Wat is de rol van deze organisaties? Wat is de aard van de samenwerking?";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Samenwerkingsverbanden";
+	sh:order 6;
+	sh:path lblodSubsidie:samenwerkingsBeschrijving .
+
+nodes:9af49577-a98f-42a0-a424-199136bad130
+	sh:order 21 .
+
+nodes:9f0c03a1-a588-4150-a9b7-9ddfb8a5edb9
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path ( schema:bankAccount schema:identifier );
+
+	sh:resultMessage "Dit veld is verplicht."@nl ],
+	[
+		a form:ValidIBAN;
+		form:grouping form:MatchEvery;
+		sh:order 2;
+		sh:path ( schema:bankAccount schema:identifier );
+		sh:resultMessage "Geef een geldig IBAN op."@nl
+  ];
+	sh:name "Iban";
+	sh:order 13;
+	sh:path ( schema:bankAccount schema:identifier ).
+
+nodes:a2283409-c32c-453b-8a95-783428e4df53
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help "Wanneer is het project geslaagd? Beschrijf de concrete resultaten die u wil behalen met het project.";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Beoogde resultaten";
+	sh:order 5;
+	sh:path lblodSubsidie:resultsDescription .
+
+nodes:a5918896-a804-487d-b2f3-e1dcd8a61e4a
+	 a form:Section;
+	sh:name "Verklaring non-discriminatie en integriteit";
+	sh:order 10 .
+
+nodes:aab3b6ea-db2c-4786-bf6a-401882292e6b
+	 a form:Field;
+	form:displayType displayTypes:date;
+	form:partOf nodes:b12c7fa8-f842-4ba4-8d0c-c05b9c2e0d3a;
+	sh:name "Startdatum van het project";
+	sh:order 2;
+	sh:path lblodSubsidie:projectStartdate.
+
+nodes:ad771e46-7747-4d94-b842-6207adecc40f
+	form:shape nodes:da138a6d-5363-4ea3-85a3-67582f09530b.
+
+nodes:adb9b4f4-12d3-4d3c-a7ae-a6caa41ab82d
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:69aa4aae-b45c-434a-bc12-ca69100544dc;
+	sh:name "Heeft u voor het project een financi\u00eble tegemoetkoming aangevraagd bij een of meer andere instanties? Geef hieronder een overzicht van deze tegemoetkomingen samen met de contactgegevens van elk van de instanties.";
+	sh:order 25;
+	sh:path lblodSubsidie:aangevraagdeTegemoetkomingenBeschrijving .
+
+nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541
+	 a form:Section;
+	sh:name "Gegevens van de aanvrager";
+	sh:order 2 .
+
+nodes:b12c7fa8-f842-4ba4-8d0c-c05b9c2e0d3a
+	 a form:Section;
+	sh:name "Identificatie van het project";
+	sh:order 4 .
+
+nodes:b216bee1-75fa-484f-9533-af3e081d5b21
+	 a form:Section;
+	sh:name "Verantwoording van de begrote middelen";
+	sh:order 7 .
+
+nodes:b4674b0f-1103-43fd-b2f8-44af551d1d3c
+	 a form:Field;
+	form:displayType displayTypes:currencyInput;
+	form:partOf nodes:ea6faa0b-f3a4-4e80-8b7d-5ef8ff6c1cf4;
+	sh:name "Bedrag";
+	sh:order 3;
+	sh:path lblodSubsidie:subisidieOfErkenningsBedrag .
+
+nodes:b66708ab-f00d-42ab-955f-4ef3f9e940f4
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	form:validatedBy
+  [
+    a form:RequiredConstraint;
+    form:grouping form:Bag;
+    sh:order 1;
+    sh:path (schema:contactPoint lblodSubsidie:juridischStatuut );
+    sh:resultMessage "Dit veld is verplicht."@nl
+  ];
+	sh:name "Juridisch Statuut";
+	sh:order 2;
+	sh:path (schema:contactPoint lblodSubsidie:juridischStatuut ) .
+
+nodes:c6554664-7d1e-4697-9192-bee21afe0982
+	 a form:Section;
+	sh:order 8 .
+
+nodes:cb3b87cb-eaaa-4e91-8e7f-1a571025d684
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	sh:name "Ondernemingsnummer";
+	sh:order 12;
+	sh:path (schema:contactPoint lblodSubsidie:ondernemingsNummer ) .
+
+nodes:d21212da-3228-4472-9127-2adccdf011d4
+	 a form:SubForm;
+	form:includes nodes:27b32ac5-af6a-4104-8c6c-d46ca9d083d9,
+	nodes:873c6e4f-1109-4b6f-a57c-4251b381ec5d, nodes:b4674b0f-1103-43fd-b2f8-44af551d1d3c;
+	form:removeLabel "Verwijder rij";
+	sh:name "The subform title".
+
+nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1
+	 a form:Section;
+	sh:name "Algemeen";
+	sh:order 1 .
+
+nodes:e25f0f63-62ca-4c34-bf94-6e7409c1521a
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:help "Welke concrete acties onderneemt u? Geef de verschillende stappen voor het concrete verloop van het project, de timing, de betrokkenheid van eventuele partners en van de doelgroep. Vermeld ook duidelijk hoe en wanneer je welke stap wilt bereiken en welke middelen uitgetrokken zijn voor het project. Omschrijf de taken, de rollen, de verantwoordelijkheden en de vereiste competenties in het project. Licht toe hoe de samenwerking tussen het projectteam en de doelgroep of de betrokkenen georganiseerd wordt en welke afspraken er gemaakt zijn over de besluitvorming en de communicatie.";
+	form:partOf nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35;
+	sh:name "Plan van aanpak";
+	sh:order 3;
+	sh:path lblodSubsidie:planVanAanpak.
+
+nodes:e92536e7-7415-408e-ac66-a6e82c5fa9bb
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541;
+	form:validatedBy [
+		a form:ValidPhoneNumber;
+		form:defaultCountry "BE";
+		form:grouping form:MatchEvery;
+		sh:order 2;
+		sh:path ( schema:contactPoint schema:telephone );
+		sh:resultMessage "Geef een geldig telefoonnummer in."@nl
+  ],
+	[
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path ( schema:contactPoint schema:telephone );
+		sh:resultMessage "Dit veld is verplicht."@nl
+  ];
+	sh:name "Telefoonnummer";
+	sh:order 9;
+	sh:path ( schema:contactPoint schema:telephone ).
+
+nodes:ea6faa0b-f3a4-4e80-8b7d-5ef8ff6c1cf4
+	 a form:Section;
+	form:help "Vul onderstaande tabel schematisch in zodat we een overzicht krijgen van welke overheidsinstanties de organisatie structureel ondersteunen.";
+	sh:name "Overzicht van erkenningen en subsidi\u00ebring";
+	sh:order 3 .
+
+# Overzicht van erkenningen en subsidiëring
+nodes:eaea798c-8af2-4f7b-bd84-840461ddc4a3
+	 a form:Listing,
+	form:ListingTable;
+	form:addLabel "Voeg structurele ondersteuning toe";
+	form:canAdd true;
+	form:canRemove true;
+	form:createGenerator ext:erkenningEnSubsidieGenerator;
+	form:each nodes:d21212da-3228-4472-9127-2adccdf011d4;
+	form:partOf nodes:ea6faa0b-f3a4-4e80-8b7d-5ef8ff6c1cf4;
+	form:scope ext:erkenningEnSubsidieS;
+	sh:order 1 .
+
+nodes:eca15be5-abbe-4351-b23a-a0459aaaf51b
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:b12c7fa8-f842-4ba4-8d0c-c05b9c2e0d3a;
+	sh:name "Titel van het project";
+	sh:order 1;
+	sh:path lblodSubsidie:projectTitel.
+
+nodes:expenseAmount
+	 a form:Field;
+	form:displayType displayTypes:currencyInput;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	sh:name "Bedrag in euro";
+	sh:order 2;
+	sh:path ext:expenseAmount.
+
+
+nodes:expenseJustification
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	sh:name "Verantwoording";
+	sh:order 3;
+	sh:path ext:verantwoordingKosten.
+
+nodes:expenseSubForm
+	 a form:SubForm;
+	form:includes nodes:expenseAmount,
+	nodes:expenseJustification, nodes:expenseType;
+	form:removeLabel "Remove row text";
+	sh:name "The subform title".
+
+nodes:expenseTable
+	 a form:Listing,
+	form:ListingTable;
+	form:addLabel "Voeg kosten toe";
+	form:canAdd true;
+	form:canRemove true;
+	form:createGenerator ext:expenseGenerator;
+	form:each nodes:expenseSubForm;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	form:scope ext:expenseS;
+	sh:order 1 .
+
+nodes:expenseType
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	sh:name "Soort kosten";
+	sh:order 1;
+	sh:path ext:soortenKosten.
+
+nodes:fb675f2f-95f0-412a-8d80-509b499c5e8a
+	 a form:Generator;
+	form:prototype nodes:6a7a290b-3260-4feb-8770-b2233d34ef8b.
+
+
+nodes:incomeAmount
+	 a form:Field;
+	form:displayType displayTypes:currencyInput;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	sh:name "Bedrag in euro";
+	sh:order 2;
+	sh:path ext:incomeAmount.
+
+nodes:incomeJustification
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	sh:name "Verantwoording";
+	sh:order 3;
+	sh:path ext:verantwoordingInkomsten .
+
+nodes:incomeSubform
+	 a form:SubForm;
+	form:includes nodes:incomeAmount,
+	nodes:incomeJustification, nodes:incomeType;
+	form:removeLabel "Verwijder inkomsten";
+	sh:name "The subform title".
+
+nodes:incomeTable
+	 a form:Listing,
+	form:ListingTable;
+	form:addLabel "Voeg inkomsten toe";
+	form:canAdd true;
+	form:canRemove true;
+	form:createGenerator ext:incomeGenerator;
+	form:each nodes:incomeSubform;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	form:scope ext:incomeS;
+	sh:order 1 .
+
+nodes:incomeType
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355;
+	sh:name "Soort inkomsten";
+	sh:order 1;
+	sh:path ext:soortenInkomsten.
+
+emb:source-node
+	 a form:Form,
+	form:TopLevelForm;
+	form:includes nodes:068992a7-e93b-4e09-9047-034e6699583e,
+	nodes:0dd992f9-4512-405d-80d6-b6381ec7d53e, nodes:1af789aa-49d2-419d-87ee-5014e8aa75ec, nodes:1c0e55b3-bd82-47ca-8c01-33edd7b131c3, nodes:243fde9a-ad78-489c-a950-ab6fda6d54f6, nodes:32223769-2e97-485e-bfef-e689e043ac62, nodes:396e0acf-c88b-4c4d-a0ad-3b4714866a28, nodes:4bfeb9f9-cb17-4432-9f6f-837540c1e700, nodes:605c7fda-f84a-45e2-a326-a8a5983883ab, nodes:612bdaf7-d755-471e-b7e3-036992ee0602,
+nodes:6e3cf229-c58b-413f-a8ac-90a2ea1d1091, nodes:6f0c146e-a479-41cf-a209-99eb703c286f, nodes:7448c804-cac4-4d5c-ba2c-b4a52b47da7f, nodes:74c83e68-3c82-4ae4-b5a2-68346a8a7695, nodes:834b7c21-7a4f-46f0-9653-6f4e970e1546, nodes:942cb8aa-d787-4ade-9abd-16d8d7bf72bd, nodes:944f37e1-0a0e-4e3d-bcd1-0e362c26f391, nodes:99d5b32f-63ba-4a04-8f35-5d9b70ccddbe, nodes:9af49577-a98f-42a0-a424-199136bad130, nodes:9f0c03a1-a588-4150-a9b7-9ddfb8a5edb9, nodes:a2283409-c32c-453b-8a95-783428e4df53, nodes:aab3b6ea-db2c-4786-bf6a-401882292e6b, nodes:adb9b4f4-12d3-4d3c-a7ae-a6caa41ab82d, nodes:b66708ab-f00d-42ab-955f-4ef3f9e940f4, nodes:cb3b87cb-eaaa-4e91-8e7f-1a571025d684, nodes:e25f0f63-62ca-4c34-bf94-6e7409c1521a, nodes:e92536e7-7415-408e-ac66-a6e82c5fa9bb, nodes:eaea798c-8af2-4f7b-bd84-840461ddc4a3, nodes:eca15be5-abbe-4351-b23a-a0459aaaf51b, nodes:expenseTable, nodes:incomeTable, nodes:somInkomsten, nodes:somUitgaven;
+	form:partOf nodes:2d3e6aac-6a81-4f70-83a1-5315275ad355,
+	nodes:354f7be8-2ab6-4d58-9f7a-dc8051613b35, nodes:69aa4aae-b45c-434a-bc12-ca69100544dc, nodes:a5918896-a804-487d-b2f3-e1dcd8a61e4a, nodes:ae1a10a9-a2c1-4889-9fcb-e8a2542f4541, nodes:b12c7fa8-f842-4ba4-8d0c-c05b9c2e0d3a, nodes:b216bee1-75fa-484f-9533-af3e081d5b21, nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1, nodes:ea6faa0b-f3a4-4e80-8b7d-5ef8ff6c1cf4 .
+
+# Erkenning en Subsidies
+ext:erkenningEnSubsidieGenerator
+	 a form:Generator;
+	form:prototype [
+    form:shape [
+      a ext:ErkenningOrSubsidie;
+      a ext:erkenningOrSubsidieAmount;
+    ]
+  ] .
+
+ext:erkenningEnSubsidieS
+	 a form:Scope;
+	sh:path ext:ErkenningOrSubsidie.
+
+# Kosten
+ext:expenseGenerator
+	 a form:Generator;
+	form:dataGenerator form:addMuUuid;
+	form:prototype [
+		form:shape [
+		a ext:Expense;
+		a ext:expenseAmount; ] ].
+
+	ext:expenseS
+		 a form:Scope;
+		sh:path ext:Expense.
+
+# Inkomsten
+	ext:incomeGenerator
+		 a form:Generator;
+		form:dataGenerator form:addMuUuid;
+		form:prototype [
+      form:shape [
+      a ext:Income;
+      a ext:incomeAmount; ]
+    ].
+
+	ext:incomeS
+		 a form:Scope;
+		sh:path ext:Income.
+
