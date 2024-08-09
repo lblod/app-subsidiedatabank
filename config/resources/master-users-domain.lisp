@@ -6,9 +6,9 @@
                 (:rijksregister-nummer :string ,(s-prefix "dct:identifier")))
   :has-many `((account :via ,(s-prefix "foaf:account")
                        :as "account")
-              (bestuurseenheid :via ,(s-prefix "foaf:member")
-                              :as "bestuurseenheden"))
-  :features `(include-uri)
+              (organization :via ,(s-prefix "foaf:member")
+                              :as "organizations")
+             )
   :on-path "gebruikers"
 )
 

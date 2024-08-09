@@ -1,0 +1,101 @@
+{
+  "source": {
+    "prefixes": [
+      "PREFIX mu:            <http://mu.semte.ch/vocabularies/core/>",
+      "PREFIX rdf:           <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+      "PREFIX dct:           <http://purl.org/dc/terms/>",
+      "PREFIX skos:          <http://www.w3.org/2004/02/skos/core#>",
+      "PREFIX subsidie:      <http://data.vlaanderen.be/ns/subsidie#>",
+      "PREFIX lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>",
+      "PREFIX schema:        <http://schema.org/>",
+      "PREFIX foaf:          <http://xmlns.com/foaf/0.1/>",
+      "PREFIX ext:           <http://mu.semte.ch/vocabularies/ext/>",
+      "PREFIX sh:            <http://www.w3.org/ns/shacl#>",
+      "PREFIX nie:           <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#>"
+    ],
+    "properties": [
+      "lblodSubsidie:projectTitle",
+      "lblodSubsidie:projectTitel",
+      "lblodSubsidie:samenwerkingsBeschrijving",
+      "lblodSubsidie:resultsDescription",
+      "lblodSubsidie:projectStartdate",
+      "lblodSubsidie:projectEnddate",
+      "lblodSubsidie:aangevraagdeTegemoetkomingenBeschrijving",
+      "lblodSubsidie:subisidieOfErkenningsBedrag",
+      "lblodSubsidie:personeelsinzetBeschrijving",
+      "lblodSubsidie:planVanAanpak",
+      "lblodSubsidie:begrotingsTotaal",
+      "lblodSubsidie:organisatieDoelstellingen",
+      "lblodSubsidie:projectDescription",
+      "lblodSubsidie:projectTargetAudience",
+      "lblodSubsidie:subisidyAmount",
+      "lblodSubsidie:amount",
+      "lblodSubsidie:promotionStrategy",
+      "lblodSubsidie:toegankelijkheidArgumentatie",
+      "lblodSubsidie:werkingskostenVerantwoording",
+      "lblodSubsidie:confirmationCheckbox",
+      "lblodSubsidie:subsidizingAuthority",
+      {
+        "s-prefix": "schema:contactPoint",
+        "properties": [
+          "schema:fullName",
+          "schema:streetAddress",
+          "schema:postalCode",
+          "schema:email",
+          "schema:telephone",
+          "lblodSubsidie:juridischStatuut",
+          "lblodSubsidie:ondernemingsNummer"
+        ]
+      },
+      {
+        "s-prefix": "schema:bankAccount",
+        "properties": [
+          "schema:identifier",
+          {
+            "s-prefix": "dct:hasPart",
+            "properties": [
+              "rdf:type"
+            ]
+          }
+        ]
+      },
+      {
+        "s-prefix": "dct:hasPart",
+        "properties": [
+          "rdf:type",
+          "nie:url"
+        ]
+      },
+      {
+        "s-prefix": "ext:ErkenningOrSubsidie",
+        "properties": [
+          "rdf:type",
+          "sh:order",
+          "ext:subsidieInstantie",
+          "ext:subsidieOfErkenningReden",
+          "ext:erkenningOrSubsidieAmount"
+        ]
+      },
+      {
+        "s-prefix": "ext:Income",
+        "properties": [
+          "rdf:type",
+          "sh:order",
+          "ext:soortenInkomsten",
+          "ext:verantwoordingInkomsten",
+          "ext:incomeAmount"
+        ]
+      },
+      {
+        "s-prefix": "ext:Expense",
+        "properties": [
+          "rdf:type",
+          "sh:order",
+          "ext:soortenKosten",
+          "ext:verantwoordingKosten",
+          "ext:expenseAmount"
+        ]
+      }
+    ]
+  }
+}
