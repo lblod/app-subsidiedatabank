@@ -176,9 +176,9 @@
   :properties `((:description :string ,(s-prefix "dct:description"))
                 (:role :url ,(s-prefix "m8g:role"))
                 (:identifier :string ,(s-prefix "dct:identifier")))
-  :has-one `((bestuurseenheid :via ,(s-prefix "m8g:playsRole")
+  :has-one `((organization :via ,(s-prefix "m8g:playsRole")
                             :inverse t
-                            :as "participating-bestuurseenheid"))
+                            :as "participating-organization"))
   :has-many `((agents :via ,(s-prefix "m8g:playsRole")
                              :inverse t
                              :as "participating-agents")
@@ -220,7 +220,7 @@
                         :as "creator")
              (submission-document-status :via ,(s-prefix "adms:status")
                                          :as "status"))
-  :has-many `((bestuurseenheid :via ,(s-prefix "lblodSubsidie:collaborator")
+  :has-many `((organization :via ,(s-prefix "lblodSubsidie:collaborator")
                                       :as "collaborators")
               (file :via ,(s-prefix "dct:source")
                            :as "sources"))
