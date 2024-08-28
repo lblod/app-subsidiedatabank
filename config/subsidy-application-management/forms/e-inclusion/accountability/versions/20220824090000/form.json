@@ -9,33 +9,47 @@
         "PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>"
       ],
       "properties": [
-        "lblodSubsidie:amount",
-        "lblodSubsidie:currentEInclusionActions",
-        "lblodSubsidie:actionShortDescription",
-        "lblodSubsidie:actionFullDescription",
-        "lblodSubsidie:targetedAudience",
-        "lblodSubsidie:targetedAudienceOther",
+        "lblodSubsidie:toekomstigeElementenBeschrijving",
+        "lblodSubsidie:beschrijvingActieInternetKwetsbareBurgers",
+        "lblodSubsidie:succesfactorenBeschrijving",
+        "lblodSubsidie:actieVanToepassing",
+        "lblodSubsidie:doelgroepBereiktAndereOptie",
+        "lblodSubsidie:actieVanToepassingEigenInput",
+        "lblodSubsidie:actieSamenwerkingAndereOptie",
+        "lblodSubsidie:actieDoelgroepBereikt",
+        "lblodSubsidie:vervolgGepland",
+        "lblodSubsidie:actieSamenwerking",
+        "lblodSubsidie:actieImpactBeschrijving",
+        "ext:action",
         {
           "s-prefix": "schema:contactPoint",
           "properties": [
             "foaf:firstName",
             "foaf:familyName",
             "schema:telephone",
-            "schema:email",
-            "schema:jobTitle"
+            "schema:email"
           ]
         },
         {
-          "s-prefix": "schema:bankAccount",
+          "s-prefix": "lblodSubsidie:hasAdditionalAction",
           "properties": [
-            "schema:identifier",
-            {
-              "s-prefix": "dct:hasPart",
-              "properties": ["rdf:type"]
-            }
+            "lblodSubsidie:additionalActionType",
+            "lblodSubsidie:actieVanToepassingExtraActie1",
+            "lblodSubsidie:actieVanToepassingExtraActie2",
+            "lblodSubsidie:actieVanToepassingExtraActie3",
+            "lblodSubsidie:actieVanToepassingExtraActie4",
+            "lblodSubsidie:toekomstigeElementenBeschrijvingExtaActie",
+            "lblodSubsidie:geplandVervolgExtraActie",
+            "lblodSubsidie:extraActieSamenwerking",
+            "lblodSubsidie:doelgroepBereiktAndereOptieExtraActie",
+            "lblodSubsidie:extraActieImpactBeschrijving",
+            "lblodSubsidie:succesfactorenBeschrijvingExtraActie",
+            "lblodSubsidie:extraActieDoelgroepBereikt",
+            "lblodSubsidie:actieSamenwerkingAndereOptieExtra",
+            "lblodSubsidie:extraActieBeschrijving"
           ]
         }
       ]
+
     }
   }
-  

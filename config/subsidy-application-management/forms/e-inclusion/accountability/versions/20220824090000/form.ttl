@@ -1,43 +1,630 @@
-@prefix form: <http://lblod.data.gift/vocabularies/forms/> .
+@prefix : <#>.
+@prefix form: <http://lblod.data.gift/vocabularies/forms/>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
-@prefix mu: <http://mu.semte.ch/vocabularies/core/> .
-@prefix fieldGroups: <http://data.lblod.info/field-groups/> .
-@prefix fields: <http://data.lblod.info/fields/> .
-@prefix displayTypes: <http://lblod.data.gift/display-types/> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
-@prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+@prefix displayTypes: <http://lblod.data.gift/display-types/>.
+@prefix nodes: <http://data.lblod.info/form-data/nodes/>.
+@prefix emb: <http://ember-submission-form-fields/>.
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/>.
+@prefix fields: <http://data.lblod.info/fields/>.
+@prefix concept: <http://lblod.data.gift/concepts/>.
+@prefix lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix schema: <http://schema.org/>.
+
+fields:actionsSelectorField
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeSelector;
+	form:help "(Indien uw extra actie onder meerdere categorie\u00ebn kan vallen, kies de categorie die volgens u het meest toepasselijk is.)";
+  form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/14f53028-5c5c-4c9e-9e41-de46590b647a", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path lblodSubsidie:additionalActionType;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Onder welke categorie valt de actie die u wilt toevoegen?";
+	sh:order 1;
+	sh:path lblodSubsidie:additionalActionType.
+
+nodes:0af2f7bf-978e-4464-a950-7f0ba774cbfb
+    a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere antwoorden aanduiden is mogelijk)";
+  form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/5d34d724-680b-4e31-917d-6ad9cf76e4b5", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:actieVanToepassingExtraActie1;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Duid aan wat van toepassing was binnen deze actie:";
+	sh:order 7;
+	sh:path lblodSubsidie:actieVanToepassingExtraActie1 .
+
+nodes:11a556c3-6a6e-4eaa-a5ab-c58f568157aa
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:validatedBy [
+		a form:RequiredConstraint;
+    form:grouping form:Bag;
+    sh:path lblodSubsidie:toekomstigeElementenBeschrijving;
+    sh:resultMessage "Dit veld is verplicht." ],
+	  [
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:path lblodSubsidie:toekomstigeElementenBeschrijving;
+		sh:resultMessage "Max. karakters overschreden." ];
+	sh:name "Beschrijf welke elementen u in de toekomst anders zou doen in min. 500 en max. 1000 karakters.";
+	sh:order 14;
+	sh:path lblodSubsidie:toekomstigeElementenBeschrijving .
+
+nodes:1c2a64c4-2f5d-4cd0-96c1-834d7129af3b
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:toekomstigeElementenBeschrijvingExtaActie;
+		sh:resultMessage "Dit veld is verplicht." ],
+		[
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:path lblodSubsidie:toekomstigeElementenBeschrijvingExtaActie;
+		sh:resultMessage "Max. karakters overschreden." ];
+	sh:name "Beschrijf welke elementen u in de toekomst anders zou doen in min. 500 en max. 1000 karakters.";
+	sh:order 12;
+	sh:path lblodSubsidie:toekomstigeElementenBeschrijvingExtaActie.
+
+nodes:24289e48-258f-4919-8c3e-5783a6acb4a4
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path ( schema:contactPoint foaf:firstName );
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Voornaam";
+	sh:order 2;
+	sh:path ( schema:contactPoint foaf:firstName ) .
+
+nodes:28fd8e7a-c2d2-4f81-888b-8a11a673c2fe
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere antwoorden aanduiden is mogelijk)";
+  form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/db720651-2bc6-480a-805d-5976b3fcbb50",  "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path lblodSubsidie:actieVanToepassing;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Duid aan wat van toepassing was binnen deze actie:";
+	sh:order 6;
+	sh:path lblodSubsidie:actieVanToepassing.
+
+nodes:2de73a34-e74b-4e24-afcd-cb56bad403a1
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:succesfactorenBeschrijving;
+  	sh:resultMessage "Dit veld is verplicht." ],
+    [
+    a form:MaxLength;
+    form:grouping form:MatchEvery;
+    form:max "1000";
+    sh:order 1;
+    sh:path lblodSubsidie:succesfactorenBeschrijving;
+    sh:resultMessage "Max. karakters overschreden."@nl ];
+	sh:name "Beschrijf de succesfactoren in min. 500 en max. 1000 karakters.";
+	sh:order 13;
+	sh:path lblodSubsidie:succesfactorenBeschrijving .
+
+nodes:3911364b-f6d9-4b67-928b-11b772df7f5f
+	 a form:Section;
+	form:help "Beschrijf hieronder alle andere acties die uw lokaal bestuur uitvoerde met deze subsidie naast de bovenstaande verplichte actie. Je kan telkens een actie toevoegen door op \u2018Voeg extra actie toe\u2019 te klikken.";
+	sh:name "Extra actie";
+	sh:order 3 .
+
+nodes:3b8eb404-535f-4e3d-8764-b24ec4d87d37
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere antwoorden aanduiden is mogelijk)";
+form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/fbabbcab-ab24-4c11-bec4-7fffb8c4dad7", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+    form:valuesIn ( concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd );
+    sh:path lblodSubsidie:additionalActionType
+	];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:actieVanToepassingExtraActie2;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Duid aan wat van toepassing was binnen deze actie:";
+	sh:order 3;
+	sh:path lblodSubsidie:actieVanToepassingExtraActie2 .
+
+nodes:4396cdb5-898f-4fa8-802c-994c7377042f
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ];
+	sh:name "Is er een vervolg van deze actie (gepland)?";
+	sh:order 17;
+	sh:path lblodSubsidie:geplandVervolgExtraActie .
+
+nodes:4ee41cf5-3ad7-4584-9455-57fa4fd0eee1
+a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:8b50a1b9-6f28-4214-bd01-3e1364122192 );
+    sh:path lblodSubsidie:actieDoelgroepBereikt ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:doelgroepBereiktAndereOptie;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Andere";
+	sh:order 17;
+	sh:path lblodSubsidie:doelgroepBereiktAndereOptie .
+
+nodes:57ff8ea4-1483-4eca-a93b-f6957937935d
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere antwoorden aanduiden is mogelijk)";
+form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/da003279-0385-4deb-9173-c6bc3bc00d76", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+    form:grouping form:Bag;
+    form:valuesIn ( concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:actieVanToepassingExtraActie3;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Duid aan wat van toepassing was binnen deze actie:";
+	sh:order 5;
+	sh:path lblodSubsidie:actieVanToepassingExtraActie3.
+
+nodes:5b8da2d3-02b2-4d84-8528-9a5f02c110bf
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	sh:name "Is er een vervolg van deze actie (gepland)?";
+	sh:order 19;
+	sh:path lblodSubsidie:vervolgGepland.
+
+nodes:60a427d9-b6fb-4b71-a5cb-53595b75da92
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere antwoorden aanduiden is mogelijk)";
+form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/305b862a-85ce-4479-b9a1-291e03ae6a39", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+    a form:MatchValues;
+    form:grouping form:Bag;
+    form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path lblodSubsidie:extraActieSamenwerking;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Voor deze actie werkten we samen met:";
+	sh:order 15;
+	sh:path lblodSubsidie:extraActieSamenwerking.
+
+nodes:6900d536-f867-4e60-af69-285404470538
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+    sh:path ( schema:contactPoint schema:email )	],
+    [
+		a form:ValidEmail;
+		form:grouping form:MatchEvery;
+		sh:order 2;
+		sh:path ( schema:contactPoint schema:email ) ];
+	sh:name "Mailadres";
+	sh:order 5;
+	sh:path ( schema:contactPoint schema:email ) .
+
+nodes:72e7c695-16da-4e25-974f-6d92ba46a0e9
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:9471a2b8-d6cb-438e-97cd-7812a55c9d3b );
+    sh:path lblodSubsidie:actieVanToepassing ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:actieVanToepassingEigenInput;
+		sh:resultMessage "Dit veld is verplicht." ];
+  sh:name "Doel van de actie";
+	sh:order 10;
+	sh:path lblodSubsidie:actieVanToepassingEigenInput .
+
+nodes:752cf059-b334-4413-9b15-46d621e29076
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path ( schema:contactPoint foaf:familyName ) ];
+	sh:name "Familienaam";
+	sh:order 3;
+	sh:path ( schema:contactPoint foaf:familyName ) .
+
+nodes:910c3d2d-140f-472a-a6a7-b1d734ac68ae
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:actieImpactBeschrijving;
+		sh:resultMessage "Dit veld is verplicht." ],
+		[
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:order 1;
+		sh:path lblodSubsidie:actieImpactBeschrijving;
+		sh:resultMessage "Max. karakters overschreden."@nl ];
+  sh:name "Beschrijf de impact van de actie in min. 500 en max. 1000 karakters.";
+	sh:order 12;
+	sh:path lblodSubsidie:actieImpactBeschrijving .
+
+nodes:93d0ca54-c2db-453e-9f58-eebf1110fed5
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere antwoorden aanduiden is mogelijk)";
+  form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/db720651-2bc6-480a-805d-5976b3fcbb50", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:c9b14645-ab92-4b01-833d-14834d54a4a8 );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path lblodSubsidie:actieVanToepassingExtraActie4;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Duid aan wat van toepassing was binnen deze actie:";
+	sh:order 2;
+	sh:path lblodSubsidie:actieVanToepassingExtraActie4.
+
+nodes:957ea5dd-068c-4e28-b221-d043f6711be7
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ],
+		[
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:8b50a1b9-6f28-4214-bd01-3e1364122192 );
+    sh:path lblodSubsidie:extraActieDoelgroepBereikt ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:doelgroepBereiktAndereOptieExtraActie;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Andere";
+	sh:order 14;
+	sh:path lblodSubsidie:doelgroepBereiktAndereOptieExtraActie.
+
+nodes:970f3d19-eda0-4f24-81bd-172247f2bcee
+    a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:extraActieImpactBeschrijving;
+		sh:resultMessage "Dit veld is verplicht." ],
+		[
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:path lblodSubsidie:extraActieImpactBeschrijving;
+		sh:resultMessage "Max. karakters overschreden." ];
+	sh:name "Beschrijf de impact van de actie in min. 500 en max. 1000 karakters.";
+	sh:order 10;
+	sh:path lblodSubsidie:extraActieImpactBeschrijving .
+
+nodes:aaf34be5-276c-40a7-8b9e-284d4dcdf5f8
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere antwoorden aanduiden is mogelijk)";
+  form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/305b862a-85ce-4479-b9a1-291e03ae6a39", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path lblodSubsidie:actieSamenwerking;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Voor deze actie werkten we samen met:";
+	sh:order 17;
+	sh:path lblodSubsidie:actieSamenwerking .
+
+nodes:afcd216b-c027-4d67-aabf-4ca3146a3e26
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+    form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:succesfactorenBeschrijvingExtraActie;
+		sh:resultMessage "Dit veld is verplicht." ],
+		[
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:path lblodSubsidie:succesfactorenBeschrijvingExtraActie;
+		sh:resultMessage "Max. karakters overschreden." ];
+	sh:name "Beschrijf de succesfactoren in min. 500 en max. 1000 karakters.";
+	sh:order 11;
+	sh:path lblodSubsidie:succesfactorenBeschrijvingExtraActie .
+
+nodes:b017065e-d436-47d6-8245-753d6037ce6b
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere opties aanduiden is mogelijk, als de actie  een specifieke doelgroep heeft bereikt die niet in deze lijst staat, dan vult u in het vakje eronder 'andere doelgroep(en)' aan)";
+  form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/8e82b7d3-5251-4137-b3f4-94d8ff954864", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path lblodSubsidie:extraActieDoelgroepBereikt;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Welke doelgroep heeft deze actie bereikt?";
+	sh:order 13;
+	sh:path lblodSubsidie:extraActieDoelgroepBereikt .
+
+nodes:b1c7d143-9b47-40bf-b9a2-af3b06a52da5
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:rendersWhen [
+    a form:MatchValues;
+    form:grouping form:Bag;
+    form:valuesIn ( concept:eb89ff3b-2809-478f-b73d-96d34ab838f7 );
+    sh:path lblodSubsidie:actieSamenwerking ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:actieSamenwerkingAndereOptie;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Andere";
+	sh:order 18;
+	sh:path lblodSubsidie:actieSamenwerkingAndereOptie.
+
+nodes:cbc9fea5-8952-41ae-9a6f-e5dca3035bf3
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1;
+	form:validatedBy [
+		a form:ValidPhoneNumber;
+		form:defaultCountry "BE";
+		form:grouping form:MatchEvery;
+		sh:order 1;
+		sh:path ( schema:contactPoint schema:telephone ) ],
+		[
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 2;
+	sh:path ( schema:contactPoint schema:telephone )
+	];
+	sh:name "Telefoonnummer";
+	sh:order 4;
+	sh:path ( schema:contactPoint schema:telephone ) .
+
+nodes:d2f3f896-91ca-4106-b967-4c11c89a4f7e
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:beschrijvingActieInternetKwetsbareBurgers;
+		sh:resultMessage "Dit veld is verplicht." ],
+		[
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:order 1;
+		sh:path lblodSubsidie:beschrijvingActieInternetKwetsbareBurgers;
+		sh:resultMessage "Max. karakters overschreden."@nl ];
+	sh:name "Beschrijf in min. 500 en max. 1000 karakters welke actie het lokaal bestuur heeft opgezet rond individuele toegang tot internet op het thuisadres van kwetsbare burgers (wat, waar, hoe, wie, wanneer).";
+	sh:order 11;
+	sh:path lblodSubsidie:beschrijvingActieInternetKwetsbareBurgers.
+
+nodes:d3803e8d-eb61-4244-9604-012d646fb5c6
+	 a form:Section;
+	form:help "Om deze subsidie te ontvangen, moest het lokaal bestuur inzetten op minstens \u00e9\u00e9n actie rond individuele toegang tot internet op het thuisadres van kwetsbare burgers.";
+  sh:name "Actie rond individuele toegang tot internet op het thuisadres van kwetsbare burgers.";
+	sh:order 2 .
+
+nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1
+	 a form:Section;
+	form:help "Dit is de persoon die gecontacteerd wordt bij de opvolging van dit dossier.";
+	sh:name "Contactpersoon";
+	sh:order 1 .
+
+nodes:e9aa6843-d927-4c34-86fc-d30df98542b9
+	 a form:Field;
+	form:displayType displayTypes:conceptSchemeMultiSelectCheckboxes;
+	form:help "(meerdere opties aanduiden is mogelijk, als de actie  een specifieke doelgroep heeft bereikt die niet in deze lijst staat, dan vult u in het vakje eronder 'andere doelgroep(en)' aan)";
+  form:options """{ "conceptScheme": "http://lblod.data.gift/concept-schemes/8e82b7d3-5251-4137-b3f4-94d8ff954864", "orderBy": "http://purl.org/linked-data/cube#order" }""";
+	form:partOf nodes:d3803e8d-eb61-4244-9604-012d646fb5c6;
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:order 1;
+		sh:path lblodSubsidie:actieDoelgroepBereikt;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Welke doelgroep heeft deze actie bereikt?";
+	sh:order 16;
+	sh:path lblodSubsidie:actieDoelgroepBereikt .
+
+nodes:ecc913bd-3280-4b45-b154-5d06859d5e1a
+	 a form:Field;
+	form:displayType displayTypes:defaultInput;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ],
+		[
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:eb89ff3b-2809-478f-b73d-96d34ab838f7 );
+    sh:path lblodSubsidie:extraActieSamenwerking ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:actieSamenwerkingAndereOptieExtra;
+		sh:resultMessage "Dit veld is verplicht." ];
+	sh:name "Andere";
+	sh:order 15;
+	sh:path lblodSubsidie:actieSamenwerkingAndereOptieExtra .
+
+nodes:fe6790e6-4052-45b4-83c4-d5820d137c9b
+	 a form:Field;
+	form:displayType displayTypes:textArea;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:rendersWhen [
+		a form:MatchValues;
+		form:grouping form:Bag;
+		form:valuesIn ( concept:139a4d2c-ff73-4528-b6da-b7c92b6ee1e8 concept:5df29fac-062f-4978-bb8e-f7566044e42d concept:97cc83b3-8a01-4d3c-8b77-958775ca7fab concept:ff963fb1-cb16-4bfe-bd4e-645beed1fecd concept:c9b14645-ab92-4b01-833d-14834d54a4a8 concept:b443571d-3857-483e-ab53-4ee1ce9c377c );
+    sh:path lblodSubsidie:additionalActionType ];
+	form:validatedBy [
+		a form:RequiredConstraint;
+		form:grouping form:Bag;
+		sh:path lblodSubsidie:extraActieBeschrijving;
+		sh:resultMessage "Dit veld is verplicht." ],
+		[
+		a form:MaxLength;
+		form:grouping form:MatchEvery;
+		form:max "1000";
+		sh:path lblodSubsidie:extraActieBeschrijving;
+		sh:resultMessage "Max. karakters overschreden." ];
+	sh:name "Beschrijf de actie in min. 500 en max. 1000 karakters.";
+	sh:order 9;
+	sh:path lblodSubsidie:extraActieBeschrijving .
+
+
+emb:source-node
+	 a form:Form,
+	form:TopLevelForm;
+	form:includes nodes:11a556c3-6a6e-4eaa-a5ab-c58f568157aa,
+	nodes:24289e48-258f-4919-8c3e-5783a6acb4a4, nodes:28fd8e7a-c2d2-4f81-888b-8a11a673c2fe, nodes:2de73a34-e74b-4e24-afcd-cb56bad403a1, nodes:4ee41cf5-3ad7-4584-9455-57fa4fd0eee1, nodes:5b8da2d3-02b2-4d84-8528-9a5f02c110bf, nodes:6900d536-f867-4e60-af69-285404470538, nodes:72e7c695-16da-4e25-974f-6d92ba46a0e9, nodes:752cf059-b334-4413-9b15-46d621e29076, nodes:910c3d2d-140f-472a-a6a7-b1d734ac68ae, nodes:aaf34be5-276c-40a7-8b9e-284d4dcdf5f8, nodes:b1c7d143-9b47-40bf-b9a2-af3b06a52da5, nodes:cbc9fea5-8952-41ae-9a6f-e5dca3035bf3, nodes:d2f3f896-91ca-4106-b967-4c11c89a4f7e, nodes:e9aa6843-d927-4c34-86fc-d30df98542b9, ext:extraActionL;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f,
+	nodes:d3803e8d-eb61-4244-9604-012d646fb5c6, nodes:d7b33768-3723-4291-a7be-3d8a7d7cdbc1 .
+ext:actionFG
+	 a form:FieldGroup;
+	form:hasField fields:actionsSelectorField.
 
 ##########################################################
-# form
+#  Generator: Additional Actions
 ##########################################################
-fieldGroups:main a form:FieldGroup ;
-    mu:uuid "70eebdf0-14dc-47f7-85df-e1cfd41c3855" .
+ext:actionGenerator
+	 a form:Generator;
+	form:dataGenerator form:addMuUuid;
+	form:prototype [
+		form:shape [
+	] ].
 
-form:6b70a6f0-cce2-4afe-81f5-5911f45b0b27 a form:Form ;
-    mu:uuid "6b70a6f0-cce2-4afe-81f5-5911f45b0b27" ;
-    form:hasFieldGroup fieldGroups:main .
+ext:actionItem
+	 a form:SubForm;
+	form:hasFieldGroup ext:actionFG;
+	form:includes fields:actionsSelectorField, nodes:0af2f7bf-978e-4464-a950-7f0ba774cbfb, nodes:1c2a64c4-2f5d-4cd0-96c1-834d7129af3b, nodes:3b8eb404-535f-4e3d-8764-b24ec4d87d37, nodes:4396cdb5-898f-4fa8-802c-994c7377042f, nodes:57ff8ea4-1483-4eca-a93b-f6957937935d, nodes:60a427d9-b6fb-4b71-a5cb-53595b75da92, nodes:93d0ca54-c2db-453e-9f58-eebf1110fed5, nodes:957ea5dd-068c-4e28-b221-d043f6711be7, nodes:970f3d19-eda0-4f24-81bd-172247f2bcee, nodes:afcd216b-c027-4d67-aabf-4ca3146a3e26, nodes:b017065e-d436-47d6-8245-753d6037ce6b, nodes:ecc913bd-3280-4b45-b154-5d06859d5e1a, nodes:fe6790e6-4052-45b4-83c4-d5820d137c9b;
+	form:removeLabel "Verwijder extra actie";
+  sh:name "".
 
-##########################################################
-#  property-group
-##########################################################
-fields:8e24d707-0e29-45b5-9bbf-a39e4fdb2c11 a form:PropertyGroup;
-    mu:uuid "8e24d707-0e29-45b5-9bbf-a39e4fdb2c11";
-    sh:description "parent property-group, used to group fields and property-groups together";
-    sh:name "Deze stap is in opbouw." ;
-    form:help """Hier zal op een later tijdstip een functionele verantwoording ingediend moeten worden. <br>Meer info over de verantwoording bij deze subsidiemaatregel vind je op deze <a href="https://www.vlaanderen.be/samenleven/subsidies/subsidie-voor-de-uitrol-van-een-lokaal-e-inclusiebeleid#verantwoording" target="_blank">webpagina</a>.""";
-    sh:order 1 .
+ext:extraActionL
+	 a form:Listing;
+	form:addLabel "Voeg extra actie toe";
+	form:canAdd true;
+	form:canRemove true;
+	form:createGenerator ext:actionGenerator;
+	form:each ext:actionItem;
+	form:partOf nodes:3911364b-f6d9-4b67-928b-11b772df7f5f;
+	form:scope ext:extraActionScope;
+	sh:maxCount 20;
+  sh:name "";
+	sh:order 2 .
 
-##########################################################
-# Input
-##########################################################
-fields:4dbaa7df-c612-44c9-bfce-8889d561a266 a form:Field ;
-    mu:uuid "4dbaa7df-c612-44c9-bfce-8889d561a266";
-    sh:name "Naamloze vraag" ;
-    sh:order 10 ;
-    sh:path ext:a7b8e11d-f361-4d8a-842d-40ccf2d8361a ;
-    form:options """{}""" ;
+ext:extraActionScope
+	 a form:Scope;
+	sh:path lblodSubsidie:hasAdditionalAction.
 
-    
-    sh:group fields:8e24d707-0e29-45b5-9bbf-a39e4fdb2c11 .
+ext:actionFG
+	 a form:FieldGroup;
+	form:hasField fields:actionsSelectorField.
 
-fieldGroups:main form:hasField fields:4dbaa7df-c612-44c9-bfce-8889d561a266 .
