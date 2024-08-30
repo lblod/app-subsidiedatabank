@@ -1,0 +1,47 @@
+PREFIX lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>
+PREFIX subsidie: <http://data.vlaanderen.be/ns/subsidie#>
+PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX lblod: <http://data.lblod.info/id/conceptscheme/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
+
+INSERT DATA {
+  GRAPH <http://mu.semte.ch/graphs/public> {
+    # Create ACMIDMOrganisationClassification concept scheme
+    <http://data.lblod.info/id/conceptscheme/ACMIDMOrganisationClassification> a <http://www.w3.org/2004/02/skos/core#ConceptScheme>;
+      mu:uuid "586e1a3d-56ef-424b-862d-2123d8b7189f" ;
+      skos:prefLabel "ACM/IDM OrganisatieClassificatie"@nl ;
+      skos:prefLabel "ACM/IDM OrganisationClassification"@en ;
+      skos:definition "Lijst van type organisaties binnen ACM/IDM"@nl .
+
+    # Add concept-scheme for economische actoren
+    <http://data.lblod.info/id/concept/c6157470-9fb3-4e8d-a9b7-8737dbfa3642>
+      mu:uuid "c6157470-9fb3-4e8d-a9b7-8737dbfa3642" ;
+      rdf:type skos:Concept , ext:OrganizationClassificationCode;
+      skos:prefLabel "Economische actor"@nl ;
+      skos:prefLabel "Economic actor"@en ;
+      skos:definition "Economische actoren binnen ACM/IDM"@nl ;
+      skos:topConceptOf lblod:ACMIDMOrganisationClassification ;
+      skos:inScheme lblod:ACMIDMOrganisationClassification .
+
+    # Add new criterion for economische actoren (verenigingen)
+    <http://data.lblod.info/id/criterions/28fe1648-dd25-4772-b5e9-0eed4e8f4b90>
+      a <http://data.europa.eu/m8g/Criterion> ;
+      mu:uuid "28fe1648-dd25-4772-b5e9-0eed4e8f4b90" ;
+      <http://purl.org/dc/terms/title> "Subsidiemaatregelaanbod: doelgroep economische actoren" ;
+      <http://data.europa.eu/m8g/fulfilledByRequirementGroup> <http://data.lblod.info/id/requirement-groups/8b0a601a-2432-4c0a-9363-b869d4632c54> .
+
+    <http://data.lblod.info/id/requirement-groups/8b0a601a-2432-4c0a-9363-b869d4632c54>
+      a <http://data.europa.eu/m8g/RequirementGroup> ;
+      mu:uuid "8b0a601a-2432-4c0a-9363-b869d4632c54" ;
+      <http://purl.org/dc/terms/description> "Criteriumgroep: de organisatie moet voldoen aan de vereisten van een economische actor." ;
+      <http://data.europa.eu/m8g/hasCriterionRequirement> <http://data.lblod.info/id/criterion-requirement/27499267-9fc8-4fa5-9ac6-d1b553ab342e> .
+
+    <http://data.lblod.info/id/criterion-requirement/27499267-9fc8-4fa5-9ac6-d1b553ab342e>
+     a <http://data.europa.eu/m8g/CriterionRequirement> ;
+     mu:uuid "27499267-9fc8-4fa5-9ac6-d1b553ab342e" ;
+     <http://purl.org/dc/terms/description> "Criteriumvereiste: de organisatie heeft classificatiecode economische actor." ;
+     lblodSubsidie:isSatisfiableBy <http://data.lblod.info/id/concept/c6157470-9fb3-4e8d-a9b7-8737dbfa3642> .
+  }
+}

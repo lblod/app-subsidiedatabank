@@ -1,0 +1,31 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
+PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
+
+INSERT {
+  GRAPH <http://mu.semte.ch/graphs/public> {
+    <http://data.lblod.info/id/conceptscheme/CombinedOrganisationClassification> a skos:ConceptScheme ;
+      mu:uuid "fb16066b-170e-4e86-9df3-83f33d52fccd" ;
+      skos:prefLabel "Gecombineerde Organisatie Classificatie"@nl . # TODO: better naming
+
+    ?concept skos:inScheme <http://data.lblod.info/id/conceptscheme/CombinedOrganisationClassification> .
+    ?concept skos:topConceptOf <http://data.lblod.info/id/conceptscheme/CombinedOrganisationClassification> .
+  }
+}
+WHERE {
+  {
+    GRAPH <http://mu.semte.ch/graphs/public> {
+      ?concept skos:inScheme <http://data.vlaanderen.be/id/conceptscheme/BestuurseenheidClassificatieCode> .
+      ?concept skos:prefLabel ?label .
+      OPTIONAL { ?concept skos:definition ?definition }
+    }
+  }
+  UNION
+  {
+    GRAPH <http://mu.semte.ch/graphs/public> {
+      ?concept skos:inScheme <http://data.lblod.info/id/conceptscheme/ACMIDMOrganisationClassification> .
+      ?concept skos:prefLabel ?label .
+      OPTIONAL { ?concept skos:definition ?definition }
+    }
+  }
+}

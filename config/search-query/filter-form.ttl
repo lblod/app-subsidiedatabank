@@ -47,7 +47,9 @@ ext:typeBestuurF a form:Field ;
     sh:path searchSubsidie:typeBestuur;
     form:displayType displayTypes:conceptSchemeSelector ;
     search:emberQueryParameterKey "bestuursType" ;
-    form:options  """{"conceptScheme":"http://data.vlaanderen.be/id/conceptscheme/BestuurseenheidClassificatieCode"}""" ;
+    # form:options  """{"conceptScheme":"http://data.vlaanderen.be/id/conceptscheme/BestuurseenheidClassificatieCode"}""" ;
+    form:options  """{"conceptScheme":"http://data.lblod.info/id/conceptscheme/ACMIDMOrganisationClassification"}""" ;
+    # form:options  """{"conceptScheme":"http://data.lblod.info/id/conceptscheme/CombinedOrganisationClassification"}""" ;
     form:help "vb. Gemeente, OCMW" ;
     sh:order 20;
     sh:group ext:applicationPg .
@@ -78,12 +80,3 @@ ext:subsidieStatusF a form:Field ;
     form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/f7274d7f-31d5-4b02-aca8-b96481115651"}""" ;
     sh:order 30;
     sh:group ext:applicationPg .
-
-
-
-
-    
-
-
-    
-    
