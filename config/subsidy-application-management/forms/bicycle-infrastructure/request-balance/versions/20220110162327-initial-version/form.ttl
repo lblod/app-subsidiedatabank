@@ -176,7 +176,7 @@ fields:965d24ef-99ae-4f07-9a5d-7a9e083a7ca1 a form:Field ;
     [ a form:RequiredConstraint ;
       form:grouping form:Bag ;
       sh:resultMessage "Dit veld is verplicht."@nl;
-      sh:path lblodSubsidie:picturesUpload
+      sh:path ( lblodSubsidie:picturesUpload dct:hasPart ) ;
     ] ;
     form:displayType displayTypes:files ;
     sh:group fields:99ec3271-086a-4195-9ef7-e7773f4eac37 .
@@ -187,7 +187,7 @@ fields:4f9bbe22-c562-4ff0-87ac-cc47cc01e224 a form:Field ;
     sh:order 16 ;
     sh:path ( lblodSubsidie:picturesUpload dct:hasPart rdf:type );
     sh:group fields:99ec3271-086a-4195-9ef7-e7773f4eac37 .
-        
+
 ##########################################################
 # Bicycle infrastructure: invoice-upload
 ##########################################################
@@ -202,7 +202,7 @@ fields:36210e53-38f0-4135-b338-23ec58153c7d a form:Field ;
     [ a form:RequiredConstraint ;
       form:grouping form:Bag ;
       sh:resultMessage "Dit veld is verplicht."@nl;
-      sh:path lblodSubsidie:invoiceUpload
+      sh:path ( lblodSubsidie:invoiceUpload dct:hasPart ) ;
     ] ;
     form:displayType displayTypes:files ;
     sh:group fields:99ec3271-086a-4195-9ef7-e7773f4eac37 .
@@ -228,7 +228,7 @@ fields:ca288d9e-7917-4c7a-8b1d-510b32892548 a form:Field ;
     [ a form:RequiredConstraint ;
       form:grouping form:Bag ;
       sh:resultMessage "Dit veld is verplicht."@nl;
-      sh:path lblodSubsidie:reportUpload
+      sh:path ( lblodSubsidie:reportUpload dct:hasPart ) ;
     ] ;
     form:displayType displayTypes:files ;
     sh:group fields:99ec3271-086a-4195-9ef7-e7773f4eac37 .
