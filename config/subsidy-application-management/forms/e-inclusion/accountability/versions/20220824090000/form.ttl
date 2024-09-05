@@ -598,6 +598,7 @@ ext:actionGenerator
 	form:dataGenerator form:addMuUuid;
 	form:prototype [
 		form:shape [
+      a <http://lblod.data.gift/vocabularies/subsidie/e-inclusion/has-additional-action/FormData>
 	] ].
 
 ext:actionItem

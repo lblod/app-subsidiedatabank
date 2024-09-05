@@ -9,6 +9,7 @@ module.exports = {
 
     const {$rdf, mu, sudo} = lib;
 
+    const RDF_TYPE = new $rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
     const SCHEMA = new $rdf.Namespace('http://schema.org/');
     const FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
 
@@ -19,6 +20,13 @@ module.exports = {
         SCHEMA('contactPoint'),
         $rdf.sym(contactPoint),
         graphs.additions);
+
+    store.add(
+        $rdf.sym(contactPoint),
+        RDF_TYPE,
+        SCHEMA('ContactPoint'),
+        graphs.additions);
+  
 
     const {firstName, familyName, email, telephone} =
         await getGenericInfo(source.uri, mu, sudo);
@@ -47,35 +55,35 @@ module.exports = {
           SCHEMA('telephone'),
           telephone.value,
           graphs.additions);
-  }
+  },
 };
 
 async function getGenericInfo(uri, mu, sudo) {
-  const { results } = await sudo.querySudo(`
-    PREFIX lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>
-    PREFIX schema: <http://schema.org/>
-    PREFIX nie: <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#>
-    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-    SELECT DISTINCT ?firstName ?familyName ?email ?telephone
-    WHERE {
-      GRAPH ?g {
-        ${mu.sparqlEscapeUri(uri)}
-          schema:contactPoint ?contactPoint.
-        OPTIONAL {
-            ?contactPoint foaf:familyName ?familyName.
-        }
-        OPTIONAL {
-            ?contactPoint foaf:firstName ?firstName.
-        }
-        OPTIONAL {
-            ?contactPoint schema:email ?email.
-        }
-        OPTIONAL {
-            ?contactPoint schema:telephone ?telephone.
-        }
-      }
-    }`
-  );
+  const {results} = await sudo.querySudo(`PREFIX lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>
+PREFIX schema: <http://schema.org/>
+PREFIX nie: <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT DISTINCT ?firstName ?familyName ?email ?telephone
+WHERE {
+  GRAPH ?g {
+    ${mu.sparqlEscapeUri(uri)}
+      schema:contactPoint ?contactPoint.
+
+    OPTIONAL { 
+        ?contactPoint foaf:familyName ?familyName.
+    }
+    OPTIONAL { 
+        ?contactPoint foaf:firstName ?firstName.
+    }
+    OPTIONAL { 
+        ?contactPoint schema:email ?email.
+    }  
+    OPTIONAL { 
+        ?contactPoint schema:telephone ?telephone.
+    }
+  }          
+}`);
 
   if (results.bindings.length) {
     return results.bindings[0];
