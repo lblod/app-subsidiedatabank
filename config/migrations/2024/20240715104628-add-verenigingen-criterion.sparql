@@ -20,7 +20,6 @@ INSERT DATA {
       mu:uuid "c6157470-9fb3-4e8d-a9b7-8737dbfa3642" ;
       rdf:type skos:Concept , ext:OrganizationClassificationCode;
       skos:prefLabel "Economische actor"@nl ;
-      skos:prefLabel "Economic actor"@en ;
       skos:definition "Economische actoren binnen ACM/IDM"@nl ;
       skos:topConceptOf lblod:ACMIDMOrganisationClassification ;
       skos:inScheme lblod:ACMIDMOrganisationClassification .

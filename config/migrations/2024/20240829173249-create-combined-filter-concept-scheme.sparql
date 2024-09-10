@@ -6,7 +6,7 @@ INSERT {
   GRAPH <http://mu.semte.ch/graphs/public> {
     <http://data.lblod.info/id/conceptscheme/CombinedOrganisationClassification> a skos:ConceptScheme ;
       mu:uuid "fb16066b-170e-4e86-9df3-83f33d52fccd" ;
-      skos:prefLabel "Gecombineerde Organisatie Classificatie"@nl . # TODO: better naming
+      skos:prefLabel "Gecombineerde Organisatie Classificatie van economische actor en bestuurseenheden"@nl .
 
     ?concept skos:inScheme <http://data.lblod.info/id/conceptscheme/CombinedOrganisationClassification> .
     ?concept skos:topConceptOf <http://data.lblod.info/id/conceptscheme/CombinedOrganisationClassification> .
