@@ -20,7 +20,7 @@
     mu:uuid "e025a601-b50b-4abd-a6de-d0c3b619795c";
     form:includes ext:typeSubsidieF;
     form:includes ext:typeBestuurF;
-    form:includes ext:bestuurseenheidF;
+    form:includes ext:organizationsF;
     form:includes ext:aanvraagDatumF;
     form:includes ext:subsidieStatusF.
 
@@ -52,11 +52,11 @@ ext:typeBestuurF a form:Field ;
     sh:order 20;
     sh:group ext:applicationPg .
 
-ext:bestuurseenheidF a form:Field ;
-    sh:name "Bestuurseenheid" ;
-    sh:path searchSubsidie:bestuurseenheid;
+ext:organizationsF a form:Field ;
+    sh:name "Bestuurseenheden" ;
+    sh:path searchSubsidie:organizations;
     form:displayType displayTypes:conceptSchemeSelector ;
-    search:emberQueryParameterKey "bestuurseenheden" ;
+    search:emberQueryParameterKey "organizations" ;
     form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/7e2b965e-c824-474f-b5d5-b1c115740083"}""" ;
     form:help "vb. Gemeente Hasselt, OCMW Gent" ;
     sh:order 20;
