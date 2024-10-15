@@ -21,6 +21,7 @@
     form:includes ext:typeSubsidieF;
     form:includes ext:typeBestuurF;
     form:includes ext:organizationsF;
+    form:includes ext:economischeActorenF;
     form:includes ext:aanvraagDatumF;
     form:includes ext:subsidieStatusF.
 
@@ -58,8 +59,18 @@ ext:organizationsF a form:Field ;
     form:displayType displayTypes:conceptSchemeSelector ;
     search:emberQueryParameterKey "organizations" ;
     form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/7e2b965e-c824-474f-b5d5-b1c115740083"}""" ;
-    form:help "vb. Gemeente Hasselt, OCMW Gent" ;
+    form:help "vb. Gemeente Hasselt, Gemeente Antwerpen" ;
     sh:order 20;
+    sh:group ext:applicationPg .
+
+ext:economischeActorenF a form:Field ;
+    sh:name "Economische Actoren" ;
+    sh:path searchSubsidie:organizations;
+    form:displayType displayTypes:conceptSchemeSelector ;
+    search:emberQueryParameterKey "economischeActoren" ;
+    form:options  """{"conceptScheme":"http://data.lblod.info/id/conceptscheme/EconomischeActoren"}""" ;
+    form:help "vb. Antwerp Pride" ;
+    sh:order 30;
     sh:group ext:applicationPg .
 
 ext:aanvraagDatumF a form:Field ;
@@ -67,7 +78,7 @@ ext:aanvraagDatumF a form:Field ;
     sh:path searchSubsidie:aanvraagDatum;
     form:displayType displayTypes:datePicker;
     search:emberQueryParameterKey "aanvraagDatum" ;
-    sh:order 30;
+    sh:order 40;
     sh:group ext:applicationPg .
 
 ext:subsidieStatusF a form:Field ;
@@ -76,5 +87,5 @@ ext:subsidieStatusF a form:Field ;
     form:displayType displayTypes:conceptSchemeMultiSelector ;
     search:emberQueryParameterKey "subsidieStatus" ;
     form:options  """{"conceptScheme":"http://lblod.data.gift/concept-schemes/f7274d7f-31d5-4b02-aca8-b96481115651"}""" ;
-    sh:order 30;
+    sh:order 50;
     sh:group ext:applicationPg .
