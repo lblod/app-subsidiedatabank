@@ -50,3 +50,6 @@ services:
 
   file:
     restart: "no"
+
+  db-cleanup:
+    restart: "no"
