@@ -90,9 +90,10 @@ services:
     logging: *default-logging
 
   form-data-management:
-    image: lblod/form-data-management-service:0.1.0
+    image: lblod/form-data-management-service:0.2.0
     volumes:
       - ./config/search-query:/share/search-query
+      - ./data/files/form-data-meta/:/data/
     labels:
       - "logging=true"
     restart: always
@@ -153,6 +154,13 @@ services:
     image: semtech/mu-file-service:3.3.2
     volumes:
       - ./data/files:/share
+    labels:
+      - "logging=true"
+    restart: always
+    logging: *default-logging
+
+  db-cleanup:
+    image: lblod/db-cleanup-service:0.5.1
     labels:
       - "logging=true"
     restart: always
