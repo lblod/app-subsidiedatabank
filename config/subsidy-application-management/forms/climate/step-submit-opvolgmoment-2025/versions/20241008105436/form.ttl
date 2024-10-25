@@ -1,0 +1,223 @@
+@prefix form: <http://lblod.data.gift/vocabularies/forms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix mu: <http://mu.semte.ch/vocabularies/core/> .
+@prefix fieldGroups: <http://data.lblod.info/field-groups/> .
+@prefix fields: <http://data.lblod.info/fields/> .
+@prefix displayTypes: <http://lblod.data.gift/display-types/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix schema: <http://schema.org/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix nie: <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#>.
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/>.
+
+
+##########################################################
+# Property groups
+##########################################################
+
+fields:c0ce45db-a79b-4e2a-9ee1-832b10e05009 a form:PropertyGroup;
+    mu:uuid "c0ce45db-a79b-4e2a-9ee1-832b10e05009";
+    sh:description "parent property-group, used to group fields and property-groups together";
+    sh:order 1 .
+
+
+fields:e9222aa4-1288-43eb-995c-9a9729f833c5 a form:PropertyGroup;
+    mu:uuid "e9222aa4-1288-43eb-995c-9a9729f833c5";
+    sh:description "contact person information";
+    sh:order 2;
+    sh:name "Contactgegevens contactpersoon" ;
+    form:help "Dit is de persoon die gecontacteerd wordt bij de opvolging van dit dossier." ;
+    sh:group fields:c0ce45db-a79b-4e2a-9ee1-832b10e05009 .
+
+fields:c110971b-0c68-4817-be84-54e6ab0ddc2e a form:PropertyGroup;
+    mu:uuid "c110971b-0c68-4817-be84-54e6ab0ddc2e";
+    sh:description "submit follow-up moment";
+    sh:order 3;
+    sh:name "Indienen Opvolgmoment" ;
+    form:help "Het voltooien van deze stap laat zien dat de voortgang van het Lokaal Energie en Klimaat Pact op de gemeenteraad werd besproken." ;
+    sh:group fields:c0ce45db-a79b-4e2a-9ee1-832b10e05009 .
+
+##########################################################
+# Hidden input to trigger property groups
+##########################################################
+
+fields:716759c5-b508-42fa-a661-75578c0e7e3c a form:Field ;
+    mu:uuid "716759c5-b508-42fa-a661-75578c0e7e3c";
+    sh:order 20 ;
+    sh:path ext:stubPformPath ;
+    form:options """{}""" ;
+    sh:group fields:91fda733-791e-48ea-9f48-5ee7a284de37 .
+
+##########################################################
+# Contact info
+##########################################################
+
+fields:7285f232-94e8-4fc4-b7e0-200c342cd759 a form:Field ;
+    mu:uuid "7285f232-94e8-4fc4-b7e0-200c342cd759";
+    sh:name "Voornaam contactpersoon" ;
+    sh:order 30 ;
+    sh:path ( schema:contactPoint foaf:firstName ) ;
+    form:validations
+    [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path ( schema:contactPoint foaf:firstName ) ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+    ] ;
+    form:displayType displayTypes:defaultInput ;
+    sh:group fields:e9222aa4-1288-43eb-995c-9a9729f833c5 .
+
+fields:d23d206c-b4e4-479c-b099-921061d43406 a form:Field ;
+    mu:uuid "d23d206c-b4e4-479c-b099-921061d43406";
+    sh:name "Familienaam contactpersoon" ;
+    sh:order 31 ;
+    sh:path ( schema:contactPoint foaf:familyName ) ;
+    form:validations
+    [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path ( schema:contactPoint foaf:familyName ) ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+    ] ;
+    form:displayType displayTypes:defaultInput ;
+    sh:group fields:e9222aa4-1288-43eb-995c-9a9729f833c5 .
+
+fields:84f868c9-0c9d-44d4-867a-fab3ce125d7b a form:Field ;
+    mu:uuid "84f868c9-0c9d-44d4-867a-fab3ce125d7b";
+    sh:name "Telefoonnummer" ;
+    sh:order 32 ;
+    sh:path ( schema:contactPoint schema:telephone ) ;
+    form:validations
+    [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path ( schema:contactPoint schema:telephone ) ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+    ] ,
+    [ a form:ValidPhoneNumber ;
+        form:grouping form:MatchEvery ;
+        form:defaultCountry "BE" ;
+        sh:path ( schema:contactPoint schema:telephone ) ;
+        sh:resultMessage "Geef een geldig telefoonnummer in."@nl
+    ] ;
+    form:displayType displayTypes:defaultInput ;
+    sh:group fields:e9222aa4-1288-43eb-995c-9a9729f833c5 .
+
+fields:86f87cfa-26cd-4f27-97f5-db69b0b194cd a form:Field ;
+    mu:uuid "86f87cfa-26cd-4f27-97f5-db69b0b194cd";
+    sh:name "Mailadres" ;
+    sh:order 33 ;
+    sh:path ( schema:contactPoint schema:email ) ;
+    form:validations
+    [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path ( schema:contactPoint schema:email ) ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+    ] ,
+    [ a form:ValidEmail ;
+        form:grouping form:MatchEvery ;
+        sh:path ( schema:contactPoint schema:email ) ;
+        sh:resultMessage "Geef een geldig e-mailadres op."@nl
+    ] ;
+    form:displayType displayTypes:defaultInput ;
+    sh:group fields:e9222aa4-1288-43eb-995c-9a9729f833c5 .
+
+##########################################################
+# Attachment
+##########################################################
+fields:58d9bb42-ba50-41c4-8d66-0627f826ec8c a form:Field ;
+    mu:uuid "58d9bb42-ba50-41c4-8d66-0627f826ec8c" ;
+    sh:name "Laad hier het gemeenteraadsbesluit op" ;
+    sh:order 40 ;
+    sh:path ( lblodSubsidie:attachment dct:hasPart ) ;
+    form:validations
+        [ a form:RequiredConstraint ;
+            form:grouping form:Bag ;
+            sh:resultMessage "Dit veld is verplicht."@nl ;
+            sh:path ( lblodSubsidie:attachment dct:hasPart )
+        ] ;
+    form:displayType displayTypes:files ;
+    sh:group fields:c110971b-0c68-4817-be84-54e6ab0ddc2e .
+
+fields:2f746700-757d-49cb-902b-b190a624c83d a form:Field ;
+    mu:uuid "2f746700-757d-49cb-902b-b190a624c83d" ;
+    sh:name "Laad hier de financiële rapportering op" ;
+    sh:order 50 ;
+    sh:path ( lblodSubsidie:attachmentFinancialReport dct:hasPart ) ;
+    form:validations
+        [ a form:RequiredConstraint ;
+            form:grouping form:Bag ;
+            sh:resultMessage "Dit veld is verplicht."@nl ;
+            sh:path ( lblodSubsidie:attachmentFinancialReport dct:hasPart )
+        ] ;
+    form:displayType displayTypes:files ;
+    sh:group fields:c110971b-0c68-4817-be84-54e6ab0ddc2e .
+
+
+fields:7039dfb8-917e-457e-8a72-822b38c9153b a form:Field ;
+    mu:uuid "7039dfb8-917e-457e-8a72-822b38c9153b" ;
+    sh:name "Laad hier het voorgelegde (LEKP-)rapport op" ;
+    sh:order 60 ;
+    sh:path ( lblodSubsidie:attachmentLEKPReport dct:hasPart ) ;
+    form:displayType displayTypes:files ;
+    sh:group fields:c110971b-0c68-4817-be84-54e6ab0ddc2e .
+
+##########################################################
+# Hidden field required for all variations of URL or FILE
+# input field which require validation.
+# It makes sure there is a type attached to hasPart object.
+# This enables correct validation in both front and backend.
+##########################################################
+
+fields:eea45073-3a49-43dc-9f06-e63b040993f1 a form:Field ;
+    mu:uuid "eea45073-3a49-43dc-9f06-e63b040993f1" ;
+    sh:name "Type RemoteDataObject or FileDataObject [hidden input]" ;
+    sh:order 41 ;
+    sh:path ( lblodSubsidie:attachment dct:hasPart rdf:type );
+    sh:group fields:c110971b-0c68-4817-be84-54e6ab0ddc2e .
+
+fields:328ad30a-f85c-4454-a28f-694fb2383b77 a form:Field ;
+    mu:uuid "328ad30a-f85c-4454-a28f-694fb2383b77" ;
+    sh:name "Type RemoteDataObject or FileDataObject [hidden input]" ;
+    sh:order 51 ;
+    sh:path ( lblodSubsidie:attachmentFinancialReport dct:hasPart rdf:type );
+    sh:group fields:c110971b-0c68-4817-be84-54e6ab0ddc2e .
+
+##########################################################
+# Linking fields to form
+##########################################################
+
+fieldGroups:main a form:FieldGroup ;
+    mu:uuid "1f3cf92c-aa5f-4708-85c6-77aabbc8989f" ;
+    form:hasField
+
+        ### First name contact person
+        fields:7285f232-94e8-4fc4-b7e0-200c342cd759 ,
+
+        ### First name contact person
+        fields:d23d206c-b4e4-479c-b099-921061d43406 ,
+
+        ### Phone
+        fields:84f868c9-0c9d-44d4-867a-fab3ce125d7b ,
+
+        ### Email
+        fields:86f87cfa-26cd-4f27-97f5-db69b0b194cd ,
+
+        ### Attachment
+        fields:58d9bb42-ba50-41c4-8d66-0627f826ec8c ,
+
+        ### Attachment Financial Report
+        fields:2f746700-757d-49cb-902b-b190a624c83d ,
+
+        ### Attachment LEKP (optional)
+        fields:7039dfb8-917e-457e-8a72-822b38c9153b ,
+
+        ### Attachment [hidden]
+        fields:eea45073-3a49-43dc-9f06-e63b040993f1 .
+
+        ### Attachment [hidden]
+        fields:328ad30a-f85c-4454-a28f-694fb2383b77 .
+
+form:d643711c-0c74-4108-b8fc-ca89400ad7fb a form:Form ;
+    mu:uuid "d643711c-0c74-4108-b8fc-ca89400ad7fb" ;
+    form:hasFieldGroup fieldGroups:main .
