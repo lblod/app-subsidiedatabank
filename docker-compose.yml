@@ -90,7 +90,7 @@ services:
     logging: *default-logging
 
   form-data-management:
-    image: lblod/form-data-management-service:0.2.0
+    image: lblod/form-data-management-service:0.3.0
     volumes:
       - ./config/search-query:/share/search-query
       - ./data/files/form-data-meta/:/data/
