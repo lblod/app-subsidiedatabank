@@ -1,0 +1,11 @@
+
+PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+INSERT DATA {
+    GRAPH <http://mu.semte.ch/graphs/public> {
+        <http://data.lblod.info/id/conceptscheme/EconomischeActoren> a skos:ConceptScheme;
+        mu:uuid "5e1c1d4a-3146-4a6b-bfb6-ce23c73c7f8c";
+        skos:prefLabel "Economische Actoren".
+    }
+}
