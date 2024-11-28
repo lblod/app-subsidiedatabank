@@ -12,8 +12,8 @@ const {
 const { createError } = require('./error');
 
 // Types of operations
-const DOWNLOAD_OPERATION = "download"
-const DELETE_OPERATION = "delete"
+const DOWNLOAD_OPERATION = "download";
+const DELETE_OPERATION = "delete";
 
 // Cookie necessary to download file from producer
 let cookie = null;
@@ -42,7 +42,7 @@ async function processFileDeltas(termObjects, fetch, operation) {
     // Process meta files (<data://)
     if (isMetaFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
+        await downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
         deleteFile(item.object.replace('<data://', '<share://subsidies/'), correlationId);
       }
@@ -51,7 +51,7 @@ async function processFileDeltas(termObjects, fetch, operation) {
     // Process attachments (<share://)
     else if (isAttachmentFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        downloadFile(item.subject, fetch, correlationId);
+        await downloadFile(item.subject, fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
         deleteFile(item.subject, correlationId);
       }
@@ -202,7 +202,7 @@ function isAttachmentFile(item) {
  * @returns {Promise} A promise representing the completion of directory creation.
  */
 async function createDirectories(filePath) {
-  await fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
 
 /**
