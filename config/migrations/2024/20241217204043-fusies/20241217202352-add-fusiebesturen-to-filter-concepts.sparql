@@ -1,7 +1,6 @@
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX besluit:	<http://data.vlaanderen.be/ns/besluit#> 
-PREFIX mu:	<http://mu.semte.ch/vocabularies/core/> 
-
+PREFIX besluit: <http://data.vlaanderen.be/ns/besluit#> 
+PREFIX mu: <http://mu.semte.ch/vocabularies/core/> 
 
 INSERT {
   GRAPH ?g {
@@ -10,7 +9,7 @@ INSERT {
   }
 }
 WHERE {
-  GRAPH ?g {
+  GRAPH ?h {
     ?bestuurseenheid a besluit:Bestuurseenheid ;
                       mu:uuid ?uuid .
     FILTER(?uuid IN (
@@ -24,4 +23,5 @@ WHERE {
       "5d94b2fd-60ee-4e56-a1f0-a586d596adf6"   # Merelbeke-Melle (OCMW)
     ))
   }
+  BIND(?g AS ?h)
 }
