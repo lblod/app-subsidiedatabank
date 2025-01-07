@@ -23,5 +23,5 @@ WHERE {
       "5d94b2fd-60ee-4e56-a1f0-a586d596adf6"   # Merelbeke-Melle (OCMW)
     ))
   }
-  BIND(?g AS ?h)
+  BIND(?h AS ?g)
 }
