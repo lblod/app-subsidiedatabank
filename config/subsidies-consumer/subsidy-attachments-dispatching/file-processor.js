@@ -38,25 +38,27 @@ async function processFileDeltas(termObjects, fetch, operation) {
   const correlationId = uuidv4(); // Generate a correlation ID for this batch of operations
   console.log(`Processing file deltas with correlation ID: ${correlationId}`);
   
-  for (const item of termObjects) {
+  const downloadPromises = termObjects.map(async (item) => {
     // Process meta files (<data://)
     if (isMetaFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        await downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
+        return downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
-        deleteFile(item.object.replace('<data://', '<share://subsidies/'), correlationId);
+        return deleteFile(item.object.replace('<data://', '<share://subsidies/'), correlationId);
       }
     }
 
     // Process attachments (<share://)
     else if (isAttachmentFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        await downloadFile(item.subject, fetch, correlationId);
+        return downloadFile(item.subject, fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
-        deleteFile(item.subject, correlationId);
+        return deleteFile(item.subject, correlationId);
       }
     }
-  }
+  });
+
+  await Promise.all(downloadPromises);
 }
 
 /**
@@ -83,32 +85,40 @@ async function downloadFile(uri, fetcher, correlationId) {
     let filePath = `/share/${fileName}`;
 
     let attempt = 1;
+    let delay = SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION;
 
     while (attempt <= MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-      console.log(`Downloading file ${uri} from ${downloadFileURL}, Attempt ${attempt}, Correlation ID: ${correlationId}`);
-      const response = await fetcher(downloadFileURL, fetchOptions);
+      console.log(`Attempt ${attempt}: Downloading file ${uri} from ${downloadFileURL}, Correlation ID: ${correlationId}`);
+      try {
+        const response = await fetcher(downloadFileURL, fetchOptions);
 
-      if (response.ok) {
-        const buffer = await response.buffer();
-        await createDirectories(filePath);
+        if (response.ok) {
+          const buffer = await response.buffer();
+          await createDirectories(filePath);
 
-        fs.writeFileSync(filePath, buffer);
-        console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
-        return;
-      } else {
-        console.error(`Failed to download file ${uri} (${response.status}), Correlation ID: ${correlationId}`);
-        if (attempt === MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-          const errorMessage = `Failed to download file ${uri} after ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS} attempts. Response: ${response.statusText}, Correlation ID: ${correlationId}`;
-          createError(SYNC_BASE_URL, errorMessage, correlationId);
+          fs.writeFileSync(filePath, buffer);
+          console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
+          return;
+        } else {
+          console.error(`Failed to download file ${uri} (Status: ${response.status}, Headers: ${JSON.stringify(response.headers.raw())}), Correlation ID: ${correlationId}`);
         }
-        await retryAfterDelay(SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION);
-        attempt++;
+      } catch (networkError) {
+        console.error(`Network error during download attempt ${attempt} for file ${uri}:`, networkError, `Correlation ID: ${correlationId}`);
       }
+
+      if (attempt === MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
+        const errorMessage = `Failed to download file ${uri} after ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS} attempts. Correlation ID: ${correlationId}`;
+        await createError(SYNC_BASE_URL, errorMessage, correlationId);
+      }
+
+      await retryAfterDelay(delay);
+      delay *= 2; // Exponential backoff
+      attempt++;
     }
   } catch (error) {
     console.error(`An error occurred during the download process for file ${uri}:`, error, `Correlation ID: ${correlationId}`);
     const errorMessage = `An error occurred during the download process for file ${uri}: ${error.message || error}, Correlation ID: ${correlationId}`;
-    createError(SYNC_BASE_URL, errorMessage, correlationId);
+    await createError(SYNC_BASE_URL, errorMessage, correlationId);
   }
 }
 
@@ -159,7 +169,7 @@ async function login(correlationId) {
     if (!resp.ok) {
       const errorMessage = `Failed to log in. Response: ${resp.statusText}`;
       console.log(errorMessage);
-      createError(SYNC_BASE_URL, errorMessage, correlationId);
+      await createError(SYNC_BASE_URL, errorMessage, correlationId);
       throw new Error("Could not log in");
     }
 
@@ -171,7 +181,7 @@ async function login(correlationId) {
   } catch (e) {
     console.error(`Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}:`, e);
     const errorMessage = `Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}: ${e.message || e}`;
-    createError(SYNC_BASE_URL, errorMessage, correlationId);
+    await createError(SYNC_BASE_URL, errorMessage, correlationId);
     throw e;
   }
 }
