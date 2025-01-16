@@ -83,27 +83,35 @@ async function downloadFile(uri, fetcher, correlationId) {
     let filePath = `/share/${fileName}`;
 
     let attempt = 1;
+    let delay = SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION;
 
     while (attempt <= MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-      console.log(`Downloading file ${uri} from ${downloadFileURL}, Attempt ${attempt}, Correlation ID: ${correlationId}`);
-      const response = await fetcher(downloadFileURL, fetchOptions);
+      console.log(`Attempt ${attempt}: Downloading file ${uri} from ${downloadFileURL}, Correlation ID: ${correlationId}`);
+      try {
+        const response = await fetcher(downloadFileURL, fetchOptions);
 
-      if (response.ok) {
-        const buffer = await response.buffer();
-        await createDirectories(filePath);
+        if (response.ok) {
+          const buffer = await response.buffer();
+          await createDirectories(filePath);
 
-        fs.writeFileSync(filePath, buffer);
-        console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
-        return;
-      } else {
-        console.error(`Failed to download file ${uri} (${response.status}), Correlation ID: ${correlationId}`);
-        if (attempt === MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-          const errorMessage = `Failed to download file ${uri} after ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS} attempts. Response: ${response.statusText}, Correlation ID: ${correlationId}`;
-          createError(SYNC_BASE_URL, errorMessage, correlationId);
+          fs.writeFileSync(filePath, buffer);
+          console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
+          return;
+        } else {
+          console.error(`Failed to download file ${uri} (Status: ${response.status}, Headers: ${JSON.stringify(response.headers.raw())}), Correlation ID: ${correlationId}`);
         }
-        await retryAfterDelay(SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION);
-        attempt++;
+      } catch (networkError) {
+        console.error(`Network error during download attempt ${attempt} for file ${uri}:`, networkError, `Correlation ID: ${correlationId}`);
       }
+
+      if (attempt === MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
+        const errorMessage = `Failed to download file ${uri} after ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS} attempts. Correlation ID: ${correlationId}`;
+        createError(SYNC_BASE_URL, errorMessage, correlationId);
+      }
+
+      await retryAfterDelay(delay);
+      delay *= 2; // Exponential backoff
+      attempt++;
     }
   } catch (error) {
     console.error(`An error occurred during the download process for file ${uri}:`, error, `Correlation ID: ${correlationId}`);
