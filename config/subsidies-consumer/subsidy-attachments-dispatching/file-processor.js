@@ -38,25 +38,27 @@ async function processFileDeltas(termObjects, fetch, operation) {
   const correlationId = uuidv4(); // Generate a correlation ID for this batch of operations
   console.log(`Processing file deltas with correlation ID: ${correlationId}`);
   
-  for (const item of termObjects) {
+  const downloadPromises = termObjects.map(async (item) => {
     // Process meta files (<data://)
     if (isMetaFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        await downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
+        return downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
-        deleteFile(item.object.replace('<data://', '<share://subsidies/'), correlationId);
+        return deleteFile(item.object.replace('<data://', '<share://subsidies/'), correlationId);
       }
     }
 
     // Process attachments (<share://)
     else if (isAttachmentFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        await downloadFile(item.subject, fetch, correlationId);
+        return downloadFile(item.subject, fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
-        deleteFile(item.subject, correlationId);
+        return deleteFile(item.subject, correlationId);
       }
     }
-  }
+  });
+
+  await Promise.all(downloadPromises);
 }
 
 /**
