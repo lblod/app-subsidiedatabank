@@ -108,7 +108,7 @@ async function downloadFile(uri, fetcher, correlationId) {
 
       if (attempt === MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
         const errorMessage = `Failed to download file ${uri} after ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS} attempts. Correlation ID: ${correlationId}`;
-        createError(SYNC_BASE_URL, errorMessage, correlationId);
+        await createError(SYNC_BASE_URL, errorMessage, correlationId);
       }
 
       await retryAfterDelay(delay);
@@ -118,7 +118,7 @@ async function downloadFile(uri, fetcher, correlationId) {
   } catch (error) {
     console.error(`An error occurred during the download process for file ${uri}:`, error, `Correlation ID: ${correlationId}`);
     const errorMessage = `An error occurred during the download process for file ${uri}: ${error.message || error}, Correlation ID: ${correlationId}`;
-    createError(SYNC_BASE_URL, errorMessage, correlationId);
+    await createError(SYNC_BASE_URL, errorMessage, correlationId);
   }
 }
 
@@ -169,7 +169,7 @@ async function login(correlationId) {
     if (!resp.ok) {
       const errorMessage = `Failed to log in. Response: ${resp.statusText}`;
       console.log(errorMessage);
-      createError(SYNC_BASE_URL, errorMessage, correlationId);
+      await createError(SYNC_BASE_URL, errorMessage, correlationId);
       throw new Error("Could not log in");
     }
 
@@ -181,7 +181,7 @@ async function login(correlationId) {
   } catch (e) {
     console.error(`Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}:`, e);
     const errorMessage = `Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}: ${e.message || e}`;
-    createError(SYNC_BASE_URL, errorMessage, correlationId);
+    await createError(SYNC_BASE_URL, errorMessage, correlationId);
     throw e;
   }
 }
