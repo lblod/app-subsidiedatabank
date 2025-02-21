@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid'); // Import UUID library for generating correlation IDs
+const { uuid } = require('mu');
 
 const { 
   MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS, 
@@ -35,7 +35,7 @@ let cookie = null;
  * @returns {Promise} A promise representing the completion of the processing.
  */
 async function processFileDeltas(termObjects, fetch, operation) {
-  const correlationId = uuidv4(); // Generate a correlation ID for this batch of operations
+  const correlationId = uuid(); // Generate a correlation ID for this batch of operations
   console.log(`Processing file deltas with correlation ID: ${correlationId}`);
   
   const downloadPromises = termObjects.map(async (item) => {
