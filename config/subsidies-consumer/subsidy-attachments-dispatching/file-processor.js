@@ -3,13 +3,11 @@ const path = require('path');
 const { uuid } = require('mu');
 
 const { 
-  MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS, 
   SECRET_KEY, 
-  SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION, 
   SYNC_BASE_URL, 
   SYNC_LOGIN_ENDPOINT
 } = require("./config");
-const { createFileRetry } = require('./queries');
+const { createFileRetry, incrementFileRetryAttempt } = require('./queries');
 
 // Types of operations
 const DOWNLOAD_OPERATION = "download";
@@ -68,7 +66,7 @@ async function processFileDeltas(termObjects, fetch, operation) {
  * @param {string} correlationId - The correlation ID for logging and tracking.
  * @returns {Promise} A promise representing the completion of the download.
  */
-async function downloadFile(uri, fetcher, correlationId) {
+async function downloadFile(uri, fetcher, correlationId, retry = false) {
   try {
     await loginIfNeeded(correlationId);
 
@@ -78,45 +76,28 @@ async function downloadFile(uri, fetcher, correlationId) {
       },
     };
 
-    uri = uri.replace(/[<>]/g, "");
+    uri = uri.replace(/[<>]/g, ""); // Remove gt & lt symbols "<share://uri>" -> "share://uri"
+
     const fileName = uri.replace('share://', '');
     const downloadFileURL = `${SYNC_BASE_URL}/delta-files-share/download?uri=${uri}`;
+    const filePath = `/share/${fileName}`;
 
-    let filePath = `/share/${fileName}`;
+    const response = await fetcher(downloadFileURL, fetchOptions);
+    const buffer = await response.buffer();
+    
+    await createDirectories(filePath);
+    fs.writeFileSync(filePath, buffer);
+    
+    console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
 
-    let attempt = 1;
-    let delay = SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION;
-
-    while (attempt <= MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-      console.log(`Attempt ${attempt}: Downloading file ${uri} from ${downloadFileURL}, Correlation ID: ${correlationId}`);
-      try {
-        const response = await fetcher(downloadFileURL, fetchOptions);
-
-        if (response.ok) {
-          const buffer = await response.buffer();
-          await createDirectories(filePath);
-
-          fs.writeFileSync(filePath, buffer);
-          console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
-          return;
-        } else {
-          console.error(`Failed to download file ${uri} (Status: ${response.status}, Headers: ${JSON.stringify(response.headers.raw())}), Correlation ID: ${correlationId}`);
-        }
-      } catch (networkError) {
-        console.error(`Network error during download attempt ${attempt} for file ${uri}:`, networkError, `Correlation ID: ${correlationId}`);
-      }
-
-      if (attempt === MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-        const errorMessage = `Failed to download file ${uri} after ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS} attempts. Correlation ID: ${correlationId}`;
-      }
-
-      await retryAfterDelay(delay);
-      delay *= 2; // Exponential backoff
-      attempt++;
-    }
   } catch (error) {
-    console.error(`An error occurred during the download process for file ${uri}:`, error, `Correlation ID: ${correlationId}`);
-    const errorMessage = `An error occurred during the download process for file ${uri}: ${error.message || error}, Correlation ID: ${correlationId}`;
+    console.error(`Something went wrong while downloading file ${uri}:`, error, `Correlation ID: ${correlationId}`);
+    
+    if(retry) {
+      await incrementFileRetryAttempt(uri, error.message, correlationId);
+    } else {
+      await createFileRetry(uri, error.message, correlationId);
+    }
   }
 }
 
@@ -176,8 +157,7 @@ async function login(correlationId) {
       cookie = newCookiePart;
     }
   } catch (e) {
-    console.error(`Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}:`, e);
-    const errorMessage = `Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}: ${e.message || e}`;
+    console.error(`Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}:`, e.message || e);
     throw e;
   }
 }

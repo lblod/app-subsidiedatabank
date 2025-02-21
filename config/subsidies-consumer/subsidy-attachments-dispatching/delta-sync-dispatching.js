@@ -7,9 +7,8 @@ const {
 } = require('./config');
 
 const { processFileDeltas, DELETE_OPERATION, DOWNLOAD_OPERATION } = require('./file-processor');
-const { batchedDbUpdate, deleteFromAllGraphs} = require('./utils');
-
-
+const { batchedDbUpdate, deleteFromAllGraphs } = require('./utils');
+const { getFilesForRetry } = require('./queries');
 
 /**
  * Dispatch the fetched information to a target graph. The function consists of 3 parts:
@@ -28,6 +27,15 @@ const { batchedDbUpdate, deleteFromAllGraphs} = require('./utils');
  * @return {void} Nothing
  */
 async function dispatch(lib, data) {
+  // Process any files that need to be retried
+  const { mu, muAuthSudo, fetch } = lib;
+  const filesToRetry = await getFilesForRetry();
+  console.log(`Found ${filesToRetry.length} files that need to be retried`);
+
+  for (const fileUri of filesToRetry) {
+    await processFileDeltas([{subject: fileUri}], fetch, DOWNLOAD_OPERATION);
+  }
+
   for (const { deletes, inserts } of data.termObjectChangeSets) {
     await processDeletes(lib, deletes);
     await processInserts(lib, inserts);
@@ -40,7 +48,7 @@ async function dispatch(lib, data) {
 async function processDeletes(lib, deletes) {
   const { mu, muAuthSudo, fetch } = lib;
 
-  await processFileDeltas(deletes, fetch, DELETE_OPERATION)
+  await processFileDeltas(deletes, fetch, DELETE_OPERATION);
 
   const deleteStatements = deletes?.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
   if (deleteStatements?.length) {
@@ -62,7 +70,7 @@ async function processDeletes(lib, deletes) {
 async function processInserts(lib, inserts) {
   const { mu, muAuthSudo, fetch } = lib;
 
-  await processFileDeltas(inserts, fetch, DOWNLOAD_OPERATION)
+  await processFileDeltas(inserts, fetch, DOWNLOAD_OPERATION);
 
   const insertStatements = inserts?.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
   if (insertStatements?.length) {

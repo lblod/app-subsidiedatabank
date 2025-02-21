@@ -8,11 +8,19 @@ const INGEST_GRAPH = process.env.INGEST_GRAPH || `http://mu.semte.ch/application
 const SYNC_LOGIN_ENDPOINT = process.env.DCR_SYNC_LOGIN_ENDPOINT;
 const SECRET_KEY = process.env.DCR_SECRET_KEY;
 
+const PREFIXES = `
+  PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
+  PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
+  PREFIX dct: <http://purl.org/dc/terms/>
+  PREFIX oslc: <http://open-services.net/ns/core#>
+`
+
 if(!process.env.DCR_SYNC_BASE_URL)
   throw `Expected 'DCR_SYNC_BASE_URL' to be provided.`;
 const SYNC_BASE_URL = process.env.DCR_SYNC_BASE_URL;
 
 module.exports = {
+  PREFIXES,
   BATCH_SIZE,
   MU_CALL_SCOPE_ID_INITIAL_SYNC,
   BYPASS_MU_AUTH_FOR_EXPENSIVE_QUERIES,
