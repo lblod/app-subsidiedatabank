@@ -70,3 +70,14 @@ export async function incrementFileRetryAttempt(uri, message){
     }
   `);
 }
+
+export async function deleteFileEntry(uri) {
+  return update(`
+    ${PREFIXES}
+    DELETE WHERE {
+      GRAPH ${sparqlEscapeUri(subsidiesConsumerGraph)} {
+        ${sparqlEscapeUri(uri)} ?p ?o .
+      }
+    }
+  `);
+}

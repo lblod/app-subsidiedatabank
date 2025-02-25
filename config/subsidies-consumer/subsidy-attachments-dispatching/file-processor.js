@@ -7,7 +7,7 @@ const {
   SYNC_BASE_URL, 
   SYNC_LOGIN_ENDPOINT
 } = require("./config");
-const { createFileRetry, incrementFileRetryAttempt } = require('./queries');
+const { createFileRetry, incrementFileRetryAttempt, deleteFileEntry } = require('./queries');
 
 // Types of operations
 const DOWNLOAD_OPERATION = "download";
@@ -89,6 +89,11 @@ async function downloadFile(uri, fetcher, correlationId, retry = false) {
     fs.writeFileSync(filePath, buffer);
     
     console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
+
+    if (retry) {
+      await deleteFileEntry(uri);
+      console.log(`Deleted retry entry for ${uri} after successful download`);
+    }
 
   } catch (error) {
     console.error(`Something went wrong while downloading file ${uri}:`, error, `Correlation ID: ${correlationId}`);
