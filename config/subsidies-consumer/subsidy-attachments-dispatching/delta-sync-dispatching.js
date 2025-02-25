@@ -6,7 +6,7 @@ const {
   INGEST_GRAPH,
 } = require('./config');
 
-const { processFileDeltas, DELETE_OPERATION, DOWNLOAD_OPERATION } = require('./file-processor');
+const { processFileDeltas, DELETE_OPERATION, DOWNLOAD_OPERATION, downloadFile } = require('./file-processor');
 const { batchedDbUpdate, deleteFromAllGraphs } = require('./utils');
 const { getFilesForRetry } = require('./queries');
 
@@ -32,8 +32,8 @@ async function dispatch(lib, data) {
   const filesToRetry = await getFilesForRetry();
   console.log(`Found ${filesToRetry.length} files that need to be retried`);
 
-  for (const fileUri of filesToRetry) {
-    await processFileDeltas([{subject: fileUri}], fetch, DOWNLOAD_OPERATION);
+  for (const file of filesToRetry) {
+    await downloadFile(file.uri, fetch, file.uuid, true);
   }
 
   for (const { deletes, inserts } of data.termObjectChangeSets) {

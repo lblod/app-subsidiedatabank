@@ -208,5 +208,6 @@ async function retryAfterDelay(delay) {
 module.exports = {
   DOWNLOAD_OPERATION,
   DELETE_OPERATION,
+  downloadFile,
   processFileDeltas
 };
