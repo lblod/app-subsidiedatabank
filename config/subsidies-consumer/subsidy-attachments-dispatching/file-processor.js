@@ -82,7 +82,13 @@ async function downloadFile(uri, fetcher, correlationId, retry = false) {
     const downloadFileURL = `${SYNC_BASE_URL}/delta-files-share/download?uri=${uri}`;
     const filePath = `/share/${fileName}`;
 
+    console.log(`Fetching file from ${downloadFileURL}, Correlation ID: ${correlationId}`)
     const response = await fetcher(downloadFileURL, fetchOptions);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to download file: ${response.status} ${response.statusText}`);
+    }
+    
     const buffer = await response.buffer();
     
     await createDirectories(filePath);
