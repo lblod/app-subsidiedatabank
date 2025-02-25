@@ -8,19 +8,22 @@ const subsidiesConsumerGraph = 'http://mu.semte.ch/graphs/subsidies-consumer';
 export async function getFilesForRetry() {
   const result = await query(`
     ${PREFIXES}
-    SELECT ?uri WHERE {
+    SELECT ?uri ?uuid WHERE {
       GRAPH ${sparqlEscapeUri(subsidiesConsumerGraph)} {
         ?uri a ${sparqlEscapeUri(fileType)} ;
+             mu:uuid ?uuid ;
              ext:attempt ?attempt .
         FILTER(?attempt < ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS})
       }
     }
   `);
-  return result.results.bindings.map(row => row.uri.value);
+  return result.results.bindings.map(row => ({
+    uri: row.uri.value,
+    uuid: row.uuid.value
+  }));
 }
 
 export async function createFileRetry(uri, message, correlationId){
-  const id = uuid();
   const now = new Date();
 
   return update(`
@@ -28,10 +31,9 @@ export async function createFileRetry(uri, message, correlationId){
     INSERT DATA {
       GRAPH ${sparqlEscapeUri(subsidiesConsumerGraph)}{
         ${sparqlEscapeUri(uri)} a ${sparqlEscapeUri(fileType)};
-          mu:uuid ${sparqlEscapeString(id)};
+          mu:uuid ${sparqlEscapeString(correlationId)};
           dct:created ${sparqlEscapeDateTime(now)};
           dct:modified ${sparqlEscapeDateTime(now)};
-          dct:identifier ${sparqlEscapeString(correlationId)};
           oslc:message ${sparqlEscapeString(message)};
           ext:attempt 1 .
       }
@@ -39,7 +41,7 @@ export async function createFileRetry(uri, message, correlationId){
   `);
 }
 
-export async function incrementFileRetryAttempt(uri, message, correlationId){
+export async function incrementFileRetryAttempt(uri, message){
   const now = new Date();
 
   return update(`
@@ -48,7 +50,6 @@ export async function incrementFileRetryAttempt(uri, message, correlationId){
       GRAPH ${sparqlEscapeUri(subsidiesConsumerGraph)} {
         ${sparqlEscapeUri(uri)} ext:attempt ?currentAttempt ;
                                 dct:modified ?modified ;
-                                dct:identifier ?oldCorrelationId ;
                                 oslc:message ?oldMessage .
       }
     }
@@ -56,7 +57,6 @@ export async function incrementFileRetryAttempt(uri, message, correlationId){
       GRAPH ${sparqlEscapeUri(subsidiesConsumerGraph)} {
         ${sparqlEscapeUri(uri)} dct:modified ${sparqlEscapeDateTime(now)};
                                 ext:attempt ?nextAttempt ;
-                                dct:identifier ${sparqlEscapeString(correlationId)};
                                 oslc:message ${sparqlEscapeString(message)} .
       }
     }
@@ -64,7 +64,6 @@ export async function incrementFileRetryAttempt(uri, message, correlationId){
       GRAPH ${sparqlEscapeUri(subsidiesConsumerGraph)} {
         ${sparqlEscapeUri(uri)} ext:attempt ?currentAttempt ;
                                 dct:modified ?modified ;
-                                dct:identifier ?oldCorrelationId ;
                                 oslc:message ?oldMessage .
         BIND(?currentAttempt + 1 AS ?nextAttempt)
       }
