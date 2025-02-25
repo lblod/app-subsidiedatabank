@@ -202,15 +202,6 @@ async function createDirectories(filePath) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
 
-/**
- * Retry an operation after a specified delay.
- * @param {number} delay - The delay time in milliseconds.
- * @returns {Promise} A promise representing the completion of the retry operation.
- */
-async function retryAfterDelay(delay) {
-  await new Promise(resolve => setTimeout(resolve, delay));
-}
-
 module.exports = {
   DOWNLOAD_OPERATION,
   DELETE_OPERATION,
