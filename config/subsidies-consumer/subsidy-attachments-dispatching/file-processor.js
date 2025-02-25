@@ -105,7 +105,7 @@ async function downloadFile(uri, fetcher, correlationId, retry = false) {
     console.error(`Something went wrong while downloading file ${uri}:`, error, `Correlation ID: ${correlationId}`);
     
     if(retry) {
-      await incrementFileRetryAttempt(uri, error.message, correlationId);
+      await incrementFileRetryAttempt(uri, error.message);
     } else {
       await createFileRetry(uri, error.message, correlationId);
     }
