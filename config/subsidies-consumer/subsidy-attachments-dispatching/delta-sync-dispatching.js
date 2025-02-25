@@ -27,18 +27,25 @@ const { getFilesForRetry } = require('./queries');
  * @return {void} Nothing
  */
 async function dispatch(lib, data) {
-  // Process any files that need to be retried
   const { mu, muAuthSudo, fetch } = lib;
-  const filesToRetry = await getFilesForRetry();
-  console.log(`Found ${filesToRetry.length} files that need to be retried`);
+  try {
+    const filesToRetry = await getFilesForRetry();
+    console.log(`Found ${filesToRetry.length} files that need to be retried`);
 
-  for (const file of filesToRetry) {
-    await downloadFile(file.uri, fetch, file.uuid, true);
-  }
+    for (const file of filesToRetry) {
+      try {
+        await downloadFile(file.uri, fetch, file.uuid, true);
+      } catch (error) {
+        console.error(`Failed to retry download for file ${file.uri}:`, error, `Correlation ID: ${file.uuid}`);
+      }
+    }
 
-  for (const { deletes, inserts } of data.termObjectChangeSets) {
-    await processDeletes(lib, deletes);
-    await processInserts(lib, inserts);
+    for (const { deletes, inserts } of data.termObjectChangeSets) {
+      await processDeletes(lib, deletes);
+      await processInserts(lib, inserts);
+    }
+  } catch (error) {
+    console.error('Error in dispatch:', error);
   }
 }
 
