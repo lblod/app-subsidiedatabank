@@ -1,15 +1,13 @@
 const fs = require('fs');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid'); // Import UUID library for generating correlation IDs
+const { uuid } = require('mu');
 
 const { 
-  MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS, 
   SECRET_KEY, 
-  SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION, 
   SYNC_BASE_URL, 
   SYNC_LOGIN_ENDPOINT
 } = require("./config");
-const { createError } = require('./error');
+const { createFileRetry, incrementFileRetryAttempt, deleteFileEntry } = require('./queries');
 
 // Types of operations
 const DOWNLOAD_OPERATION = "download";
@@ -35,28 +33,30 @@ let cookie = null;
  * @returns {Promise} A promise representing the completion of the processing.
  */
 async function processFileDeltas(termObjects, fetch, operation) {
-  const correlationId = uuidv4(); // Generate a correlation ID for this batch of operations
+  const correlationId = uuid(); // Generate a correlation ID for this batch of operations
   console.log(`Processing file deltas with correlation ID: ${correlationId}`);
   
-  for (const item of termObjects) {
+  const downloadPromises = termObjects.map(async (item) => {
     // Process meta files (<data://)
     if (isMetaFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        await downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
+        return downloadFile(item.object.replace('<data://', '<share://subsidies/'), fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
-        deleteFile(item.object.replace('<data://', '<share://subsidies/'), correlationId);
+        return deleteFile(item.object.replace('<data://', '<share://subsidies/'), correlationId);
       }
     }
 
     // Process attachments (<share://)
     else if (isAttachmentFile(item)) {
       if (operation === DOWNLOAD_OPERATION) {
-        await downloadFile(item.subject, fetch, correlationId);
+        return downloadFile(item.subject, fetch, correlationId);
       } else if (operation === DELETE_OPERATION) {
-        deleteFile(item.subject, correlationId);
+        return deleteFile(item.subject, correlationId);
       }
     }
-  }
+  });
+
+  await Promise.all(downloadPromises);
 }
 
 /**
@@ -66,7 +66,7 @@ async function processFileDeltas(termObjects, fetch, operation) {
  * @param {string} correlationId - The correlation ID for logging and tracking.
  * @returns {Promise} A promise representing the completion of the download.
  */
-async function downloadFile(uri, fetcher, correlationId) {
+async function downloadFile(uri, fetcher, correlationId, retry = false) {
   try {
     await loginIfNeeded(correlationId);
 
@@ -76,39 +76,39 @@ async function downloadFile(uri, fetcher, correlationId) {
       },
     };
 
-    uri = uri.replace(/[<>]/g, "");
+    uri = uri.replace(/[<>]/g, ""); // Remove gt & lt symbols "<share://uri>" -> "share://uri"
+
     const fileName = uri.replace('share://', '');
     const downloadFileURL = `${SYNC_BASE_URL}/delta-files-share/download?uri=${uri}`;
+    const filePath = `/share/${fileName}`;
 
-    let filePath = `/share/${fileName}`;
-
-    let attempt = 1;
-
-    while (attempt <= MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-      console.log(`Downloading file ${uri} from ${downloadFileURL}, Attempt ${attempt}, Correlation ID: ${correlationId}`);
-      const response = await fetcher(downloadFileURL, fetchOptions);
-
-      if (response.ok) {
-        const buffer = await response.buffer();
-        await createDirectories(filePath);
-
-        fs.writeFileSync(filePath, buffer);
-        console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
-        return;
-      } else {
-        console.error(`Failed to download file ${uri} (${response.status}), Correlation ID: ${correlationId}`);
-        if (attempt === MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS) {
-          const errorMessage = `Failed to download file ${uri} after ${MAX_FILE_DOWNLOAD_RETRY_ATTEMPTS} attempts. Response: ${response.statusText}, Correlation ID: ${correlationId}`;
-          createError(SYNC_BASE_URL, errorMessage, correlationId);
-        }
-        await retryAfterDelay(SLEEP_TIME_AFTER_FAILED_FILE_DOWNLOAD_OPERATION);
-        attempt++;
-      }
+    console.log(`Fetching file from ${downloadFileURL}, Correlation ID: ${correlationId}`)
+    const response = await fetcher(downloadFileURL, fetchOptions);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to download file: ${response.status} ${response.statusText}`);
     }
+    
+    const buffer = await response.buffer();
+    
+    await createDirectories(filePath);
+    fs.writeFileSync(filePath, buffer);
+    
+    console.log(`File downloaded successfully: ${filePath}, Correlation ID: ${correlationId}`);
+
+    if (retry) {
+      await deleteFileEntry(uri);
+      console.log(`Deleted retry entry for ${uri} after successful download`);
+    }
+
   } catch (error) {
-    console.error(`An error occurred during the download process for file ${uri}:`, error, `Correlation ID: ${correlationId}`);
-    const errorMessage = `An error occurred during the download process for file ${uri}: ${error.message || error}, Correlation ID: ${correlationId}`;
-    createError(SYNC_BASE_URL, errorMessage, correlationId);
+    console.error(`Something went wrong while downloading file ${uri}:`, error, `Correlation ID: ${correlationId}`);
+    
+    if(retry) {
+      await incrementFileRetryAttempt(uri, error.message);
+    } else {
+      await createFileRetry(uri, error.message, correlationId);
+    }
   }
 }
 
@@ -159,7 +159,6 @@ async function login(correlationId) {
     if (!resp.ok) {
       const errorMessage = `Failed to log in. Response: ${resp.statusText}`;
       console.log(errorMessage);
-      createError(SYNC_BASE_URL, errorMessage, correlationId);
       throw new Error("Could not log in");
     }
 
@@ -169,9 +168,7 @@ async function login(correlationId) {
       cookie = newCookiePart;
     }
   } catch (e) {
-    console.error(`Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}:`, e);
-    const errorMessage = `Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}: ${e.message || e}`;
-    createError(SYNC_BASE_URL, errorMessage, correlationId);
+    console.error(`Something went wrong while logging in at ${SYNC_LOGIN_ENDPOINT}:`, e.message || e);
     throw e;
   }
 }
@@ -205,17 +202,9 @@ async function createDirectories(filePath) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
 
-/**
- * Retry an operation after a specified delay.
- * @param {number} delay - The delay time in milliseconds.
- * @returns {Promise} A promise representing the completion of the retry operation.
- */
-async function retryAfterDelay(delay) {
-  await new Promise(resolve => setTimeout(resolve, delay));
-}
-
 module.exports = {
   DOWNLOAD_OPERATION,
   DELETE_OPERATION,
+  downloadFile,
   processFileDeltas
 };

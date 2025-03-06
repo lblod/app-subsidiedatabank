@@ -103,7 +103,7 @@ services:
   # LOKET SUBSIDIE CONSUMER
   ################################################################################
   subsidies-consumer:
-    image: lblod/delta-consumer:0.0.21
+    image: lblod/delta-consumer:0.1.3
     environment:
       DCR_SERVICE_NAME: "subsidies-consumer"
       DCR_SYNC_BASE_URL: "https://loket.lblod.info" # replace with link to Loket API
