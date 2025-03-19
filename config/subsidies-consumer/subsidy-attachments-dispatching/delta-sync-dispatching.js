@@ -6,10 +6,9 @@ const {
   INGEST_GRAPH,
 } = require('./config');
 
-const { processFileDeltas, DELETE_OPERATION, DOWNLOAD_OPERATION } = require('./file-processor');
-const { batchedDbUpdate, deleteFromAllGraphs} = require('./utils');
-
-
+const { processFileDeltas, DELETE_OPERATION, DOWNLOAD_OPERATION, downloadFile } = require('./file-processor');
+const { batchedDbUpdate, deleteFromAllGraphs } = require('./utils');
+const { getFilesForRetry } = require('./queries');
 
 /**
  * Dispatch the fetched information to a target graph. The function consists of 3 parts:
@@ -28,9 +27,25 @@ const { batchedDbUpdate, deleteFromAllGraphs} = require('./utils');
  * @return {void} Nothing
  */
 async function dispatch(lib, data) {
-  for (const { deletes, inserts } of data.termObjectChangeSets) {
-    await processDeletes(lib, deletes);
-    await processInserts(lib, inserts);
+  const { mu, muAuthSudo, fetch } = lib;
+  try {
+    const filesToRetry = await getFilesForRetry();
+    console.log(`Found ${filesToRetry.length} files that need to be retried`);
+
+    for (const file of filesToRetry) {
+      try {
+        await downloadFile(file.uri, fetch, file.uuid, true);
+      } catch (error) {
+        console.error(`Failed to retry download for file ${file.uri}:`, error, `Correlation ID: ${file.uuid}`);
+      }
+    }
+
+    for (const { deletes, inserts } of data.termObjectChangeSets) {
+      await processDeletes(lib, deletes);
+      await processInserts(lib, inserts);
+    }
+  } catch (error) {
+    console.error('Error in dispatch:', error);
   }
 }
 
@@ -40,7 +55,7 @@ async function dispatch(lib, data) {
 async function processDeletes(lib, deletes) {
   const { mu, muAuthSudo, fetch } = lib;
 
-  await processFileDeltas(deletes, fetch, DELETE_OPERATION)
+  await processFileDeltas(deletes, fetch, DELETE_OPERATION);
 
   const deleteStatements = deletes?.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
   if (deleteStatements?.length) {
@@ -62,7 +77,7 @@ async function processDeletes(lib, deletes) {
 async function processInserts(lib, inserts) {
   const { mu, muAuthSudo, fetch } = lib;
 
-  await processFileDeltas(inserts, fetch, DOWNLOAD_OPERATION)
+  await processFileDeltas(inserts, fetch, DOWNLOAD_OPERATION);
 
   const insertStatements = inserts?.map(o => `${o.subject} ${o.predicate} ${o.object}.`);
   if (insertStatements?.length) {
