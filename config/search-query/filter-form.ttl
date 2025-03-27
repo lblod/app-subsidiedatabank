@@ -44,7 +44,7 @@ ext:typeSubsidieF a form:Field ;
     sh:group ext:applicationPg .
 
 ext:typeBestuurF a form:Field ;
-    sh:name "Type bestuur" ;
+    sh:name "Type organisatie" ;
     sh:path searchSubsidie:typeBestuur;
     form:displayType displayTypes:conceptSchemeSelector ;
     search:emberQueryParameterKey "bestuursType" ;
@@ -54,7 +54,7 @@ ext:typeBestuurF a form:Field ;
     sh:group ext:applicationPg .
 
 ext:organizationsF a form:Field ;
-    sh:name "Bestuurseenheden" ;
+    sh:name "Organisaties - Lokale besturen" ;
     sh:path searchSubsidie:organizations;
     form:displayType displayTypes:conceptSchemeSelector ;
     search:emberQueryParameterKey "organizations" ;
@@ -64,7 +64,7 @@ ext:organizationsF a form:Field ;
     sh:group ext:applicationPg .
 
 ext:economischeActorenF a form:Field ;
-    sh:name "Economische Actoren" ;
+    sh:name "Organisaties - Andere (niet lokale besturen)" ;
     sh:path searchSubsidie:organizations;
     form:displayType displayTypes:conceptSchemeSelector ;
     search:emberQueryParameterKey "economischeActoren" ;
