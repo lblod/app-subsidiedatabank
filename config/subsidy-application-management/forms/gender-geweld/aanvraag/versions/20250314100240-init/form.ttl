@@ -1,0 +1,711 @@
+@prefix : <#>.
+@prefix form: <http://lblod.data.gift/vocabularies/forms/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix displayTypes: <http://lblod.data.gift/display-types/>.
+@prefix nodes: <http://data.lblod.info/form-data/nodes/>.
+@prefix emb: <http://ember-submission-form-fields/>.
+@prefix lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>.
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+@prefix schema: <http://schema.org/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+ext:algemeneDoelstellingenEnOpdrachten a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        "Schets kort de algemene doelstellingen en opdrachten van de organisatie. Geef aan welke relevante expertise je organisatie kan inzetten voor de doelstellingen van deze projectoproep.";
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:algemeneDoelstellingenEnOpdrachten;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name
+    "Informatie over de algemene werking en doelstellingen van uw organisatie";
+    sh:order 12;
+    sh:path lblodSubsidie:algemeneDoelstellingenEnOpdrachten .
+    
+ext:erkenningenEnSubsidieringSection
+    a form:Section;
+    form:help
+        """Vul onderstaande tabel schematisch in zodat we een overzicht krijgen van welke overheidsinstanties de organisatie
+ondersteunen.""";
+    sh:name "Overzicht van erkenningen en subsidiëring";
+    sh:order 3 .
+    
+ext:telephone
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:ValidPhoneNumber;
+                form:defaultCountry "BE";
+                form:grouping form:MatchEvery;
+		            sh:path ( schema:contactPoint schema:telephone );
+                sh:resultMessage "Geef een geldig telefoonnummer in."
+            ],
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+		            sh:path ( schema:contactPoint schema:telephone );
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "telefoonnummer";
+    sh:order 7;
+    sh:path ( schema:contactPoint schema:telephone ).
+
+ext:website
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:website;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "website";
+    sh:order 9;
+    sh:path lblodSubsidie:website .
+
+ext:subsidierendeInstanties a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:erkenningenEnSubsidieringSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:subsidierendeInstanties;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Subsidiërende instantie";
+    sh:order 1;
+    sh:path lblodSubsidie:subsidierendeInstanties.
+
+ext:bankAccount
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy [
+        a form:RequiredConstraint;
+        form:grouping form:Bag;
+        sh:order 1;
+        sh:path ( schema:bankAccount schema:identifier );
+
+        sh:resultMessage "Dit veld is verplicht."@nl ],
+      [
+        a form:ValidIBAN;
+        form:grouping form:MatchEvery;
+        sh:order 2;
+        sh:path ( schema:bankAccount schema:identifier );
+        sh:resultMessage "Geef een geldig IBAN op."@nl
+      ];
+    sh:name "IBAN";
+    sh:order 10;
+    sh:path ( schema:bankAccount schema:identifier ) .
+
+ext:startDatum
+    a form:Field;
+    form:displayType displayTypes:date;
+    form:partOf ext:identificatieProjectSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:startDatum;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Startdatum van het project";
+    sh:order 14;
+    sh:path lblodSubsidie:startDatum .
+
+ext:juridischStatuut
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:juridischStatuut;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "juridisch statuut";
+    sh:order 2;
+    sh:path lblodSubsidie:juridischStatuut .
+
+ext:akkoordClausule
+    a form:Field;
+    form:displayType displayTypes:checkbox;
+    form:partOf ext:verklaringenSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:akkoordClausule;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name """Ik ga akkoord met de clausule inzake non-disciriminatie en integriteit.""";
+    form:help """<a href="https://assets.vlaanderen.be/image/upload/v1741710190/repositories-prd/Clausule_non-discriminatie_en_integriteit_t7jnsj.pdf" target="_blank">Clausule inzake non-disciriminatie en integriteit.</a>""";
+    sh:order 21;
+    sh:path lblodSubsidie:akkoordClausule .
+
+ext:overzichtMedewerkers
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Geef een overzicht van de medewerkers, zowel betaald als vrijwillig, die worden ingezet voor de uitvoering van het project.
+Omschrijf de taken, de rollen en de vereiste competenties binnen het project. Geef aan op welke manier je hen zal rekruteren,
+opleiden en ondersteunen.""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:overzichtMedewerkers;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Medewerkers";
+    sh:order 28;
+    sh:path lblodSubsidie:overzichtMedewerkers .
+
+ext:email
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path ( schema:contactPoint schema:email );
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "e-mailadres";
+    sh:order 8;
+    sh:path ( schema:contactPoint schema:email ) .
+
+ext:overzichtErkenningenGenerator a form:Generator; 
+  form:prototype nodes:ca3ebdf2-6188-4576-8c42-c3edcd623704 .
+
+nodes:ca3ebdf2-6188-4576-8c42-c3edcd623704
+  form:shape nodes:531494b6-55d1-43b1-a045-80c8fd5882eb.
+
+ext:identificatieProjectSection a form:Section; 
+  sh:name "Identificatie van het project"; 
+  sh:order 4 .
+
+##########################################################
+# UPLOAD FIELD START
+##########################################################
+
+ext:begrotingDocument
+    a form:Field;
+    form:displayType displayTypes:files;
+    form:partOf ext:overzichtBegrotingSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path (lblodSubsidie:begrotingDocument dct:hasPart);
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Laad hier uw begroting op";
+    sh:order 18;
+    sh:path (lblodSubsidie:begrotingDocument dct:hasPart) .
+
+nodes:ee85d17b-8758-4c6a-b176-ef57f2120d04 a form:Field ;
+    sh:name "Type RemoteDataObject or FileDataObject [hidden input]" ;
+    sh:order 23 ;
+    sh:path ( ext:begrotingDocument dct:hasPart rdf:type );
+    form:partOf ext:overzichtBegrotingSection.
+
+##########################################################
+# UPLOAD FIELD END
+##########################################################
+
+
+ext:aanpakEnKwaliteitsbewaking
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Omschrijf welke acties je gaat ondernemen om de resultaten te behalen. Geef de verschillende stappen voor het concrete verloop
+van het project, de timing en de betrokkenheid van eventuele partners. Geef aan hoe de voortgang en de resultaten van het
+project worden gemonitord en geëvalueerd.""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:aanpakEnKwaliteitsbewaking;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Aanpak en kwaliteitsbewaking";
+    sh:order 27;
+    sh:path lblodSubsidie:aanpakEnKwaliteitsbewaking.
+
+ext:verklaringenSection
+    a form:Section;
+    sh:name "Verklaring op eer en clausule non-discriminatie en integriteit";
+    sh:order 7 .
+
+ext:ondernemingsnummer
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:ondernemingsnummer;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "ondernemingsnummer";
+    sh:order 11;
+    sh:path lblodSubsidie:ondernemingsnummer .
+
+ext:overzichtAndereSubsidierendeInstanties
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        "Heb je voor het project een financiële tegemoetkoming aangevraagd bij een of meer andere instanties? Geef hieronder een overzicht van deze tegemoetkomingen samen met de contactgegevens van elk van de instanties.";
+    form:partOf ext:overzichtBegrotingSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:overzichtAndereSubsidierendeInstanties;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Overzicht van andere subsidiërende instanties";
+    sh:order 20;
+    sh:path lblodSubsidie:overzichtAndereSubsidierendeInstanties.
+
+ext:verantwoordingBegroteMiddelen
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        "Geef een korte verantwoording van de werkings- en personeelskosten die noodzakelijk zijn voor de verwezenlijking van het project. Voor wat betreft de personeelskosten: geef per medewerker de kost aan (met vermelding van de gehanteerde loonschaal) en inzet in het project (aantal VTE). In het oproepkader vind je terug welke kosten subsidiabel zijn.";
+    form:partOf ext:overzichtBegrotingSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:verantwoordingBegroteMiddelen;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Verantwoording van de begrote middelen";
+    sh:order 19;
+    sh:path lblodSubsidie:verantwoordingBegroteMiddelen .
+
+ext:familyName
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path ( schema:contactPoint foaf:familyName );
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "naam contactpersoon";
+    sh:order 5;
+    sh:path ( schema:contactPoint foaf:familyName ) .
+
+ext:beoogdeResultatenProject
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Beschrijf de beoogde resultaten van het project:<br>
+• de directe producten of diensten (output)<br>
+• de effecten op middellange termijn (outcome)<br>
+• de bredere veranderingen op lange termijn (impact)<br>
+Formuleer specifieke, meetbare, realistische en tijdsgebonden indicatoren en bijhorende streefwaarden (key performance
+indicators/KPI’s) om te meten of de resultaten behaald zijn en/of de beoogde inspanningen zijn geleverd.
+""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:beoogdeResultatenProject;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Beoogde resultaten";
+    sh:order 26;
+    sh:path lblodSubsidie:beoogdeResultatenProject .
+    
+ext:einddatumProject
+    a form:Field;
+    form:displayType displayTypes:date;
+    form:partOf ext:identificatieProjectSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:einddatumProject;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Einddatum van het project";
+    sh:order 15;
+    sh:path lblodSubsidie:einddatumProject .
+
+ext:straatEnNummer
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:straatEnNummer;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "straat en nummer";
+    sh:order 3;
+    sh:path lblodSubsidie:straatEnNummer .
+
+ext:doelpubliekProject
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Omschrijf het doelpubliek waarop het project zich richt (Wie wil je bereiken met dit project?). Geef de noden aan van de beoogde
+doelgroep (Welke situatie wil je verbeteren met dit project?). Geef aan hoe de doelgroep wordt betrokken en bereikt.""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:doelpubliekProject;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Beoogde doelgroep(en)";
+    sh:order 25;
+    sh:path lblodSubsidie:doelpubliekProject .
+
+ext:overzichtErkenningenSubForm a form:SubForm;
+    form:includes
+        ext:subsidierendeInstanties,
+        ext:bedrag,
+        ext:redenErkenning;
+    form:removeLabel "Verwijder rij";
+    sh:name "Overzicht Erkenningen".
+
+ext:bevestigingWaarheid
+    a form:Field;
+    form:displayType displayTypes:checkbox;
+    form:partOf ext:verklaringenSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:bevestigingWaarheid;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name
+        "Ik bevestig dat alle gegevens in dit formulier naar waarheid zijn ingevuld.";
+    sh:order 22;
+    sh:path lblodSubsidie:bevestigingWaarheid .
+
+ext:bijlageSection
+a form:Section; sh:name "Bijlagen"; sh:order 8 .
+
+ext:firstName
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path ( schema:contactPoint foaf:firstName );
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "voornaam contactpersoon";
+    sh:order 6;
+    sh:path ( schema:contactPoint foaf:firstName ) .
+
+ext:titelProject
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:identificatieProjectSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:titelProject;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Titel van het project";
+    sh:order 13;
+    sh:path lblodSubsidie:titelProject .
+
+ext:korteOmschrijvingProject
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help "Vat je project bondig samen.";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:korteOmschrijvingProject;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Korte omschrijving van het project";
+    sh:order 17;
+    sh:path lblodSubsidie:korteOmschrijvingProject .
+
+ext:bedrag
+    a form:Field;
+    form:displayType displayTypes:currencyInput;
+    form:partOf ext:erkenningenEnSubsidieringSection;
+    form:validatedBy
+      [
+          a form:RequiredConstraint;
+          form:grouping form:Bag;
+          sh:order 1;
+          sh:path lblodSubsidie:bedrag;
+          sh:resultMessage "Dit veld is verplicht."
+      ];
+    sh:name "Bedrag";
+    sh:order 3;
+    sh:path lblodSubsidie:bedrag .
+
+ext:inhoudelijkeGegevensSection a form:Section; 
+  sh:name "Inhoudelijke gegevens van het project"; 
+  sh:order 5 .
+
+ext:overzichtErkenningenScope
+a form:Scope; sh:path lblodSubsidie:overzichtErkenningen.
+
+ext:algemeneInformatieSection
+    a form:Section;
+    form:help
+        """Waarvoor dient dit formulier?
+Met dit formulier kun je een projectsubsidie aanvragen voor een project dat kadert binnen de projectoproep \u201cSafe(r) spaces verbinden en versterken\u201d.  
+Wie vult dit formulier in? 
+De verantwoordelijke van de organisatie of vereniging die de subsidie aanvraagt, vult dit formulier in.
+Waar kun je terecht voor meer informatie over dit formulier?
+Alle noodzakelijke documenten kan je raadplegen op de website www.vlaanderen.be/samenleven/subsidies.   
+In de toelichting vind je alle informatie die je nodig hebt om dit formulier correct in te dienen. Het is belangrijk dat je de projectoproep aandachtig leest voor dit aanvraagformulier in te vullen. Bij vragen kun je mailen naar gelijkekansen@vlaanderen.be. 
+Het Besluit Vlaamse Codex Overheidsfinanciën van 17 mei 2019 is steeds van toepassing.
+Wanneer moet je de aanvraag uiterlijk indienen?
+Stuur dit formulier digitaal uiterlijk 2 mei 2025 om 12 uur naar gelijkekansen@vlaanderen.be.  
+Hoe lang mogen de antwoorden op de vragen zijn?
+Er staat geen limiet op de lengte van het antwoord. De antwoordruimte vergroot automatisch als je meer tekst ingeeft.""";
+    sh:name "Algemene informatie";
+    sh:order 1 .
+
+ext:overzichtErkenningenListing
+    a form:Listing, form:ListingTable;
+    form:addLabel "Voeg rij toe";
+    form:canAdd true;
+    form:canRemove true;
+    form:createGenerator ext:overzichtErkenningenGenerator;
+    form:each ext:overzichtErkenningenSubForm;
+    form:partOf ext:erkenningenEnSubsidieringSection;
+    form:scope ext:overzichtErkenningenScope;
+    sh:order 1 .
+
+ext:aandachtIntersectionaliteit
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Geef aan op welke manier je specifieke noden en perspectieven van diverse doelgroep(en) in het project meeneemt. Beschrijf
+hoe je zal inzetten op integrale toegankelijkheid van het project. (Kijk voor inspiratie naar <a href="https://www.integratie-inburgering.be/nl/wat-kunnen-we-voor-jou-doen/ondersteuning-voor-je-organisatie-of-lokaal-bestuur/participatie/hoe-toegankelijk-is-jouw-vrijetijdsaanbod/9-bs-van-toegankelijkheid" target="_blank">de 9 B’s van toegankelijkheid</a>).
+""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:aandachtIntersectionaliteit;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Aandacht voor intersectionaliteit";
+    sh:order 31;
+    sh:path lblodSubsidie:aandachtIntersectionaliteit .
+
+ext:bijlageDocument
+    a form:Field;
+    form:displayType displayTypes:files;
+    form:partOf ext:bijlageSection;
+    sh:name "Laad hier alle relevante bijlagen op";
+    form:help """Maak een zo gedetailleerd mogelijke begroting op. Het sjabloon kan je vinden op <a href="https://www.vlaanderen.be/samenleven/projectoproep-gendergerelateerd-geweld" target="_blank">www.vlaanderen.be/samenleven/projectoproep-gendergerelateerd-geweld</a>""";
+    sh:order 23;
+    sh:path (lblodSubsidie:bijlageDocument dct:hasPart) .
+
+ext:postnummerEnGemeente
+    a form:Field;
+    form:displayType displayTypes:defaultInput;
+    form:partOf ext:gegevensAanvragerSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 2;
+                sh:path lblodSubsidie:postnummerEnGemeente;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "postnummer en gemeente";
+    sh:order 4;
+    sh:path lblodSubsidie:postnummerEnGemeente .
+
+ext:gegevensAanvragerSection
+    a form:Section;
+    form:help
+        "De verantwoordelijke van de organisatie of vereniging die de subsidie aanvraagt, vult dit formulier in.";
+    sh:name "Gegevens van de aanvrager";
+    sh:order 2 .
+
+ext:redenErkenning
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:partOf ext:erkenningenEnSubsidieringSection;
+    form:validatedBy
+      [
+          a form:RequiredConstraint;
+          form:grouping form:Bag;
+          sh:order 1;
+          sh:path lblodSubsidie:redenErkenning;
+          sh:resultMessage "Dit veld is verplicht."
+      ];
+    sh:name "Reden van erkenning/subsidie";
+    sh:order 2;
+    sh:path lblodSubsidie:redenErkenning .
+
+ext:overzichtBegrotingSection a form:Section; 
+  sh:name "Overzicht begroting"; 
+  sh:order 6 .
+
+ext:samenwerkingsverbandenToelichting
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Geef aan welke samenwerkingsverbanden je met andere verenigingen of organisaties aangaat binnen dit project en waarom.
+Licht toe hoe je de samenwerking zal organiseren en welke afspraken er zijn over de inbreng, de taken, de verantwoordelijkheden
+en de communicatie.""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:samenwerkingsverbandenToelichting;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Samenwerkingsverbanden";
+    sh:order 30;
+    sh:path lblodSubsidie:samenwerkingsverbandenToelichting .
+    
+ext:verduurzamingEnOpenbaarmaking
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Omschrijf hoe je in de loop van het project ervaringen en bevindingen zal delen en hoe je de resultaten zal bekendmaken. Geef
+aan hoe de resultaten van het project worden opgenomen in de reguliere werking of elders duurzaam worden verankerd.""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:verduurzamingEnOpenbaarmaking;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Verduurzaming en openbaarmaking";
+    sh:order 29;
+    sh:path lblodSubsidie:verduurzamingEnOpenbaarmaking .
+
+ext:doelstellingenToelichting
+    a form:Field;
+    form:displayType displayTypes:textArea;
+    form:help
+        """Formuleer strategische en operationele doelstellingen van het project en licht deze toe. Motiveer hoe dit project bijdraagt aan
+de realisatie van de doelstellingen van de projectoproep.""";
+    form:partOf ext:inhoudelijkeGegevensSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:path lblodSubsidie:doelstellingenToelichting;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Doelstelling(en)";
+    sh:order 24;
+    sh:path lblodSubsidie:doelstellingenToelichting .
+    
+ext:gevraagdeSubsidieGelijkeKansen
+    a form:Field;
+    form:displayType displayTypes:currencyInput;
+    form:partOf ext:identificatieProjectSection;
+    form:validatedBy
+            [
+                a form:RequiredConstraint;
+                form:grouping form:Bag;
+                sh:order 1;
+                sh:path lblodSubsidie:gevraagdeSubsidieGelijkeKansen;
+                sh:resultMessage "Dit veld is verplicht."
+            ];
+    sh:name "Gevraagde subsidie vanuit Gelijke Kansen";
+    sh:order 16;
+    sh:path lblodSubsidie:gevraagdeSubsidieGelijkeKansen.
+
+emb:source-node
+    a form:Form, form:TopLevelForm;
+    form:includes
+        ext:telephone,
+        ext:website,
+        ext:bankAccount,
+        ext:email,
+        ext:algemeneDoelstellingenEnOpdrachten,
+        ext:startDatum,
+        ext:juridischStatuut,
+        ext:akkoordClausule,
+        ext:overzichtMedewerkers,
+        ext:begrotingDocument,
+        nodes:ee85d17b-8758-4c6a-b176-ef57f2120d04,
+        ext:aanpakEnKwaliteitsbewaking,
+        ext:ondernemingsnummer,
+        ext:overzichtAndereSubsidierendeInstanties,
+        ext:verantwoordingBegroteMiddelen,
+        ext:familyName,
+        ext:beoogdeResultatenProject,
+        ext:einddatumProject,
+        ext:straatEnNummer,
+        ext:doelpubliekProject,
+        ext:bevestigingWaarheid,
+        ext:firstName,
+        ext:titelProject,
+        ext:korteOmschrijvingProject,
+        ext:overzichtErkenningenListing,
+        ext:aandachtIntersectionaliteit,
+        ext:bijlageDocument,
+        nodes:08ebe38b-9b5f-43be-9b61-e1ee58da1168,
+        ext:postnummerEnGemeente,
+        ext:samenwerkingsverbandenToelichting,
+        ext:verduurzamingEnOpenbaarmaking,
+        ext:doelstellingenToelichting,
+        ext:gevraagdeSubsidieGelijkeKansen;
+    form:partOf
+        ext:erkenningenEnSubsidieringSection,
+        ext:identificatieProjectSection,
+        ext:verklaringenSection,
+        ext:bijlageSection,
+        ext:inhoudelijkeGegevensSection,
+        ext:algemeneInformatieSection,
+        ext:gegevensAanvragerSection,
+        ext:overzichtBegrotingSection .

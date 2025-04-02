@@ -1,0 +1,74 @@
+PREFIX mobiliteit: <https://data.vlaanderen.be/ns/mobiliteit#>
+PREFIX lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX subsidie: <http://data.vlaanderen.be/ns/subsidie#>
+PREFIX gleif: <https://www.gleif.org/ontology/Base/>
+PREFIX mu: <http://mu.semte.ch/vocabularies/core/>
+PREFIX cpsv: <http://purl.org/vocab/cpsv#>
+PREFIX common: <http://www.w3.org/2007/uwa/context/common.owl#>
+PREFIX xkos: <http://rdf-vocabulary.ddialliance.org/xkos#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+INSERT DATA {
+  GRAPH <http://mu.semte.ch/graphs/public> {
+    <http://data.lblod.info/id/subsidy-procedural-steps/db928ffe-b7ac-4d10-bb1e-83f306557220> a subsidie:Subsidieprocedurestap;
+      mu:uuid "db928ffe-b7ac-4d10-bb1e-83f306557220";
+      dct:description """Aanvraag""";
+      subsidie:Subsidieprocedurestap.type <http://lblod.data.gift/concepts/ee855aae-eb10-44aa-ae01-38c4f6cca0f6>;
+      mobiliteit:periode  <http://data.lblod.info/id/periodes/1f97a467-d48b-4333-bddf-6688d0065885>.
+
+    # New application flow
+    <http://data.lblod.info/id/subsidie-application-flows/d997a252-0f15-4d4c-8bbb-ea07ee76f092> a lblodSubsidie:ApplicationFlow;
+      mu:uuid "d997a252-0f15-4d4c-8bbb-ea07ee76f092";
+      xkos:belongsTo  <http://data.lblod.info/id/subsidy-measure-offer-series/24fa8ba9-e279-4544-b1bc-7dfff931e974> ;
+      xkos:next <http://data.lblod.info/id/subsidie-application-flow-steps/cc0fc404-9499-4315-8d8f-9a0404ed979b> .
+
+    <http://data.lblod.info/id/subsidie-application-flow-steps/cc0fc404-9499-4315-8d8f-9a0404ed979b> a lblodSubsidie:ApplicationStep;
+      mu:uuid "cc0fc404-9499-4315-8d8f-9a0404ed979b";
+      qb:order 0;
+      dct:references <http://data.lblod.info/id/subsidy-procedural-steps/db928ffe-b7ac-4d10-bb1e-83f306557220>;
+      dct:isPartOf  <http://data.lblod.info/id/subsidie-application-flows/d997a252-0f15-4d4c-8bbb-ea07ee76f092>;
+      dct:source <config://forms/gender-geweld/aanvraag/versions/20250314100240-init/form.ttl>.
+
+    # New subsidy step period from 1 January 2025 (10 PM) to 2 May 2025 (12 PM)
+    <http://data.lblod.info/id/periodes/1f97a467-d48b-4333-bddf-6688d0065885> a <http://data.europa.eu/m8g/PeriodOfTime>;
+      mu:uuid "1f97a467-d48b-4333-bddf-6688d0065885";
+      <http://data.europa.eu/m8g/startTime> "2025-01-01T22:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>; 
+      <http://data.europa.eu/m8g/endTime> "2025-05-02T10:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>. 
+
+    # Create new subsidy and link to reeks
+    <http://data.lblod.info/id/subsidy-measure-offers/e27d78e5-406b-412f-80a3-df4b6b73c496>
+      a <http://data.vlaanderen.be/ns/subsidie#SubsidiemaatregelAanbod>;
+      mu:uuid "e27d78e5-406b-412f-80a3-df4b6b73c496";
+      dct:title """Gendergerelateerd geweld""";
+      skos:prefLabel """Gendergerelateerd geweld""";
+      skos:related "https://www.vlaanderen.be/samenleven/projectoproep-gendergerelateerd-geweld";
+      cpsv:follows <http://data.lblod.info/id/subsidy-procedural-steps/db928ffe-b7ac-4d10-bb1e-83f306557220> ;
+      lblodSubsidie:heeftReeks <http://data.lblod.info/id/subsidy-measure-offer-series/24fa8ba9-e279-4544-b1bc-7dfff931e974> .
+
+    # New subsidiemaatergelaanbodreeks Oproep
+    <http://data.lblod.info/id/subsidy-measure-offer-series/24fa8ba9-e279-4544-b1bc-7dfff931e974> a lblodSubsidie:SubsidiemaatregelAanbodReeks;
+      mu:uuid "24fa8ba9-e279-4544-b1bc-7dfff931e974";
+      dct:title "Oproep"@nl;
+      dct:description ""@nl ;
+      common:active <http://data.lblod.info/id/subsidie-application-flows/d997a252-0f15-4d4c-8bbb-ea07ee76f092> ;
+      mobiliteit:periode <http://data.lblod.info/id/periodes/e848e63d-f6e3-4a3c-88b1-25db30ff0457> ;
+      lblodSubsidie:heeftSubsidieprocedurestap <http://data.lblod.info/id/subsidy-procedural-steps/db928ffe-b7ac-4d10-bb1e-83f306557220>.
+
+    # New subsidy period from 1 January 2025 (10 PM) to 2 May 2025 (12 PM)
+    <http://data.lblod.info/id/periodes/e848e63d-f6e3-4a3c-88b1-25db30ff0457> a <http://data.europa.eu/m8g/PeriodOfTime>;
+      mu:uuid "e848e63d-f6e3-4a3c-88b1-25db30ff0457";
+      <http://data.europa.eu/m8g/startTime> "2025-01-01T22:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+      <http://data.europa.eu/m8g/endTime> "2025-05-02T10:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>. 
+  }
+}
+;
+
+INSERT DATA {
+  GRAPH <http://mu.semte.ch/graphs/public> {
+    <http://data.lblod.info/id/subsidy-measure-offers/e27d78e5-406b-412f-80a3-df4b6b73c496> <http://data.europa.eu/m8g/hasCriterion>
+      <http://data.lblod.info/id/criterions/28fe1648-dd25-4772-b5e9-0eed4e8f4b90>, # Economische Actoren
+      <http://data.lblod.info/id/criterions/8c32faa4-1167-4fee-932f-3d453e59b09a>, # Ocmw
+      <http://data.lblod.info/id/criterions/f5ea0615-0b0a-47db-a38c-6097ff80815d>. # Gemeente
+  }
+}
