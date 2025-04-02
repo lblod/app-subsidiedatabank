@@ -153,8 +153,8 @@ ext:akkoordClausule
                 sh:path lblodSubsidie:akkoordClausule;
                 sh:resultMessage "Dit veld is verplicht."
             ];
-    sh:name
-    "Ik ga akkoord met de clausule inzake non-disciriminatie en integriteit.";
+    sh:name """Ik ga akkoord met de clausule inzake non-disciriminatie en integriteit.""";
+    form:help """<a href="https://assets.vlaanderen.be/image/upload/v1741710190/repositories-prd/Clausule_non-discriminatie_en_integriteit_t7jnsj.pdf" target="_blank">Clausule inzake non-disciriminatie en integriteit.</a>""";
     sh:order 21;
     sh:path lblodSubsidie:akkoordClausule .
 
@@ -546,6 +546,7 @@ ext:bijlageDocument
     form:displayType displayTypes:files;
     form:partOf ext:bijlageSection;
     sh:name "Laad hier alle relevante bijlagen op";
+    form:help """Maak een zo gedetailleerd mogelijke begroting op. Het sjabloon kan je vinden op <a href="https://www.vlaanderen.be/samenleven/projectoproep-gendergerelateerd-geweld" target="_blank">www.vlaanderen.be/samenleven/projectoproep-gendergerelateerd-geweld</a>""";
     sh:order 23;
     sh:path (lblodSubsidie:bijlageDocument dct:hasPart) .
 

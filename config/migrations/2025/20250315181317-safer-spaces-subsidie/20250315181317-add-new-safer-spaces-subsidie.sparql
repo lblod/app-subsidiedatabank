@@ -40,9 +40,9 @@ INSERT DATA {
     <http://data.lblod.info/id/subsidy-measure-offers/9d36ad03-32c6-424e-a937-4a34cc32198c>
       a <http://data.vlaanderen.be/ns/subsidie#SubsidiemaatregelAanbod>;
       mu:uuid "9d36ad03-32c6-424e-a937-4a34cc32198c";
-      dct:title """Safer Spaces""";
-      skos:prefLabel """Safer Spaces""";
-      skos:related "https://www.vlaanderen.be/samenleven/subsidies";
+      dct:title """Safe(r) spaces verbinden en versterken""";
+      skos:prefLabel """Safe(r) spaces verbinden en versterken""";
+      skos:related "https://www.vlaanderen.be/samenleven/projectoproep-safer-spaces-verbinden-en-versterken";
       cpsv:follows <http://data.lblod.info/id/subsidy-procedural-steps/6db7e6e2-eaed-4199-a55e-dccfce24c28a> ;
       lblodSubsidie:heeftReeks <http://data.lblod.info/id/subsidy-measure-offer-series/61f11ee5-70fc-44cd-93ac-2d34713fe96c> .
 
