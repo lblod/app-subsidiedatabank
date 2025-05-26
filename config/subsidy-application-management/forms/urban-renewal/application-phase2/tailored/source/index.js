@@ -1,4 +1,5 @@
 const contactInfoExtractor = require('./extractors/contact-info-extractor');
+const missingTypesExtractor = require('./extractors/missing-types-extractor');
 
 const extractor = {
   name: 'urban-renewal/application-phase2/first-step-as-source',
@@ -9,7 +10,7 @@ async function execute( store, graphs, lib, form ){
     const source = await findFormFromStep1(lib, form);
 
     //Note: this loop is still overkill, but at least it is 'prepared'
-    for (let extractor of [ contactInfoExtractor ]) {
+    for (let extractor of [ contactInfoExtractor, missingTypesExtractor ]) {
       try {
         await extractor.execute(store, graphs, lib, form, { uri: source });
       } catch (e) {
