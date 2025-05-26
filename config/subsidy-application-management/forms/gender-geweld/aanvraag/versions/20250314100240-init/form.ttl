@@ -221,10 +221,10 @@ ext:begrotingDocument
     sh:order 18;
     sh:path (lblodSubsidie:begrotingDocument dct:hasPart) .
 
-nodes:ee85d17b-8758-4c6a-b176-ef57f2120d04 a form:Field ;
+ext:hiddenBegrotingDocument a form:Field ;
     sh:name "Type RemoteDataObject or FileDataObject [hidden input]" ;
     sh:order 23 ;
-    sh:path ( ext:begrotingDocument dct:hasPart rdf:type );
+    sh:path ( lblodSubsidie:begrotingDocument dct:hasPart rdf:type );
     form:partOf ext:overzichtBegrotingSection.
 
 ##########################################################
@@ -550,6 +550,12 @@ ext:bijlageDocument
     sh:order 23;
     sh:path (lblodSubsidie:bijlageDocument dct:hasPart) .
 
+ext:hiddenBijlageDocument a form:Field ;
+    sh:name "Type RemoteDataObject or FileDataObject [hidden input]" ;
+    sh:order 23 ;
+    sh:path ( lblodSubsidie:bijlageDocument dct:hasPart rdf:type );
+    form:partOf ext:bijlageSection.
+
 ext:postnummerEnGemeente
     a form:Field;
     form:displayType displayTypes:defaultInput;
@@ -677,7 +683,7 @@ emb:source-node
         ext:akkoordClausule,
         ext:overzichtMedewerkers,
         ext:begrotingDocument,
-        nodes:ee85d17b-8758-4c6a-b176-ef57f2120d04,
+        ext:hiddenBegrotingDocument,
         ext:aanpakEnKwaliteitsbewaking,
         ext:ondernemingsnummer,
         ext:overzichtAndereSubsidierendeInstanties,
@@ -694,7 +700,7 @@ emb:source-node
         ext:overzichtErkenningenListing,
         ext:aandachtIntersectionaliteit,
         ext:bijlageDocument,
-        nodes:08ebe38b-9b5f-43be-9b61-e1ee58da1168,
+        ext:hiddenBijlageDocument,
         ext:postnummerEnGemeente,
         ext:samenwerkingsverbandenToelichting,
         ext:verduurzamingEnOpenbaarmaking,

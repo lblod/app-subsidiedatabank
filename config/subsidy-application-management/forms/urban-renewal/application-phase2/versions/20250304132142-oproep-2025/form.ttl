@@ -1,0 +1,864 @@
+@prefix form:           <http://lblod.data.gift/vocabularies/forms/> .
+@prefix sh:             <http://www.w3.org/ns/shacl#> .
+@prefix mu:             <http://mu.semte.ch/vocabularies/core/> .
+@prefix fieldGroups:    <http://data.lblod.info/field-groups/> .
+@prefix fields:         <http://data.lblod.info/fields/> .
+@prefix displayTypes:   <http://lblod.data.gift/display-types/> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#>.
+@prefix ext:            <http://mu.semte.ch/vocabularies/ext/> .
+@prefix lblodSubsidie:  <http://lblod.data.gift/vocabularies/subsidie/> .
+@prefix schema:         <http://schema.org/> .
+@prefix foaf:           <http://xmlns.com/foaf/0.1/> .
+@prefix dct:            <http://purl.org/dc/terms/> .
+@prefix rdf:            <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix m8g:	          <http://data.europa.eu/m8g/> .
+@prefix belgif:	        <http://vocab.belgif.be/ns/publicservice#> .
+@prefix lblodSubsidie: <http://lblod.data.gift/vocabularies/subsidie/>.
+
+##########################################################
+# Form and field group definitions
+##########################################################
+ext:form a form:Form, form:TopLevelForm ;
+  ### Contactgegevens contactpersoon
+  form:includes ext:firstNameContactPerson ;
+  form:includes ext:lastNameContactPerson ;
+  form:includes ext:telephoneNumberContactPerson ;
+  form:includes ext:emailAddressContactPerson ;
+  form:includes ext:jobTitleContactPerson ;
+  form:includes ext:firstNamePoliticalReference ;
+  form:includes ext:lastNamePoliticalReference ;
+  form:includes ext:telephoneNumberPoliticalReference ;
+  form:includes ext:emailAddressPoliticalReference ;
+  form:includes ext:jobTitlePoliticalReference ;
+  form:includes ext:projectName ;
+  form:includes ext:samenvattingSummaryDescription ;
+  form:includes ext:diagnose ;
+  form:includes ext:visieEnBeleidscontext ;
+  form:includes ext:ambitieusProject ;
+  form:includes ext:coalitieCoproductieEnPartnerschap ;
+  form:includes ext:momentum ;
+  ### Financiering
+  form:includes ext:partnerListing ;
+  form:includes ext:financingTotals ;
+  ### Subsidie bedrag
+  form:includes ext:subsidieBedragAanvraagF ;
+  form:includes ext:subsidieBedragL ;
+
+  form:includes ext:bestandenListing;
+
+  ### Attachments
+  form:includes ext:attachments ;
+  form:includes ext:hiddenAttachments .
+  
+
+##########################################################
+# Property Group: Contact Person
+##########################################################
+ext:contactPersonSection
+    a               form:Section ;
+    sh:name         "Contactgegevens contactpersoon" ;
+    form:help       "Dit is de persoon die gecontacteerd wordt bij de opvolging van dit dossier." ;
+    sh:order        1 .
+
+  ##########################################################
+  # Field: First Name
+  ##########################################################
+  ext:firstNameContactPerson
+      a                 form:Field ;
+      sh:name           "Voornaam contactpersoon" ;
+      sh:order          1 ;
+      sh:path           ( schema:contactPoint foaf:firstName ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( schema:contactPoint foaf:firstName ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:contactPersonSection .
+
+  ##########################################################
+  # Field: Last (Family) Name
+  ##########################################################
+  ext:lastNameContactPerson
+      a                 form:Field ;
+      sh:name           "Familienaam contactpersoon" ;
+      sh:order          2 ;
+      sh:path           ( schema:contactPoint foaf:familyName ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( schema:contactPoint foaf:familyName ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:contactPersonSection .
+
+  ##########################################################
+  # Field: Telephone Number
+  ##########################################################
+  ext:telephoneNumberContactPerson
+      a                 form:Field ;
+      sh:name           "Telefoonnummer" ;
+      sh:order          3 ;
+      sh:path           ( schema:contactPoint schema:telephone ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( schema:contactPoint schema:telephone ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ,
+                        [ a                   form:ValidPhoneNumber ;
+                          form:grouping       form:MatchEvery ;
+                          form:defaultCountry "BE" ;
+                          sh:path             ( schema:contactPoint schema:telephone ) ;
+                          sh:resultMessage    "Geef een geldig telefoonnummer in."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:contactPersonSection .
+
+  ##########################################################
+  # Field: Email Address
+  ##########################################################
+  ext:emailAddressContactPerson
+      a                 form:Field ;
+      sh:name           "Mailadres" ;
+      sh:order          4 ;
+      sh:path           ( schema:contactPoint schema:email ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( schema:contactPoint schema:email ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ,
+                        [ a                 form:ValidEmail ;
+                          form:grouping     form:MatchEvery ;
+                          sh:path           ( schema:contactPoint schema:email ) ;
+                          sh:resultMessage  "Geef een geldig e-mailadres op."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:contactPersonSection .
+
+  ##########################################################
+  # Field: Job Title
+  ##########################################################
+  ext:jobTitleContactPerson
+      a                 form:Field ;
+      sh:name           "Functie contactpersoon" ;
+      sh:order          5 ;
+      sh:path           ( schema:contactPoint schema:jobTitle ) ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:contactPersonSection .
+
+
+##########################################################
+# Property Group: Political Reference
+##########################################################
+ext:politicalReferenceSection
+    a               form:Section ;
+    sh:name         "Politieke verantwoordelijke bij de stad" ;
+    form:help       "Dit is de persoon die gecontacteerd wordt bij de opvolging van dit dossier." ;
+    sh:order        2 .
+
+  ##########################################################
+  # Field: First Name
+  ##########################################################
+  ext:firstNamePoliticalReference
+      a                 form:Field ;
+      sh:name           "Voornaam contactpersoon" ;
+      sh:order          1 ;
+      sh:path           ( ext:politicalReferenceContactPoint foaf:firstName ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( ext:politicalReferenceContactPoint foaf:firstName ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:politicalReferenceSection .
+
+  ##########################################################
+  # Field: Last (Family) Name
+  ##########################################################
+  ext:lastNamePoliticalReference 
+      a                 form:Field ;
+      sh:name           "Familienaam contactpersoon" ;
+      sh:order          2 ;
+      sh:path           ( ext:politicalReferenceContactPoint foaf:familyName ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( ext:politicalReferenceContactPoint foaf:familyName ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:politicalReferenceSection .
+
+  ##########################################################
+  # Field: Telephone Number
+  ##########################################################
+  ext:telephoneNumberPoliticalReference
+      a                 form:Field ;
+      sh:name           "Telefoonnummer" ;
+      sh:order          3 ;
+      sh:path           ( ext:politicalReferenceContactPoint schema:telephone ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( ext:politicalReferenceContactPoint schema:telephone ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ,
+                        [ a                   form:ValidPhoneNumber ;
+                          form:grouping       form:MatchEvery ;
+                          form:defaultCountry "BE" ;
+                          sh:path             ( ext:politicalReferenceContactPoint schema:telephone ) ;
+                          sh:resultMessage    "Geef een geldig telefoonnummer in."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:politicalReferenceSection .
+
+  ##########################################################
+  # Field: Email Address
+  ##########################################################
+  ext:emailAddressPoliticalReference
+      a                 form:Field ;
+      sh:name           "Mailadres" ;
+      sh:order          4 ;
+      sh:path           ( ext:politicalReferenceContactPoint schema:email ) ;
+      form:validations
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           ( ext:politicalReferenceContactPoint schema:email ) ;
+                          sh:resultMessage  "Dit veld is verplicht."@nl
+                        ] ,
+                        [ a                 form:ValidEmail ;
+                          form:grouping     form:MatchEvery ;
+                          sh:path           ( ext:politicalReferenceContactPoint schema:email ) ;
+                          sh:resultMessage  "Geef een geldig e-mailadres op."@nl
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:politicalReferenceSection .
+
+  ##########################################################
+  # Field: Job Title
+  ##########################################################
+  ext:jobTitlePoliticalReference
+      a                 form:Field ;
+      sh:name           "Functie contactpersoon" ;
+      sh:order          5 ;
+      sh:path           ( ext:politicalReferenceContactPoint schema:jobTitle ) ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:politicalReferenceSection .
+
+
+##########################################################
+# Property Group: Project Name
+##########################################################
+ext:projectNameSection
+    a               form:Section ;
+    sh:name         "Projectnaam" ;
+    sh:order        3 .
+
+  ##########################################################
+  # Field: Project Name
+  ##########################################################
+  ext:projectName
+      a                 form:Field ;
+      sh:order          1 ;
+      sh:path           lblodSubsidie:projectName ;
+      form:validations
+                        [ a                 form:MaxLength ;
+                          form:grouping     form:MatchEvery ;
+                          form:max          "150" ;
+                          sh:resultMessage  "Max. karakters overschreden." ;
+                          sh:path            lblodSubsidie:projectName
+                        ],
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:projectName            
+                        ] ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:projectNameSection .
+
+
+##########################################################
+# Property Group: Samenvatting eventuele aanpassingen
+##########################################################
+ext:samenvattingSection
+    a               form:Section ;
+    sh:name         "Samenvattende projectomschrijving" ;
+    form:help       """Deze ‘samenvattende’ beschrijving herleidt het ingediende stadsvernieuwingsproject tot de essentie en geeft aan
+hoe de stad met dit project bakens wil verzetten. Indien mogelijk / van toepassing geef aan hoe het project de
+relatie met dorpskernen in de stad en/of omliggende gemeenten versterkt. Staving met verhelderend beeld- en
+kaartmateriaal is toegelaten via bijlagen.""" ;
+    sh:order        4 .
+
+  ##########################################################
+  # Field: Summary
+  ##########################################################
+  ext:samenvattingSummaryDescription
+      a                 form:Field ;
+      sh:order          1 ;
+      sh:path           lblodSubsidie:samenvattingSummaryDescription ;
+      form:validations
+                        [ a                 form:MaxLength ;
+                          form:grouping     form:MatchEvery ;
+                          form:max          "5000" ;
+                          sh:resultMessage  "Max. karakters overschreden." ;
+                          sh:path           lblodSubsidie:samenvattingSummaryDescription
+                        ],
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:samenvattingSummaryDescription
+                        ] ;
+      form:displayType  displayTypes:textArea ;
+      sh:group       ext:samenvattingSection .
+
+
+##########################################################
+# Property Group: Strategisch Belang
+##########################################################
+ext:strategischBelangSection
+    a               form:Section ;
+    sh:name         "Strategisch belang van het stadsvernieuwingsproject" ;
+    # The title appears a bit larger in the Miro, so in theory all property groups below this one should be nested but that adds a border and requires some refactoring which we don't really have time for anymore.
+    # We use the skin option as a workaround to make the title look larger.
+    form:options    """{ "skin": 2 }""";
+    sh:order        5 .
+
+  ##########################################################
+  # Field: Diagnose
+  ##########################################################
+  ext:diagnose
+      a                 form:Field ;
+      sh:name           "Diagnose" ;
+      form:help         """<p>Geef een goed onderbouwde diagnose (of systeemanalyse) van het stadsvernieuwingsproject. In deze rubriek staat centraal welke precies de opgave is en waarom er een stadsvernieuwingsproject nodig is.</p>
+<ul style="list-style-type:disc; margin-left: 30px;">
+  <li>
+    Welke problematieken en uitdagingen wil je met dit stadsvernieuwingsproject aanpakken? Welke uitdagingen/kwesties komen in dit stadsvernieuwingsproject en binnen het bredere projectgebied samen? Hoe beïnvloeden uitdagingen/kwesties elkaar?
+  </li>
+  <li>
+    Wat is de onderbouwing (ruimtelijk, sociaal, economisch, ecologisch, ...) achter de gekozen schaal, geografie, territorium? Staaf waar mogelijk kernachtig met cijfers, signalen van burgers, evaluaties van lopende initiatieven, enz.
+  </li>
+  <li>
+    Welke knelpunten en behoeften zijn er op het vlak van ontmoeting en gemeenschapsvorming? Zijn er signalen van een gebrek aan inclusieve publieke ruimte of kwetsbare groepen die onvoldoende toegang hebben tot voorzieningen?
+  </li>
+</ul>
+""";
+      sh:order          1 ;
+      sh:path           lblodSubsidie:diagnose ;
+      form:validations
+                        [ a                 form:MaxLength ;
+                          form:grouping     form:MatchEvery ;
+                          form:max          "3500" ;
+                          sh:resultMessage  "Max. karakters overschreden." ;
+                          sh:path           lblodSubsidie:diagnose
+                        ],
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:diagnose
+                        ] ;
+      form:displayType  displayTypes:textArea ;
+      sh:group       ext:strategischBelangSection .
+
+  ##########################################################
+  # Field: Visie en beleidscontext
+  ##########################################################
+  ext:visieEnBeleidscontext
+      a                 form:Field ;
+      sh:name           "Visie en beleidscontext" ;
+      form:help         """<p>Schets de bredere visie waarin het stadsvernieuwingsproject past en de strategische beleidskeuzes die via dit stadsvernieuwingsproject gerealiseerd kunnen worden. Duid de impact die je beoogt.</p>
+<ul  style="list-style-type:disc; margin-left: 30px;">
+  <li>
+    Hoe kan het project als hefboom dienen of bijdragen aan een evenwichtige realisatie van de bredere toekomstvisie van de stad, de dorpskernen binnen de administratieve grenzen van de stad en/of de omliggende gemeenten, al dan niet in onderlinge samenhang?
+  </li>
+  <li>
+    Wat is de potentiële meerwaarde of synergie van het project voor de (domein-overschrijdende) beleidsdoelstellingen ten aanzien van de stad, de dorpskernen binnen de administratieve grenzen van de stad en de omliggende gemeenten?
+  </li>
+  <li>
+    Wat zijn de maatschappelijke winsten die het project potentieel oplevert op korte, middellange en lange termijn? Wat is de verwachte impact op maatschappelijk vlak zoals ontmoeting, nabijheid, creatie van publieke ruimte en fysieke dienstverlening, maar ook op ecologisch, ruimtelijk, economisch, cultureel, ... vlak?
+  </li>
+</ul>
+""";
+      sh:order          2 ;
+      sh:path           lblodSubsidie:visieEnBeleidscontext ;
+      form:validations
+                        [ a                 form:MaxLength ;
+                          form:grouping     form:MatchEvery ;
+                          form:max          "3500" ;
+                          sh:resultMessage  "Max. karakters overschreden." ;
+                          sh:path           lblodSubsidie:visieEnBeleidscontext
+                        ],
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:visieEnBeleidscontext
+                        ] ;
+      form:displayType  displayTypes:textArea ;
+      sh:group       ext:strategischBelangSection .
+
+  ##########################################################
+  # Field: Ambitieus project
+  ##########################################################
+  ext:ambitieusProject
+      a                 form:Field ;
+      sh:name           "Een ambitieus project" ;
+      form:help         """<p>Schets kernachtig het ambitieniveau voor de stad, omliggende gemeenten en dorpskernen binnen de administratieve grenzen van de stad, gebaseerd op de verschillende onderdelen in het project.</p>
+<ul style="list-style-type:disc; margin-left: 30px;">
+  <li>
+    Welke onderdelen stel je centraal binnen dit stadsvernieuwingsproject en waarom?
+  </li>
+  <li>
+    Wat is het vernieuwend, innovatief, maatschappelijk en sociale karakter binnen dit stadsvernieuwingsproject? In welke fases of elementen komt dit tot uiting (ontwerp, uitvoering, exploitatie)?
+  </li>
+  <li>
+    Is dit een project dat ook voor andere steden en gemeenten leerzaam kan zijn?
+  </li>
+  <li>
+  In geval het project zich situeert in een dorpskern en/of omliggende gemeente: Waarom draagt dit
+stadsvernieuwingsproject bij aan evenwichtige verdeling tussen stad, de dorpskernen binnen de
+administratieve grenzen van de stad en omliggende gemeenten? Op welke aspecten hiervan wil de stad
+met het project inzetten? Hoe worden de verschillende nagestreefde aspecten aan elkaar gekoppeld en
+versterken ze elkaar? Waarom is dit een goed geïntegreerd project?
+  </li>
+</ul>
+""";
+      sh:order          3 ;
+      sh:path           lblodSubsidie:ambitieusProject ;
+      form:validations
+                        [ a                 form:MaxLength ;
+                          form:grouping     form:MatchEvery ;
+                          form:max          "5000" ;
+                          sh:resultMessage  "Max. karakters overschreden." ;
+                          sh:path           lblodSubsidie:ambitieusProject
+                        ],
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:ambitieusProject
+                        ] ;
+      form:displayType  displayTypes:textArea ;
+      sh:group       ext:strategischBelangSection .
+
+  ##########################################################
+  # Field: Coalitie, coproductie en partnerschap
+  ##########################################################
+  ext:coalitieCoproductieEnPartnerschap
+      a                 form:Field ;
+      sh:name           "Coalitie, coproductie en partnerschap" ;
+      form:help         """<p>Duid de coalitie, coproductie en het partnerschap binnen het stadsvernieuwingsproject. Duid hoe het project breed gedragen is en hoe dit het project versterkt.</p>
+<ul style="list-style-type:disc; margin-left: 30px;">
+  <li>
+    Welke externe partners zijn er betrokken in dit project (profit, non-profit, bewoners en burgerinitiatieven, kennisinstellingen, enz.)? Hoe is het cocreatieproces tot nu toe verlopen?
+  </li>
+  <li>
+    Schets de belangen en de doelstellingen van verschillende partners in dit project.
+  </li>
+  <li>
+    Schets de hefbomen en de inzet van verschillende partners in het project.
+  </li>
+  <li>
+    Schets hoe je wil komen tot een gedragen partnerschap in het project.
+  </li>
+  <li>
+    Welke dorpskernen binnen de administratieve grenzen van de stad en welke omliggende gemeenten zijn betrokken? Hoe krijgt deze samenwerking concreet vorm binnen de projectontwikkeling en uitvoering? Welke samenwerkingen worden opgezet om de gemeenschappelijke ambities te realiseren?
+  </li>
+</ul>
+""";
+      sh:order          4 ;
+      sh:path           lblodSubsidie:coalitieCoproductieEnPartnerschap ;
+      form:validations
+                        [ a                 form:MaxLength ;
+                          form:grouping     form:MatchEvery ;
+                          form:max          "5000" ;
+                          sh:resultMessage  "Max. karakters overschreden." ;
+                          sh:path           lblodSubsidie:coalitieCoproductieEnPartnerschap
+                        ],
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:coalitieCoproductieEnPartnerschap
+                        ] ;
+      form:displayType  displayTypes:textArea ;
+      sh:group       ext:strategischBelangSection .
+
+  ##########################################################
+  # Field: momentum
+  ##########################################################
+  ext:momentum
+      a                 form:Field ;
+      sh:name           "Momentum" ;
+      form:help         """<p>Duid waarom dit het moment is voor een projectsubsidie stadsvernieuwing en schets eventuele risico’s voor de uitvoering van het stadsvernieuwingsproject.</p>
+<ul style="list-style-type:disc; margin-left: 30px;">
+  <li>
+    Geef aan waarom dit het juiste moment is voor een projectsubsidie stadsvernieuwing? Wat maakt het zo belangrijk dat het project nu wordt uitgevoerd?
+  </li>
+  <li>
+    In welke fase van het stadsontwikkelingsproces bevindt het project zich? Schets een overzicht van eventuele mogelijke (voor)onderzoeken (deze kunnen in bijlage meegestuurd worden).
+  </li>
+</ul>
+
+""";
+      sh:order          5 ;
+      sh:path           lblodSubsidie:momentum ;
+      form:validations
+                        [ a                 form:MaxLength ;
+                          form:grouping     form:MatchEvery ;
+                          form:max          "5000" ;
+                          sh:resultMessage  "Max. karakters overschreden." ;
+                          sh:path           lblodSubsidie:momentum
+                        ],
+                        [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:momentum
+                        ] ;
+      form:displayType  displayTypes:textArea ;
+      sh:group       ext:strategischBelangSection .
+
+##########################################################
+#  Financiering
+##########################################################
+ext:financingSection
+    a               form:Section ;
+    sh:name         "Globale financiële raming en subsidie" ;
+    form:help       """Duid waarvoor je de subsidie stadsvernieuwing aanvraagt en kader dit binnen een globale raming""" ;
+    sh:order        10 .
+
+##########################################################
+#  listing-scope: financiering partners
+##########################################################
+ext:partnerListingS a form:Scope;
+  sh:path ext:financingPartner.
+
+##########################################################
+#  Generator: partner
+##########################################################
+ext:partnerGenerator a form:Generator;
+  form:prototype [
+    form:shape [
+      a ext:FinancingPartner ;
+      ext:financingAmount 0;
+    ]
+  ];
+  form:dataGenerator form:addMuUuid.
+
+##########################################################
+#  Listing: Partners
+##########################################################
+ext:partnerListing a form:Listing;
+  a form:ListingTable;
+  form:each ext:partnerFormItem;
+  form:scope ext:partnerListingS;
+  form:createGenerator ext:partnerGenerator;
+  form:canAdd true;
+  form:addLabel "Voeg een nieuwe partner toe";
+  form:canRemove true;
+  form:removeLabel "Verwijder";
+  form:noDataMessage "Er werden nog geen partners toegevoegd";
+  sh:group ext:financingSection;
+  sh:order 1 .
+
+##########################################################
+#  Subform: Partner
+##########################################################
+ext:partnerFormItem a form:SubForm;
+   form:includes ext:partnerTitleF;
+   form:includes ext:partnerTypeF;
+   form:includes ext:financingAmountF;
+   form:hasFieldGroup ext:financingSection.
+
+##########################################################
+# Field: Titel
+##########################################################
+ext:partnerTitleF a form:Field ;
+    sh:name "Titel" ;
+    sh:order 1;
+    sh:path ext:partnerTitle;
+    form:displayType displayTypes:defaultInput ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:resultMessage "Dit veld is verplicht."@nl;
+        sh:path ext:partnerTitle] ;
+    sh:group ext:financingSection .
+
+##########################################################
+# Field: Partnertype
+##########################################################
+ext:partnerTypeF a form:Field ;
+    sh:name "Type partner" ;
+    sh:order 2;
+    sh:path ext:partnerType;
+    form:displayType displayTypes:conceptSchemeSelector ;
+    form:options """{"conceptScheme":"http://lblod.data.gift/vocabularies/subsidie/FinancieringPartnerType","searchEnabled":false}""" ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:resultMessage "Dit veld is verplicht."@nl;
+        sh:path ext:partnerType] ;
+    sh:group ext:financingSection .
+
+##########################################################
+# Field: Bedrag
+##########################################################
+ext:financingAmountF a form:Field ;
+    sh:name "Bedrag" ;
+    sh:order 3;
+    sh:path ext:financingAmount;
+    form:displayType displayTypes:numericalInput ;
+    form:validations
+      [ a form:PositiveNumber ;
+        form:grouping form:MatchEvery ;
+        sh:resultMessage "Het bedrag moet groter zijn dan 0."@nl;
+        sh:path ext:financingAmount] ;
+    sh:group ext:financingSection .
+
+##########################################################
+# Field: Financiering totals overview
+##########################################################
+ext:financingTotals
+    a                 form:Field ;
+    sh:order          2 ;
+    form:displayType  displayTypes:urbanRenewalFinancingTotals ;
+    sh:group       ext:financingSection .
+
+##########################################################
+# Property Group: Bedrag aangevraagde subsidie
+##########################################################
+ext:subsidieBedragAanvraagSection 
+    a         form:Section ;
+    sh:name   "Bedrag van aangevraagde subsidie" ;
+    form:help       "Het maximaal mogelijke subsidiebedrag is 5 miljoen euro." ;
+    sh:order  12 .
+
+  ##########################################################
+  # Field: Bedrag van aangevraagde subsidie
+  ##########################################################
+  ext:subsidieBedragAanvraagF
+    a                 form:Field ;
+    sh:name   "Totaal bedrag" ;
+    sh:order          1 ;
+    sh:path           lblodSubsidie:subsidieBedragAanvraag ;
+    form:validations
+                        [ a                 
+                          form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:resultMessage  "Dit veld is verplicht." ;
+                          sh:path           lblodSubsidie:subsidieBedragAanvraag            
+                        ],
+                        [ 
+                          a form:PositiveNumber ;
+                          form:grouping form:MatchEvery ;
+                          sh:resultMessage "Het bedrag moet groter zijn dan 0."@nl;
+                          sh:path lblodSubsidie:subsidieBedragAanvraag
+                        ] ;
+    form:displayType  displayTypes:numericalInput ;
+    sh:group          ext:subsidieBedragAanvraagSection .
+
+
+    ##########################################################
+    #  listing-scope: projectonderdelen bedrag
+    ##########################################################
+    ext:subsidieBedragListingS a form:Scope;
+      sh:path lblodSubsidie:subsidieBedragListingUnit.
+
+    ##########################################################
+    # Listing: Projectonderdeel timing listing
+    ##########################################################
+    ext:subsidieBedragL a form:Listing;
+      a form:ListingTable;
+      form:each ext:subsidieBedragListingSf;
+      form:scope ext:subsidieBedragListingS;
+      form:createGenerator ext:subsidieBedragListingGenerator;
+      form:canAdd true;
+      form:addLabel "Voeg toe";
+      form:canRemove true;
+      form:removeLabel "Verwijder";
+      sh:group ext:subsidieBedragAanvraagSection;
+      sh:maxCount 15;
+      sh:order 2 .
+
+    ##########################################################
+    #  Subform: subsidieBedragListingUnit
+    ##########################################################
+    ext:subsidieBedragListingSf a form:SubForm;
+      form:includes ext:subsidieBedragListingUnitNaamF;
+      form:includes ext:subsidieBedragListingUnitMotiveringF;
+      form:includes ext:subsidieBedragListingUnitBedragF;
+      form:hasFieldGroup ext:subsidieBedragAanvraagSection.
+
+
+    ##########################################################
+    # Field: Projectonderdeel bedrag aspecten
+    ##########################################################
+    ext:subsidieBedragListingUnitNaamF
+        a                 form:Field ;
+        sh:name           "Projectonderdelen / -aspecten waaraan de projectsubsidie besteed zal worden" ;
+        sh:order          1 ;
+        sh:path           lblodSubsidie:subsidieBedragListingUnitNaam ;
+        form:validations
+                          [ a                 form:MaxLength ;
+                            form:grouping     form:MatchEvery ;
+                            form:max          "500" ;
+                            sh:resultMessage  "Max. karakters overschreden." ;
+                            sh:path            lblodSubsidie:subsidieBedragListingUnitNaam
+                          ],
+                          [ a                 form:RequiredConstraint ;
+                            form:grouping     form:Bag ;
+                            sh:resultMessage  "Dit veld is verplicht." ;
+                            sh:path           lblodSubsidie:subsidieBedragListingUnitNaam            
+                          ] ;
+        form:displayType  displayTypes:defaultInput ;
+        sh:group          ext:subsidieBedragAanvraagSection .
+
+    ##########################################################
+    # Field: Projectonderdeel Bedrag Motivering
+    ##########################################################
+    ext:subsidieBedragListingUnitMotiveringF
+        a                 form:Field ;
+        sh:name           "Motivering" ;
+        sh:order          2 ;
+        sh:path           lblodSubsidie:subsidieBedragListingUnitMotivering ;
+        form:validations
+                          [ a                 form:MaxLength ;
+                            form:grouping     form:MatchEvery ;
+                            form:max          "500" ;
+                            sh:resultMessage  "Max. karakters overschreden." ;
+                            sh:path           lblodSubsidie:subsidieBedragListingUnitMotivering
+                          ] ;
+        form:displayType  displayTypes:textArea ;
+        sh:group          ext:subsidieBedragAanvraagSection .
+
+    ##########################################################
+    # Field: Projectonderdeel Bedrag subsidie bedrag
+    ##########################################################
+    ext:subsidieBedragListingUnitBedragF
+        a                 form:Field ;
+        sh:name           "Bedrag Subsidie" ;
+        sh:order          2 ;
+        sh:path           lblodSubsidie:subsidieBedragListingUnitBedrag ;
+        form:validations
+                          [ 
+                            a form:PositiveNumber ;
+                            form:grouping form:MatchEvery ;
+                            sh:resultMessage "Het bedrag moet groter zijn dan 0."@nl;
+                            sh:path lblodSubsidie:subsidieBedragListingUnitBedrag
+                          ] ;
+        form:displayType  displayTypes:numericalInput ;
+        sh:group          ext:subsidieBedragAanvraagSection .
+
+    ##########################################################
+    #  Generator: projectOnderdeel bedrag
+    ##########################################################
+    ext:subsidieBedragListingGenerator a form:Generator;
+      form:prototype [
+        form:shape [
+          a lblodSubsidie:subsidieBedragListingUnit ;
+        ];
+      ];
+      form:dataGenerator form:addMuUuid.
+
+##########################################################
+# Section: Bestanden
+##########################################################
+ext:bestandenSection
+    a               form:Section ;
+    sh:name         "Bestanden" ;
+    form:help "Geef in onderstaande lijst aan welke bijlagen aan het dossier worden toegevoegd.";
+    sh:order        13 .
+
+
+
+  ##########################################################
+  # Field: Naam
+  ##########################################################
+
+  ext:bestandNaam
+      a                 form:Field ;
+      sh:name           "Naam" ;
+      sh:order          1 ;
+      sh:path           lblodSubsidie:bestandNaam ;
+      form:validations  [ a                 form:RequiredConstraint ;
+                          form:grouping     form:Bag ;
+                          sh:path           lblodSubsidie:bestandNaam ;
+                          sh:resultMessage  "Dit veld is verplicht." ]
+      ;
+      form:displayType  displayTypes:defaultInput ;
+      sh:group       ext:bestandenSection .
+
+##########################################################
+# SubForm
+##########################################################
+
+ext:bestandenListingSf
+    a               form:SubForm ;
+    form:removeLabel "Verwijder rij" ;
+    form:hasFieldGroup ext:bestandenSection;
+    form:includes   ext:bestandNaam.
+
+##########################################################
+# Generator & Prototype (The subform)
+##########################################################
+
+ext:generatorBestanden
+    a               form:Generator ;
+    form:prototype [
+        form:shape [
+          a lblodSubsidie:bestandenListingUnit ;
+        ];
+      ];
+    form:dataGenerator form:addMuUuid.
+
+##########################################################
+# ListingTable: Voeg bestand toe
+##########################################################
+
+ext:bestandenListing
+    a               form:Listing, form:ListingTable ;
+    form:each       ext:bestandenListingSf ;
+    form:scope      ext:bestandenListingS ;
+    form:createGenerator ext:generatorBestanden ;
+    form:addLabel   "Nieuwe rij" ;
+    form:canAdd     true ;
+    form:canRemove  true ;
+    form:removeLabel "Verwijder";
+    sh:group     ext:bestandenSection ;
+    sh:maxCount 20;
+    sh:order        1 .
+
+##########################################################
+# Scope voor bestanden
+##########################################################
+
+ext:bestandenListingS a form:Scope ;
+    sh:path         lblodSubsidie:bestandenListingUnit .
+
+
+##########################################################
+#  Field: Attachments
+##########################################################
+ext:attachments
+  a                 form:Field ;
+  sh:order          2 ;
+  sh:name           "Laad hier alle relevante bijlagen op." ;
+  sh:path           ( lblodSubsidie:attachment dct:hasPart ) ;
+  form:displayType  displayTypes:files ;
+  sh:group       ext:bestandenSection .
+
+##########################################################
+# Hidden field: Attachments
+# Hidden field required for all variations of URL or FILE
+# input field which require validation.
+# It makes sure there is a type attached to hasPart object.
+# This enables correct validation in both front and backend.
+##########################################################
+ext:hiddenAttachments
+  a         form:Field ;
+  sh:order  3 ;
+  sh:name   "Type RemoteDataObject or FileDataObject [hidden input]" ;
+  sh:path   ( lblodSubsidie:attachment dct:hasPart rdf:type ) ;
+  sh:group ext:bestandenSection .
