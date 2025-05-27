@@ -20,6 +20,12 @@ module.exports = {
         $rdf.sym(contactPoint),
         graphs.additions);
 
+    store.add(
+      $rdf.sym(contactPoint),
+      RDF_TYPE,
+      SCHEMA('ContactPoint'),
+      graphs.additions);
+
     const {firstName, familyName, email, telephone, jobTitle} =
         await getGenericInfo(source.uri, mu, sudo);
 

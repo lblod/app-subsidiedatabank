@@ -278,7 +278,7 @@ ext:projectNameSection
                           sh:resultMessage  "Dit veld is verplicht." ;
                           sh:path           lblodSubsidie:projectName            
                         ] ;
-      form:displayType  displayTypes:defaultInput ;
+      form:displayType  displayTypes:textArea ;
       sh:group       ext:projectNameSection .
 
 

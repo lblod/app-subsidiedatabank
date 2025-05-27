@@ -261,12 +261,18 @@ ext:projectSection
         sh:order          1 ;
         sh:path           lblodSubsidie:projectNaam ;
         form:validations
+                          [ a                 form:MaxLength ;
+                            form:grouping     form:MatchEvery ;
+                            form:max          "150" ;
+                            sh:resultMessage  "Max. karakters overschreden." ;
+                            sh:path            lblodSubsidie:projectNaam
+                          ],
                           [ a                 form:RequiredConstraint ;
                             form:grouping     form:Bag ;
                             sh:resultMessage  "Dit veld is verplicht." ;
                             sh:path           lblodSubsidie:projectNaam
                           ] ;
-        form:displayType  displayTypes:defaultInput ;
+        form:displayType  displayTypes:textArea ;
         sh:group       ext:projectSection .
 
   ##########################################################
